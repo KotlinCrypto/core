@@ -1,0 +1,27 @@
+public abstract class org/kotlincrypto/core/Digest : java/security/MessageDigest, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
+	public final field blockSize I
+	public final field digestLength I
+	protected fun <init> (Ljava/lang/String;II)V
+	public final fun algorithm ()Ljava/lang/String;
+	protected abstract fun compress ([B)V
+	public final fun digest ()[B
+	protected abstract fun digest (JI[B)[B
+	public final fun digest ([B)[B
+	public final fun digest ([BII)I
+	protected final fun engineDigest ()[B
+	protected final fun engineDigest ([BII)I
+	protected final fun engineGetDigestLength ()I
+	protected final fun engineReset ()V
+	protected final fun engineUpdate (B)V
+	protected final fun engineUpdate (Ljava/nio/ByteBuffer;)V
+	protected final fun engineUpdate ([BII)V
+	public final fun equals (Ljava/lang/Object;)Z
+	public final fun hashCode ()I
+	public final fun reset ()V
+	protected abstract fun resetDigest ()V
+	public final fun toString ()Ljava/lang/String;
+	public final fun update (B)V
+	public final fun update ([B)V
+	public final fun update ([BII)V
+}
+
