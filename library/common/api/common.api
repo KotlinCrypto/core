@@ -2,6 +2,10 @@ public abstract interface class org/kotlincrypto/core/Algorithm {
 	public abstract fun algorithm ()Ljava/lang/String;
 }
 
+public abstract interface class org/kotlincrypto/core/Cloneable : java/lang/Cloneable {
+	public abstract fun clone ()Ljava/lang/Object;
+}
+
 public abstract interface annotation class org/kotlincrypto/core/ExperimentalKotlinCryptoApi : java/lang/annotation/Annotation {
 }
 
