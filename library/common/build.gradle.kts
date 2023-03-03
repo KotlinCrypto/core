@@ -44,8 +44,16 @@ kmpConfiguration {
         linuxAll()
         mingwAll()
 
+        common {
+            pluginIds(libs.plugins.publish.get().pluginId)
+        }
+
         kotlin {
             explicitApi()
+
+            extensions.configure<SigningExtension>("signing") {
+                useGpgCmd()
+            }
         }
     }
 }
