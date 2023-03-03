@@ -1,0 +1,14 @@
+public abstract interface class org/kotlincrypto/core/Algorithm {
+	public abstract fun algorithm ()Ljava/lang/String;
+}
+
+public abstract interface annotation class org/kotlincrypto/core/ExperimentalKotlinCryptoApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class org/kotlincrypto/core/InternalKotlinCryptoApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface class org/kotlincrypto/core/Resettable {
+	public abstract fun reset ()V
+}
+
