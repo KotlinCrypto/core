@@ -31,5 +31,5 @@ internal inline fun Digest.commonInit(
 
 @Suppress("NOTHING_TO_INLINE")
 internal inline fun Digest.commonToString(): String {
-    return "Digest[${algorithm()}]"
+    return "Digest[${algorithm()}]@${hashCode()}"
 }
