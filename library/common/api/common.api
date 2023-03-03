@@ -12,3 +12,9 @@ public abstract interface class org/kotlincrypto/core/Resettable {
 	public abstract fun reset ()V
 }
 
+public abstract interface class org/kotlincrypto/core/Updatable {
+	public abstract fun update (B)V
+	public abstract fun update ([B)V
+	public abstract fun update ([BII)V
+}
+
