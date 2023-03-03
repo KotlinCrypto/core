@@ -1,0 +1,24 @@
+public abstract class org/kotlincrypto/core/Mac : javax/crypto/Mac, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
+	protected fun <init> (Ljava/lang/String;Lorg/kotlincrypto/core/Mac$Engine;)V
+	public final fun algorithm ()Ljava/lang/String;
+	public final fun equals (Ljava/lang/Object;)Z
+	public final fun hashCode ()I
+	public final fun macLength ()I
+	public final fun toString ()Ljava/lang/String;
+}
+
+protected abstract class org/kotlincrypto/core/Mac$Engine : javax/crypto/MacSpi, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
+	public fun <init> ([B)V
+	public abstract fun doFinal ()[B
+	protected final fun engineDoFinal ()[B
+	protected final fun engineGetMacLength ()I
+	protected final fun engineInit (Ljava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V
+	protected final fun engineReset ()V
+	protected final fun engineUpdate (B)V
+	protected final fun engineUpdate (Ljava/nio/ByteBuffer;)V
+	protected final fun engineUpdate ([BII)V
+	public final fun equals (Ljava/lang/Object;)Z
+	public final fun hashCode ()I
+	public abstract fun macLength ()I
+}
+
