@@ -15,6 +15,8 @@
  **/
 package org.kotlincrypto.core
 
+import org.kotlincrypto.core.internal.DigestState
+
 class TestDigest: Digest {
 
     private val compress: (buffer: ByteArray) -> Unit
@@ -36,6 +38,17 @@ class TestDigest: Digest {
         this.reset = reset
     }
 
+    private constructor(
+        state: DigestState,
+        compress: (buffer: ByteArray) -> Unit,
+        digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
+        reset: () -> Unit,
+    ): super(state) {
+        this.compress = compress
+        this.finalize = digest
+        this.reset = reset
+    }
+
     override fun compress(buffer: ByteArray) {
         compress.invoke(buffer)
     }
@@ -46,5 +59,9 @@ class TestDigest: Digest {
 
     override fun resetDigest() {
         reset.invoke()
+    }
+
+    override fun clone(state: DigestState): Digest {
+        return TestDigest(state, compress, finalize, reset)
     }
 }

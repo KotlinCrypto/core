@@ -17,6 +17,7 @@ package org.kotlincrypto.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 class DigestUnitTest: TestDigestException() {
 
@@ -77,5 +78,31 @@ class DigestUnitTest: TestDigestException() {
 
         // Check the internal bufferOffset was 0 after all that
         assertEquals(0, digest.digest().size)
+    }
+
+    @Test
+    fun givenDigest_whenCloned_thenIsNewInstance() {
+        val digest = TestDigest(
+            digest = { _, _, b ->
+                assertEquals(1, b[0])
+                assertEquals(0, b[1])
+                b
+            }
+        ).apply {
+            update(1)
+        }
+
+        val clone = digest.clone()
+
+        assertEquals(digest.blockSize(), clone.blockSize())
+        assertEquals(digest.digestLength(), clone.digestLength())
+        assertEquals(digest.algorithm(), clone.algorithm())
+        assertNotEquals(clone, digest)
+
+        val digestDigest = digest.digest()
+        val cloneDigest = clone.digest()
+
+        assertNotEquals(cloneDigest, digestDigest)
+        assertEquals(digestDigest.size, cloneDigest.size)
     }
 }

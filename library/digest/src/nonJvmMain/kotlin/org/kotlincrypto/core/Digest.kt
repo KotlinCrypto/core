@@ -75,9 +75,8 @@ public actual abstract class Digest private actual constructor(
     public actual final override fun hashCode(): Int = delegate.hashCode()
     public actual final override fun toString(): String = commonToString()
 
-    public actual final override fun clone(): Digest {
-        TODO("Not yet implemented")
-    }
+    public actual final override fun clone(): Digest = clone(delegate.clone())
+    protected actual abstract fun clone(state: DigestState): Digest
 
     protected actual abstract fun compress(buffer: ByteArray)
     protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
