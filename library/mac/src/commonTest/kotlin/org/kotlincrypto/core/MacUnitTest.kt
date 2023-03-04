@@ -16,12 +16,17 @@
 package org.kotlincrypto.core
 
 import kotlin.test.Test
+import kotlin.test.assertNotEquals
 import kotlin.test.fail
 
 class MacUnitTest {
 
     private class TestMac(key: ByteArray, algorithm: String) : Mac(algorithm, TestEngine(key)) {
-        private class TestEngine(key: ByteArray): Engine(key) {
+        private class TestEngine: Engine {
+
+            constructor(key: ByteArray): super(key)
+            private constructor(state: State): super(state)
+
             // To ensure that Java implementation initializes javax.crypto.Mac
             // on instantiation so that it does not throw IllegalStateException
             // whenever updating.
@@ -32,6 +37,10 @@ class MacUnitTest {
             override fun update(input: ByteArray, offset: Int, len: Int) {}
             override fun macLength(): Int = 0
             override fun doFinal(): ByteArray = ByteArray(0)
+
+            override fun copy(): Engine = TestEngine(TestState())
+
+            private inner class TestState: Engine.State()
         }
     }
 
@@ -63,5 +72,13 @@ class MacUnitTest {
         } catch (_: ConcurrentModificationException) {
             // pass
         }
+    }
+
+    @Test
+    fun givenMac_whenCopied_thenIsNewInstance() {
+        val mac = TestMac(ByteArray(5), "not blank")
+        val copy = mac.copy()
+
+        assertNotEquals(mac, copy)
     }
 }

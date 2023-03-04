@@ -29,6 +29,7 @@ protected actual constructor(
     private val engine: Engine,
 ) : javax.crypto.Mac(engine, null, algorithm),
     Algorithm,
+    Copyable<Mac>,
     Resettable,
     Updatable
 {
@@ -43,24 +44,19 @@ protected actual constructor(
     public actual final override fun algorithm(): String = algorithm
     public actual fun macLength(): Int = macLength
 
+    public actual final override fun copy(): Mac = object : Mac(algorithm, engine.copy()) {}
+
     public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
     public actual final override fun hashCode(): Int = engine.hashCode()
     public actual final override fun toString(): String = commonToString()
 
-    protected actual abstract class Engine
-    @Throws(IllegalArgumentException::class)
-    actual constructor(
-        key: ByteArray
-    ) : MacSpi(),
-        Resettable,
-        Updatable
-    {
-        private val hashCode: Int
+    protected actual abstract class Engine: MacSpi, Cloneable, Copyable<Engine>, Resettable, Updatable {
 
-        init {
-            require(key.isNotEmpty()) { "key cannot be empty" }
-            hashCode = Any().hashCode()
-        }
+        private val hashCode: Int = Any().hashCode()
+
+        @Throws(IllegalArgumentException::class)
+        public actual constructor(key: ByteArray): super() { require(key.isNotEmpty()) { "key cannot be empty" } }
+        protected actual constructor(state: State): super()
 
         public actual abstract fun macLength(): Int
         public actual abstract fun doFinal(): ByteArray
@@ -73,7 +69,11 @@ protected actual constructor(
         protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) { /* no-op */ }
         protected final override fun engineDoFinal(): ByteArray = doFinal()
 
+        public final override fun clone(): Any = copy()
+
         public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode == hashCode
         public actual final override fun hashCode(): Int = hashCode
+
+        protected actual abstract inner class State
     }
 }

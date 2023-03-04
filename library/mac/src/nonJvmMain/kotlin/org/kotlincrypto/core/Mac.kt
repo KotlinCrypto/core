@@ -24,6 +24,7 @@ protected actual constructor(
     private val algorithm: String,
     private val engine: Engine,
 ) : Algorithm,
+    Copyable<Mac>,
     Resettable,
     Updatable
 {
@@ -42,29 +43,28 @@ protected actual constructor(
     public actual final override fun reset() { engine.reset() }
 
     public actual fun doFinal(): ByteArray = engine.doFinal()
+    public actual fun doFinal(input: ByteArray): ByteArray { engine.update(input); return doFinal() }
+
+    public actual final override fun copy(): Mac = object : Mac(algorithm, engine.copy()) {}
 
     public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
     public actual final override fun hashCode(): Int = engine.hashCode()
     public actual final override fun toString(): String = commonToString()
 
-    protected actual abstract class Engine
-    @Throws(IllegalArgumentException::class)
-    actual constructor(
-        key: ByteArray
-    ) : Resettable,
-        Updatable
-    {
-        private val hashCode: Int
+    protected actual abstract class Engine: Copyable<Engine>, Resettable, Updatable {
 
-        init {
-            require(key.isNotEmpty()) { "key cannot be empty" }
-            hashCode = Any().hashCode()
-        }
+        private val hashCode: Int = Any().hashCode()
+
+        @Throws(IllegalArgumentException::class)
+        public actual constructor(key: ByteArray) { require(key.isNotEmpty()) { "key cannot be empty" } }
+        protected actual constructor(state: State)
 
         public actual abstract fun macLength(): Int
         public actual abstract fun doFinal(): ByteArray
 
         public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode == hashCode
         public actual final override fun hashCode(): Int = hashCode
+
+        protected actual abstract inner class State
     }
 }
