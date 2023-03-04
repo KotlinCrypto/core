@@ -1,5 +1,6 @@
 public abstract class org/kotlincrypto/core/Digest : java/security/MessageDigest, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Cloneable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
 	protected fun <init> (Ljava/lang/String;II)V
+	protected fun <init> (Lorg/kotlincrypto/core/internal/DigestState;)V
 	public final fun algorithm ()Ljava/lang/String;
 	public final fun blockSize ()I
 	public synthetic fun clone ()Ljava/lang/Object;

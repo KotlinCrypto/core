@@ -16,21 +16,46 @@
 package org.kotlincrypto.core
 
 import org.kotlincrypto.core.internal.DigestDelegate
+import org.kotlincrypto.core.internal.DigestState
 import org.kotlincrypto.core.internal.commonToString
 
-public actual abstract class Digest
-@Throws(IllegalArgumentException::class)
-protected actual constructor(
+public actual abstract class Digest private actual constructor(
     algorithm: String,
     blockSize: Int,
     digestLength: Int,
+    state: DigestState?,
 ) : Algorithm,
     Cloneable<Digest>,
     Resettable,
     Updatable
 {
 
-    private val delegate = DigestDelegate.instance(algorithm, blockSize, digestLength, ::compress, ::digest, ::resetDigest)
+    private val delegate = if (state != null) {
+        DigestDelegate.instance(state, ::compress, ::digest, ::resetDigest)
+    } else {
+        DigestDelegate.instance(algorithm, blockSize, digestLength, ::compress, ::digest, ::resetDigest)
+    }
+
+    @Throws(IllegalArgumentException::class)
+    protected actual constructor(
+        algorithm: String,
+        blockSize: Int,
+        digestLength: Int
+    ): this(
+        algorithm = algorithm,
+        blockSize = blockSize,
+        digestLength = digestLength,
+        state = null
+    )
+
+    protected actual constructor(
+        state: DigestState
+    ): this(
+        algorithm = state.algorithm,
+        blockSize = state.blockSize,
+        digestLength = state.digestLength,
+        state = state
+    )
 
     public actual final override fun algorithm(): String = delegate.algorithm
     public actual fun blockSize(): Int = delegate.blockSize

@@ -15,17 +15,23 @@
  **/
 package org.kotlincrypto.core
 
-public expect abstract class Digest
-@Throws(IllegalArgumentException::class)
-protected constructor(
+import org.kotlincrypto.core.internal.DigestState
+
+public expect abstract class Digest private constructor(
     algorithm: String,
     blockSize: Int,
     digestLength: Int,
+    state: DigestState?,
 ) : Algorithm,
     Cloneable<Digest>,
     Resettable,
     Updatable
 {
+
+    @Throws(IllegalArgumentException::class)
+    protected constructor(algorithm: String, blockSize: Int, digestLength: Int)
+    protected constructor(state: DigestState)
+
     public final override fun algorithm(): String
     public fun blockSize(): Int
     public fun digestLength(): Int
