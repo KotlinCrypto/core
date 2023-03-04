@@ -16,28 +16,50 @@
 package org.kotlincrypto.core
 
 import org.kotlincrypto.core.internal.DigestDelegate
-import org.kotlincrypto.core.internal.commonInit
+import org.kotlincrypto.core.internal.DigestState
 import org.kotlincrypto.core.internal.commonToString
 
-public actual abstract class Digest
-@Throws(IllegalArgumentException::class)
-protected actual constructor(
-    private val algorithm: String,
-    public actual val blockSize: Int,
-    public actual val digestLength: Int,
+public actual abstract class Digest private actual constructor(
+    algorithm: String,
+    blockSize: Int,
+    digestLength: Int,
+    state: DigestState?,
 ) : Algorithm,
+    Copyable<Digest>,
     Resettable,
     Updatable
 {
 
-    private val delegate: DigestDelegate
-
-    init {
-        commonInit(algorithm, digestLength)
-        delegate = DigestDelegate.instance(blockSize, ::compress, ::digest, ::resetDigest)
+    private val delegate = if (state != null) {
+        DigestDelegate.instance(state, ::compress, ::digest, ::resetDigest)
+    } else {
+        DigestDelegate.instance(algorithm, blockSize, digestLength, ::compress, ::digest, ::resetDigest)
     }
 
-    public actual final override fun algorithm(): String = algorithm
+    @Throws(IllegalArgumentException::class)
+    protected actual constructor(
+        algorithm: String,
+        blockSize: Int,
+        digestLength: Int
+    ): this(
+        algorithm = algorithm,
+        blockSize = blockSize,
+        digestLength = digestLength,
+        state = null
+    )
+
+    protected actual constructor(
+        state: DigestState
+    ): this(
+        algorithm = state.algorithm,
+        blockSize = state.blockSize,
+        digestLength = state.digestLength,
+        state = state
+    )
+
+    public actual final override fun algorithm(): String = delegate.algorithm
+    public actual fun blockSize(): Int = delegate.blockSize
+    public actual fun digestLength(): Int = delegate.digestLength
 
     public actual final override fun update(input: Byte) { delegate.update(input) }
     public actual final override fun update(input: ByteArray) { delegate.update(input) }
@@ -52,6 +74,9 @@ protected actual constructor(
     public actual final override fun equals(other: Any?): Boolean = other is Digest && other.delegate == delegate
     public actual final override fun hashCode(): Int = delegate.hashCode()
     public actual final override fun toString(): String = commonToString()
+
+    public actual final override fun copy(): Digest = copy(delegate.copy())
+    protected actual abstract fun copy(state: DigestState): Digest
 
     protected actual abstract fun compress(buffer: ByteArray)
     protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray

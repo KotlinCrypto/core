@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("KotlinRedundantDiagnosticSuppress")
-
 package org.kotlincrypto.core.internal
 
-import org.kotlincrypto.core.Digest
-
-@Suppress("NOTHING_TO_INLINE")
-internal inline fun Digest.commonToString(): String {
-    return "Digest[${algorithm()}]@${hashCode()}"
-}
+public sealed class DigestState(
+    internal val algorithm: String,
+    internal val blockSize: Int,
+    internal val digestLength: Int,
+)

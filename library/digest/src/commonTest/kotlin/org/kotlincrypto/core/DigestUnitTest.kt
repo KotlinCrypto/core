@@ -17,6 +17,7 @@ package org.kotlincrypto.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 class DigestUnitTest: TestDigestException() {
 
@@ -60,22 +61,48 @@ class DigestUnitTest: TestDigestException() {
             digest = { _, offset, _ -> ByteArray(offset) }
         )
 
-        digest.update(ByteArray(digest.blockSize - 1))
+        digest.update(ByteArray(digest.blockSize() - 1))
         assertEquals(0, compressCount)
 
-        digest.update(ByteArray(digest.blockSize + 1))
+        digest.update(ByteArray(digest.blockSize() + 1))
         assertEquals(2, compressCount)
 
-        digest.update(ByteArray(digest.blockSize - 1))
+        digest.update(ByteArray(digest.blockSize() - 1))
         assertEquals(2, compressCount)
 
         digest.update(4)
         assertEquals(3, compressCount)
 
-        digest.update(ByteArray(digest.blockSize))
+        digest.update(ByteArray(digest.blockSize()))
         assertEquals(4, compressCount)
 
         // Check the internal bufferOffset was 0 after all that
         assertEquals(0, digest.digest().size)
+    }
+
+    @Test
+    fun givenDigest_whenCopied_thenIsNewInstance() {
+        val digest = TestDigest(
+            digest = { _, _, b ->
+                assertEquals(1, b[0])
+                assertEquals(0, b[1])
+                b
+            }
+        ).apply {
+            update(1)
+        }
+
+        val copy = digest.copy()
+
+        assertEquals(digest.blockSize(), copy.blockSize())
+        assertEquals(digest.digestLength(), copy.digestLength())
+        assertEquals(digest.algorithm(), copy.algorithm())
+        assertNotEquals(copy, digest)
+
+        val digestDigest = digest.digest()
+        val copyDigest = copy.digest()
+
+        assertNotEquals(copyDigest, digestDigest)
+        assertEquals(digestDigest.size, copyDigest.size)
     }
 }

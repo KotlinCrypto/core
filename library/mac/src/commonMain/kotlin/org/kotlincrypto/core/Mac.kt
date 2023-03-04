@@ -21,6 +21,7 @@ protected constructor(
     algorithm: String,
     engine: Engine,
 ) : Algorithm,
+    Copyable<Mac>,
     Resettable,
     Updatable
 {
@@ -36,22 +37,26 @@ protected constructor(
     public final override fun reset()
 
     public fun doFinal(): ByteArray
+    public fun doFinal(input: ByteArray): ByteArray
 
-    final override fun equals(other: Any?): Boolean
-    final override fun hashCode(): Int
-    final override fun toString(): String
+    public final override fun copy(): Mac
 
-    protected abstract class Engine
-    @Throws(IllegalArgumentException::class)
-    constructor (
-        key: ByteArray
-    ) : Resettable,
-        Updatable
-    {
+    public final override fun equals(other: Any?): Boolean
+    public final override fun hashCode(): Int
+    public final override fun toString(): String
+
+    protected abstract class Engine: Copyable<Engine>, Resettable, Updatable {
+
+        @Throws(IllegalArgumentException::class)
+        public constructor(key: ByteArray)
+        protected constructor(state: State)
+
         public abstract fun macLength(): Int
         public abstract fun doFinal(): ByteArray
 
         final override fun equals(other: Any?): Boolean
         final override fun hashCode(): Int
+
+        protected abstract inner class State()
     }
 }

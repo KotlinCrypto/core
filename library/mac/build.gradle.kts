@@ -45,6 +45,8 @@ kmpConfiguration {
         mingwAll()
 
         common {
+            pluginIds(libs.plugins.publish.get().pluginId)
+
             sourceSetMain {
                 dependencies {
                     api(project(":library:common"))
@@ -59,6 +61,10 @@ kmpConfiguration {
 
         kotlin {
             explicitApi()
+
+            extensions.configure<SigningExtension>("signing") {
+                useGpgCmd()
+            }
         }
     }
 }

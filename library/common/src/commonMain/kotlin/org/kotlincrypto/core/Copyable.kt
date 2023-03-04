@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("KotlinRedundantDiagnosticSuppress")
+package org.kotlincrypto.core
 
-package org.kotlincrypto.core.internal
-
-import org.kotlincrypto.core.Digest
-
-@Suppress("NOTHING_TO_INLINE")
-internal inline fun Digest.commonToString(): String {
-    return "Digest[${algorithm()}]@${hashCode()}"
+public interface Copyable<out T: Any> {
+    public fun copy(): T
 }

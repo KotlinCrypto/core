@@ -15,22 +15,26 @@
  **/
 package org.kotlincrypto.core
 
-import kotlin.jvm.JvmField
+import org.kotlincrypto.core.internal.DigestState
 
-public expect abstract class Digest
-@Throws(IllegalArgumentException::class)
-protected constructor(
+public expect abstract class Digest private constructor(
     algorithm: String,
     blockSize: Int,
     digestLength: Int,
+    state: DigestState?,
 ) : Algorithm,
+    Copyable<Digest>,
     Resettable,
     Updatable
 {
-    @JvmField
-    public val blockSize: Int
-    @JvmField
-    public val digestLength: Int
+
+    @Throws(IllegalArgumentException::class)
+    protected constructor(algorithm: String, blockSize: Int, digestLength: Int)
+    protected constructor(state: DigestState)
+
+    public final override fun algorithm(): String
+    public fun blockSize(): Int
+    public fun digestLength(): Int
 
     public final override fun update(input: Byte)
     public final override fun update(input: ByteArray)
@@ -42,11 +46,12 @@ protected constructor(
 
     public final override fun reset()
 
-    public final override fun algorithm(): String
-
     public final override fun equals(other: Any?): Boolean
     public final override fun hashCode(): Int
     public final override fun toString(): String
+
+    public final override fun copy(): Digest
+    protected abstract fun copy(state: DigestState): Digest
 
     protected abstract fun compress(buffer: ByteArray)
     protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray

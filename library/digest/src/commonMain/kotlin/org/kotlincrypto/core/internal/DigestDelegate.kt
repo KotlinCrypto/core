@@ -15,20 +15,22 @@
  **/
 package org.kotlincrypto.core.internal
 
+import org.kotlincrypto.core.Copyable
 import org.kotlincrypto.core.Resettable
 import org.kotlincrypto.core.Updatable
 import kotlin.jvm.JvmSynthetic
 
 internal class DigestDelegate private constructor(
-    private val blockSize: Int,
+    internal val algorithm: String,
+    internal val blockSize: Int,
+    internal val digestLength: Int,
+    private val buffer: ByteArray,
+    private var bufferOffs: Int,
+    private var compressCount: Long,
     private val compress: (buffer: ByteArray) -> Unit,
     private val digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
     private val resetDigest: () -> Unit
-): Resettable, Updatable {
-
-    private val buffer = ByteArray(blockSize)
-    private var bufferOffs = 0
-    private var compressCount = 0L
+): Copyable<DigestState>, Resettable, Updatable {
 
     override fun update(input: Byte) {
         buffer[bufferOffs] = input
@@ -87,25 +89,62 @@ internal class DigestDelegate private constructor(
         resetDigest()
     }
 
+    private inner class RealState: DigestState(algorithm, blockSize, digestLength) {
+        val buffer = this@DigestDelegate.buffer.copyOf()
+        val bufferOffs = this@DigestDelegate.bufferOffs
+        val compressCount = this@DigestDelegate.compressCount
+    }
+
+    override fun copy(): DigestState = RealState()
+
     internal companion object {
+
+        @JvmSynthetic
+        internal fun instance(
+            state: DigestState,
+            compress: (buffer: ByteArray) -> Unit,
+            digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
+            resetDigest: () -> Unit
+        ): DigestDelegate {
+            return DigestDelegate(
+                algorithm = (state as RealState).algorithm,
+                blockSize = state.blockSize,
+                digestLength = state.digestLength,
+                buffer = state.buffer.copyOf(),
+                bufferOffs = state.bufferOffs,
+                compressCount = state.compressCount,
+                compress = compress,
+                digest = digest,
+                resetDigest = resetDigest,
+            )
+        }
 
         @JvmSynthetic
         @Throws(IllegalArgumentException::class)
         internal fun instance(
+            algorithm: String,
             blockSize: Int,
+            digestLength: Int,
             compress: (buffer: ByteArray) -> Unit,
             digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
             resetDigest: () -> Unit
         ): DigestDelegate {
 
+            require(algorithm.isNotBlank()) { "algorithm cannot be blank" }
             require(blockSize > 0) { "blockSize must be greater than 0" }
             require(blockSize % 8 == 0) { "blockSize must be a factor of 8" }
+            require(digestLength > 0) { "digestLength must be greater than 0" }
 
             return DigestDelegate(
-                blockSize,
-                compress,
-                digest,
-                resetDigest,
+                algorithm = algorithm,
+                blockSize = blockSize,
+                digestLength = digestLength,
+                buffer = ByteArray(blockSize),
+                bufferOffs = 0,
+                compressCount = 0L,
+                compress = compress,
+                digest = digest,
+                resetDigest = resetDigest,
             )
         }
     }
