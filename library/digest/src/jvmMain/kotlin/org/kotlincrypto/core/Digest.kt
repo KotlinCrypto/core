@@ -16,7 +16,6 @@
 package org.kotlincrypto.core
 
 import org.kotlincrypto.core.internal.DigestDelegate
-import org.kotlincrypto.core.internal.commonInit
 import org.kotlincrypto.core.internal.commonToString
 import java.nio.ByteBuffer
 import java.security.DigestException
@@ -32,16 +31,12 @@ protected actual constructor(
     public actual val digestLength: Int,
 ) : MessageDigest(algorithm),
     Algorithm,
+    Cloneable<Digest>,
     Resettable,
     Updatable
 {
 
-    private val delegate: DigestDelegate
-
-    init {
-        commonInit(algorithm, digestLength)
-        delegate = DigestDelegate.instance(blockSize, ::compress, ::digest, ::resetDigest)
-    }
+    private val delegate = DigestDelegate.instance(algorithm, blockSize, digestLength, ::compress, ::digest, ::resetDigest)
 
     public actual final override fun algorithm(): String = algorithm
 
@@ -73,6 +68,10 @@ protected actual constructor(
     public actual final override fun equals(other: Any?): Boolean = other is Digest && other.delegate == delegate
     public actual final override fun hashCode(): Int = delegate.hashCode()
     public actual final override fun toString(): String = commonToString()
+
+    public actual final override fun clone(): Digest {
+        TODO("Not yet implemented")
+    }
 
     protected actual abstract fun compress(buffer: ByteArray)
     protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray

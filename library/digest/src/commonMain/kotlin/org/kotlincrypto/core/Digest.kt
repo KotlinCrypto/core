@@ -24,6 +24,7 @@ protected constructor(
     blockSize: Int,
     digestLength: Int,
 ) : Algorithm,
+    Cloneable<Digest>,
     Resettable,
     Updatable
 {
@@ -47,6 +48,8 @@ protected constructor(
     public final override fun equals(other: Any?): Boolean
     public final override fun hashCode(): Int
     public final override fun toString(): String
+
+    public final override fun clone(): Digest
 
     protected abstract fun compress(buffer: ByteArray)
     protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
