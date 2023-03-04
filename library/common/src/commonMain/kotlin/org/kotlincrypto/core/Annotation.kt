@@ -18,14 +18,15 @@
 package org.kotlincrypto.core
 
 /**
- * Denotes an api as internal, and subject to change at any time.
+ * Denotes an api as experimental, such that it may change
+ * inadvertently without notice.
  *
  * Any usage of a declaration annotated with [ExperimentalKotlinCryptoApi]
  * must be accepted by annotating that usage with the [OptIn]
  * annotation, e.g @OptIn(ExperimentalKotlinCryptoApi::class), or by using
  * the following compiler argument:
  *
- *   -Xopt-in=org.kotlincrypto.core.annotation.ExperimentalKotlinCryptoApi
+ *   -Xopt-in=org.kotlincrypto.core.ExperimentalKotlinCryptoApi
  * */
 @RequiresOptIn
 @MustBeDocumented
@@ -53,7 +54,7 @@ public annotation class ExperimentalKotlinCryptoApi
  * annotation, e.g @OptIn(InternalKotlinCryptoApi::class), or by using
  * the following compiler argument:
  *
- *   -Xopt-in=org.kotlincrypto.core.annotation.InternalKotlinCryptoApi
+ *   -Xopt-in=org.kotlincrypto.core.InternalKotlinCryptoApi
  * */
 @RequiresOptIn
 @MustBeDocumented
