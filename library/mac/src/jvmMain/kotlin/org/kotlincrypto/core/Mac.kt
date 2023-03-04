@@ -44,7 +44,8 @@ protected actual constructor(
     public actual final override fun algorithm(): String = algorithm
     public actual fun macLength(): Int = macLength
 
-    public actual final override fun copy(): Mac = object : Mac(algorithm, engine.copy()) {}
+    public actual final override fun copy(): Mac = copy(engine.copy())
+    protected actual abstract fun copy(engineCopy: Engine): Mac
 
     public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
     public actual final override fun hashCode(): Int = engine.hashCode()

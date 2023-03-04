@@ -3,6 +3,7 @@ public abstract class org/kotlincrypto/core/Mac : javax/crypto/Mac, org/kotlincr
 	public final fun algorithm ()Ljava/lang/String;
 	public synthetic fun copy ()Ljava/lang/Object;
 	public final fun copy ()Lorg/kotlincrypto/core/Mac;
+	protected abstract fun copy (Lorg/kotlincrypto/core/Mac$Engine;)Lorg/kotlincrypto/core/Mac;
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
 	public final fun macLength ()I

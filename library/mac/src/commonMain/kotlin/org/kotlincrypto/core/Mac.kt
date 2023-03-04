@@ -40,6 +40,7 @@ protected constructor(
     public fun doFinal(input: ByteArray): ByteArray
 
     public final override fun copy(): Mac
+    protected abstract fun copy(engineCopy: Engine): Mac
 
     public final override fun equals(other: Any?): Boolean
     public final override fun hashCode(): Int

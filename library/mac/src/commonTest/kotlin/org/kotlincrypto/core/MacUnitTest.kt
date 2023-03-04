@@ -21,7 +21,13 @@ import kotlin.test.fail
 
 class MacUnitTest {
 
-    private class TestMac(key: ByteArray, algorithm: String) : Mac(algorithm, TestEngine(key)) {
+    private class TestMac : Mac {
+
+        constructor(key: ByteArray, algorithm: String): super(algorithm, TestEngine(key))
+        private constructor(algorithm: String, engine: TestEngine): super(algorithm, engine)
+
+        override fun copy(engineCopy: Engine): Mac = TestMac(algorithm(), engineCopy as TestEngine)
+
         private class TestEngine: Engine {
 
             constructor(key: ByteArray): super(key)
