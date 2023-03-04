@@ -15,6 +15,11 @@
  **/
 package org.kotlincrypto.core.internal
 
+/**
+ * Used as a holder for copying/cloning of digests.
+ *
+ * @see [DigestDelegate.RealState]
+ * */
 public sealed class DigestState(
     internal val algorithm: String,
     internal val blockSize: Int,
