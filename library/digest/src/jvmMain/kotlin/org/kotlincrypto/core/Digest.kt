@@ -62,6 +62,7 @@ public actual abstract class Digest private actual constructor(
      *  - [blockSize] is not a factor of 8
      *  - [digestLength] is less than or equal to 0
      * */
+    @InternalKotlinCryptoApi
     @Throws(IllegalArgumentException::class)
     protected actual constructor(
         algorithm: String,
@@ -106,6 +107,7 @@ public actual abstract class Digest private actual constructor(
      *
      * @see [DigestState]
      * */
+    @InternalKotlinCryptoApi
     protected actual constructor(
         state: DigestState
     ): this(

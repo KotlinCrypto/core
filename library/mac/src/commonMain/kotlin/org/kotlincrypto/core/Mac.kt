@@ -33,6 +33,7 @@ package org.kotlincrypto.core
  * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
 public expect abstract class Mac
+@InternalKotlinCryptoApi
 @Throws(IllegalArgumentException::class)
 protected constructor(
     algorithm: String,
@@ -127,12 +128,14 @@ protected constructor(
          *
          * @throws [IllegalArgumentException] if [key] is empty.
          * */
+        @InternalKotlinCryptoApi
         @Throws(IllegalArgumentException::class)
         public constructor(key: ByteArray)
 
         /**
          * Creates a new [Engine] for the copied [State]
          * */
+        @InternalKotlinCryptoApi
         protected constructor(state: State)
 
         public abstract fun macLength(): Int

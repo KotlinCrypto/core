@@ -36,6 +36,7 @@ import org.kotlincrypto.core.internal.commonToString
  * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
 public actual abstract class Mac
+@InternalKotlinCryptoApi
 @Throws(IllegalArgumentException::class)
 protected actual constructor(
     private val algorithm: String,
@@ -135,12 +136,14 @@ protected actual constructor(
          *
          * @throws [IllegalArgumentException] if [key] is empty.
          * */
+        @InternalKotlinCryptoApi
         @Throws(IllegalArgumentException::class)
         public actual constructor(key: ByteArray) { require(key.isNotEmpty()) { "key cannot be empty" } }
 
         /**
          * Creates a new [Engine] for the copied [State]
          * */
+        @InternalKotlinCryptoApi
         protected actual constructor(state: State)
 
         public actual abstract fun macLength(): Int

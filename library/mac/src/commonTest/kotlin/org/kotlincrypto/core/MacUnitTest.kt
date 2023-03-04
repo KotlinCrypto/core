@@ -21,6 +21,8 @@ import kotlin.test.fail
 
 class MacUnitTest {
 
+    @Suppress("UnnecessaryOptInAnnotation")
+    @OptIn(InternalKotlinCryptoApi::class)
     private class TestMac : Mac {
 
         constructor(key: ByteArray, algorithm: String): super(algorithm, TestEngine(key))

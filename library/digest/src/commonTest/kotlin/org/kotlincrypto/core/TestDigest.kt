@@ -17,6 +17,8 @@ package org.kotlincrypto.core
 
 import org.kotlincrypto.core.internal.DigestState
 
+@Suppress("UnnecessaryOptInAnnotation")
+@OptIn(InternalKotlinCryptoApi::class)
 class TestDigest: Digest {
 
     private val compress: (buffer: ByteArray) -> Unit
