@@ -15,6 +15,9 @@
  **/
 package org.kotlincrypto.core
 
+/**
+ * Denotes a class as a user of a specified cryptographic [algorithm]
+ * */
 public interface Algorithm {
     public fun algorithm(): String
 }
