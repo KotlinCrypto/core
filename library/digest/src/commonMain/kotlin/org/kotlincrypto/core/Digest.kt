@@ -48,6 +48,7 @@ public expect abstract class Digest private constructor(
      *  - [blockSize] is not a factor of 8
      *  - [digestLength] is less than or equal to 0
      * */
+    @InternalKotlinCryptoApi
     @Throws(IllegalArgumentException::class)
     protected constructor(algorithm: String, blockSize: Int, digestLength: Int)
 
@@ -83,6 +84,7 @@ public expect abstract class Digest private constructor(
      *
      * @see [DigestState]
      * */
+    @InternalKotlinCryptoApi
     protected constructor(state: DigestState)
 
     public final override fun algorithm(): String
