@@ -15,6 +15,23 @@
  **/
 package org.kotlincrypto.core
 
+/**
+ * Core abstraction for Message Authentication Code implementations.
+ *
+ * A MAC provides a way to check the integrity of information transmitted
+ * over or stored in an unreliable medium, based on a secret (key). Typically,
+ * message authentication codes are used between two parties that share a
+ * secret (key) in order to validate information transmitted between these
+ * parties.
+ *
+ * Implementations of [Mac] should follow the Java naming guidelines for
+ * [algorithm] which can be found at:
+ *
+ * https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#mac-algorithms
+ *
+ * @see [Engine]
+ * @throws [IllegalArgumentException] if [algorithm] is blank
+ * */
 public expect abstract class Mac
 @Throws(IllegalArgumentException::class)
 protected constructor(
@@ -46,10 +63,76 @@ protected constructor(
     public final override fun hashCode(): Int
     public final override fun toString(): String
 
+    /**
+     * Core abstraction for powering a [Mac] implementation.
+     *
+     * Implementors of [Engine] **must** initialize the instance with the
+     * provided key parameter.
+     *
+     * e.g.
+     *
+     *     public abstract class HMac: Mac {
+     *
+     *         @Throws(IllegalArgumentException::class)
+     *         protected constructor(
+     *             key: ByteArray,
+     *             algorithm: String,
+     *             digest: Digest,
+     *         ): super(algorithm, Engine(key, digest))
+     *
+     *         protected constructor(
+     *             algorithm: String,
+     *             engine: HMac.Engine
+     *         ): super(algorithm, engine)
+     *
+     *         protected class Engine: Mac.Engine {
+     *
+     *             private val state: State
+     *
+     *             @Throws(IllegalArgumentException::class)
+     *             internal constructor(key: ByteArray, digest: Digest): super(key) {
+     *                 digest.reset()
+     *
+     *                 val preparedKey = // ...
+     *
+     *                 state = State(
+     *                     iKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x36 },
+     *                     oKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x5C },
+     *                     digest = digest,
+     *                 )
+     *
+     *                 digest.update(state.iKey)
+     *             }
+     *
+     *             private constructor(state: State): super(state) {
+     *                 this.state = State(state.iKey, state.oKey, digest.copy())
+     *             }
+     *
+     *             override fun copy(): Engine = Engine(state)
+     *
+     *             private inner class State(
+     *                 val iKey: ByteArray,
+     *                 val oKey: ByteArray,
+     *                 val digest: Digest,
+     *             ): Mac.Engine.State()
+     *
+     *             // ...
+     *         }
+     *     }
+     * */
     protected abstract class Engine: Copyable<Engine>, Resettable, Updatable {
 
+        /**
+         * Initializes a new [Engine] with the provided [key].
+         *
+         * @throws [IllegalArgumentException] if [key] is empty.
+         * */
         @Throws(IllegalArgumentException::class)
         public constructor(key: ByteArray)
+
+        /**
+         * Creates a new [Engine] for the copied [State]
+         * */
         protected constructor(state: State)
 
         public abstract fun macLength(): Int
