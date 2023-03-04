@@ -17,6 +17,17 @@ package org.kotlincrypto.core
 
 import org.kotlincrypto.core.internal.DigestState
 
+/**
+ * Core abstraction for Message Digest implementations.
+ *
+ * A Digest provides secure one-way hash functions that take in
+ * arbitrary sized data and output a fixed-length hash value.
+ *
+ * Implementations of [Digest] should follow the Java naming
+ * guidelines for [algorithm] which can be found at:
+ *
+ * https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms
+ * */
 public expect abstract class Digest private constructor(
     algorithm: String,
     blockSize: Int,
@@ -28,8 +39,50 @@ public expect abstract class Digest private constructor(
     Updatable
 {
 
+    /**
+     * Creates a new [Digest] for the specified parameters.
+     *
+     * @throws [IllegalArgumentException] when:
+     *  - [algorithm] is blank
+     *  - [blockSize] is less than or equal to 0
+     *  - [blockSize] is not a factor of 8
+     *  - [digestLength] is less than or equal to 0
+     * */
     @Throws(IllegalArgumentException::class)
     protected constructor(algorithm: String, blockSize: Int, digestLength: Int)
+
+    /**
+     * Creates a new [Digest] for the copied [state] of another [Digest]
+     * instance.
+     *
+     * Implementors of [Digest] should have a private secondary constructor
+     * that is utilized by its [copy] implementation.
+     *
+     * e.g.
+     *
+     *     class Md5: Digest {
+     *
+     *         private val x: IntArray = IntArray(16)
+     *         private val state: IntArray = intArrayOf(
+     *             1732584193,
+     *             -271733879,
+     *             -1732584194,
+     *             271733878,
+     *         )
+     *
+     *         constructor(): super("MD5", 64, 16)
+     *         private constructor(state: DigestState, md5: Md5): super(state) {
+     *             md5.x.copyInto(x)
+     *             md5.state.copyInto(this.state)
+     *         }
+     *
+     *         override fun copy(state: DigestState): Md5 = Md5(state, this)
+     *
+     *         // ...
+     *     }
+     *
+     * @see [DigestState]
+     * */
     protected constructor(state: DigestState)
 
     public final override fun algorithm(): String

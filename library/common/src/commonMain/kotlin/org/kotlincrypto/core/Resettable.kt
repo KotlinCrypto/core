@@ -15,6 +15,9 @@
  **/
 package org.kotlincrypto.core
 
+/**
+ * Denotes a class as being able to be [reset]
+ * */
 public interface Resettable {
     public fun reset()
 }

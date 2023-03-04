@@ -15,6 +15,9 @@
  **/
 package org.kotlincrypto.core
 
+/**
+ * Denotes a class as being able to be [update]ed.
+ * */
 public interface Updatable {
     public fun update(input: Byte)
     public fun update(input: ByteArray)

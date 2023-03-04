@@ -15,6 +15,13 @@
  **/
 package org.kotlincrypto.core
 
+/**
+ * Denotes a class as being able to be copied such that
+ * a new instance can be created.
+ *
+ * Classes with state should initialize new instances
+ * with a copy of the current instance's state.
+ * */
 public interface Copyable<out T: Any> {
     public fun copy(): T
 }
