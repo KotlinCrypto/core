@@ -81,7 +81,7 @@ class DigestUnitTest: TestDigestException() {
     }
 
     @Test
-    fun givenDigest_whenCloned_thenIsNewInstance() {
+    fun givenDigest_whenCopied_thenIsNewInstance() {
         val digest = TestDigest(
             digest = { _, _, b ->
                 assertEquals(1, b[0])
@@ -92,17 +92,17 @@ class DigestUnitTest: TestDigestException() {
             update(1)
         }
 
-        val clone = digest.clone()
+        val copy = digest.copy()
 
-        assertEquals(digest.blockSize(), clone.blockSize())
-        assertEquals(digest.digestLength(), clone.digestLength())
-        assertEquals(digest.algorithm(), clone.algorithm())
-        assertNotEquals(clone, digest)
+        assertEquals(digest.blockSize(), copy.blockSize())
+        assertEquals(digest.digestLength(), copy.digestLength())
+        assertEquals(digest.algorithm(), copy.algorithm())
+        assertNotEquals(copy, digest)
 
         val digestDigest = digest.digest()
-        val cloneDigest = clone.digest()
+        val copyDigest = copy.digest()
 
-        assertNotEquals(cloneDigest, digestDigest)
-        assertEquals(digestDigest.size, cloneDigest.size)
+        assertNotEquals(copyDigest, digestDigest)
+        assertEquals(digestDigest.size, copyDigest.size)
     }
 }

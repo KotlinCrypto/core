@@ -29,7 +29,8 @@ public actual abstract class Digest private actual constructor(
     state: DigestState?,
 ) : MessageDigest(algorithm),
     Algorithm,
-    Cloneable<Digest>,
+    Cloneable,
+    Copyable<Digest>,
     Resettable,
     Updatable
 {
@@ -94,8 +95,9 @@ public actual abstract class Digest private actual constructor(
     public actual final override fun hashCode(): Int = delegate.hashCode()
     public actual final override fun toString(): String = commonToString()
 
-    public actual final override fun clone(): Digest = clone(delegate.clone())
-    protected actual abstract fun clone(state: DigestState): Digest
+    public final override fun clone(): Any = copy()
+    public actual final override fun copy(): Digest = copy(delegate.copy())
+    protected actual abstract fun copy(state: DigestState): Digest
 
     protected actual abstract fun compress(buffer: ByteArray)
     protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray

@@ -23,7 +23,7 @@ public expect abstract class Digest private constructor(
     digestLength: Int,
     state: DigestState?,
 ) : Algorithm,
-    Cloneable<Digest>,
+    Copyable<Digest>,
     Resettable,
     Updatable
 {
@@ -50,8 +50,8 @@ public expect abstract class Digest private constructor(
     public final override fun hashCode(): Int
     public final override fun toString(): String
 
-    public final override fun clone(): Digest
-    protected abstract fun clone(state: DigestState): Digest
+    public final override fun copy(): Digest
+    protected abstract fun copy(state: DigestState): Digest
 
     protected abstract fun compress(buffer: ByteArray)
     protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray

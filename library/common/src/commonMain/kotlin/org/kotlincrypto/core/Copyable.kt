@@ -15,6 +15,6 @@
  **/
 package org.kotlincrypto.core
 
-public expect interface Cloneable<out T: Any> {
-    public fun clone(): T
+public interface Copyable<out T: Any> {
+    public fun copy(): T
 }

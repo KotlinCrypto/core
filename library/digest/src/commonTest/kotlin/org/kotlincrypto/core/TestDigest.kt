@@ -61,7 +61,7 @@ class TestDigest: Digest {
         reset.invoke()
     }
 
-    override fun clone(state: DigestState): Digest {
+    override fun copy(state: DigestState): Digest {
         return TestDigest(state, compress, finalize, reset)
     }
 }

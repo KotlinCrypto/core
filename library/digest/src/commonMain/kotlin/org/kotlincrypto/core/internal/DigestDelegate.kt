@@ -15,7 +15,7 @@
  **/
 package org.kotlincrypto.core.internal
 
-import org.kotlincrypto.core.Cloneable
+import org.kotlincrypto.core.Copyable
 import org.kotlincrypto.core.Resettable
 import org.kotlincrypto.core.Updatable
 import kotlin.jvm.JvmSynthetic
@@ -30,7 +30,7 @@ internal class DigestDelegate private constructor(
     private val compress: (buffer: ByteArray) -> Unit,
     private val digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
     private val resetDigest: () -> Unit
-): Cloneable<DigestState>, Resettable, Updatable {
+): Copyable<DigestState>, Resettable, Updatable {
 
     override fun update(input: Byte) {
         buffer[bufferOffs] = input
@@ -95,7 +95,7 @@ internal class DigestDelegate private constructor(
         val compressCount = this@DigestDelegate.compressCount
     }
 
-    override fun clone(): DigestState = RealState()
+    override fun copy(): DigestState = RealState()
 
     internal companion object {
 
