@@ -25,10 +25,8 @@ public actual abstract class Digest
 @Throws(IllegalArgumentException::class)
 protected actual constructor(
     algorithm: String,
-    @JvmField
-    public actual val blockSize: Int,
-    @JvmField
-    public actual val digestLength: Int,
+    blockSize: Int,
+    digestLength: Int,
 ) : MessageDigest(algorithm),
     Algorithm,
     Cloneable<Digest>,
@@ -38,7 +36,9 @@ protected actual constructor(
 
     private val delegate = DigestDelegate.instance(algorithm, blockSize, digestLength, ::compress, ::digest, ::resetDigest)
 
-    public actual final override fun algorithm(): String = algorithm
+    public actual final override fun algorithm(): String = delegate.algorithm
+    public actual fun blockSize(): Int = delegate.blockSize
+    public actual fun digestLength(): Int = delegate.digestLength
 
     public actual final override fun update(input: Byte) { delegate.update(input) }
     public actual final override fun update(input: ByteArray) { delegate.update(input) }

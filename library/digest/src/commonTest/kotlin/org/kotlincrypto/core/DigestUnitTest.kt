@@ -60,19 +60,19 @@ class DigestUnitTest: TestDigestException() {
             digest = { _, offset, _ -> ByteArray(offset) }
         )
 
-        digest.update(ByteArray(digest.blockSize - 1))
+        digest.update(ByteArray(digest.blockSize() - 1))
         assertEquals(0, compressCount)
 
-        digest.update(ByteArray(digest.blockSize + 1))
+        digest.update(ByteArray(digest.blockSize() + 1))
         assertEquals(2, compressCount)
 
-        digest.update(ByteArray(digest.blockSize - 1))
+        digest.update(ByteArray(digest.blockSize() - 1))
         assertEquals(2, compressCount)
 
         digest.update(4)
         assertEquals(3, compressCount)
 
-        digest.update(ByteArray(digest.blockSize))
+        digest.update(ByteArray(digest.blockSize()))
         assertEquals(4, compressCount)
 
         // Check the internal bufferOffset was 0 after all that

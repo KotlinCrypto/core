@@ -15,8 +15,6 @@
  **/
 package org.kotlincrypto.core
 
-import kotlin.jvm.JvmField
-
 public expect abstract class Digest
 @Throws(IllegalArgumentException::class)
 protected constructor(
@@ -28,10 +26,9 @@ protected constructor(
     Resettable,
     Updatable
 {
-    @JvmField
-    public val blockSize: Int
-    @JvmField
-    public val digestLength: Int
+    public final override fun algorithm(): String
+    public fun blockSize(): Int
+    public fun digestLength(): Int
 
     public final override fun update(input: Byte)
     public final override fun update(input: ByteArray)
@@ -42,8 +39,6 @@ protected constructor(
     public fun digest(input: ByteArray): ByteArray
 
     public final override fun reset()
-
-    public final override fun algorithm(): String
 
     public final override fun equals(other: Any?): Boolean
     public final override fun hashCode(): Int

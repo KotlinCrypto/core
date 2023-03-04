@@ -21,9 +21,9 @@ import org.kotlincrypto.core.internal.commonToString
 public actual abstract class Digest
 @Throws(IllegalArgumentException::class)
 protected actual constructor(
-    private val algorithm: String,
-    public actual val blockSize: Int,
-    public actual val digestLength: Int,
+    algorithm: String,
+    blockSize: Int,
+    digestLength: Int,
 ) : Algorithm,
     Cloneable<Digest>,
     Resettable,
@@ -32,7 +32,9 @@ protected actual constructor(
 
     private val delegate = DigestDelegate.instance(algorithm, blockSize, digestLength, ::compress, ::digest, ::resetDigest)
 
-    public actual final override fun algorithm(): String = algorithm
+    public actual final override fun algorithm(): String = delegate.algorithm
+    public actual fun blockSize(): Int = delegate.blockSize
+    public actual fun digestLength(): Int = delegate.digestLength
 
     public actual final override fun update(input: Byte) { delegate.update(input) }
     public actual final override fun update(input: ByteArray) { delegate.update(input) }
