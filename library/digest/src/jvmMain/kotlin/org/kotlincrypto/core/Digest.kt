@@ -136,7 +136,7 @@ public actual abstract class Digest private actual constructor(
 
     public actual final override fun reset() { delegate.reset() }
 
-    protected final override fun engineGetDigestLength(): Int = digestLength
+    protected final override fun engineGetDigestLength(): Int = delegate.digestLength
 
     protected final override fun engineUpdate(p0: Byte) { delegate.update(p0) }
     protected final override fun engineUpdate(input: ByteBuffer) { super.engineUpdate(input) }
