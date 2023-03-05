@@ -23,6 +23,8 @@
 
 Low level core cryptographic components for Kotlin Multiplatform
 
+If you are looking for Hashing algorithms (e.g. `SHA-256`, `SHA-512`, etc), see the [hash repo][url-hash].
+
 ### Get Started
 
 <!-- TAG_VERSION -->
@@ -83,3 +85,4 @@ dependencies {
 [url-latest-release]: https://github.com/KotlinCrypto/core/releases/latest
 [url-license]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [url-kotlin]: https://kotlinlang.org
+[url-hash]: https://github.com/KotlinCrypto/hash

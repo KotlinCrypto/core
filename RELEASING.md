@@ -31,7 +31,7 @@ git checkout -b release_"$VERSION_NAME"
 ```bash
 git add --all
 git commit -S -m "Prepare $VERSION_NAME release"
-git tag -s $VersionName -m "Release v$VERSION_NAME"
+git tag -s "$VERSION_NAME" -m "Release v$VERSION_NAME"
 ```
 
 - Make sure you have valid credentials in `~/.gradle/gradle.properties`
@@ -81,13 +81,18 @@ git push -u origin release_"$VERSION_NAME"
     - Should ask for PIN to log in
 
 - Sign a random `.txt` file (gpg tty for YubiKey PIN + gradle build don't mix)
-```bash
+```shell
 gpg --sign --armor --detach ~/Documents/hello.txt
 ```
 
 - Ensure java version is greater than or equal to 11
-```bash
+```shell
 java --version
+```
+
+- Ensure you are in a `bash` shell
+```shell
+bash
 ```
 
 - Set version variable in terminal shell
