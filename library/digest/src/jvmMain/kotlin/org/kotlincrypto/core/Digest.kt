@@ -86,21 +86,24 @@ public actual abstract class Digest private actual constructor(
      *
      *     class Md5: Digest {
      *
-     *         private val x: IntArray = IntArray(16)
-     *         private val state: IntArray = intArrayOf(
-     *             1732584193,
-     *             -271733879,
-     *             -1732584194,
-     *             271733878,
-     *         )
+     *         private val x: IntArray
+     *         private val state: IntArray
      *
-     *         constructor(): super("MD5", 64, 16)
+     *         constructor(): super("MD5", 64, 16) {
+     *             x =  = IntArray(16)
+     *             state = intArrayOf(
+     *                 1732584193,
+     *                 -271733879,
+     *                 -1732584194,
+     *                 271733878,
+     *             )
+     *         }
      *         private constructor(state: DigestState, md5: Md5): super(state) {
-     *             md5.x.copyInto(x)
-     *             md5.state.copyInto(this.state)
+     *             x = md5.x.copyOf()
+     *             this.state = md5.state.copyOf()
      *         }
      *
-     *         override fun copy(state: DigestState): Md5 = Md5(state, this)
+     *         protected override fun copy(state: DigestState): Md5 = Md5(state, this)
      *
      *         // ...
      *     }
@@ -133,7 +136,7 @@ public actual abstract class Digest private actual constructor(
 
     public actual final override fun reset() { delegate.reset() }
 
-    protected final override fun engineGetDigestLength(): Int = digestLength
+    protected final override fun engineGetDigestLength(): Int = delegate.digestLength
 
     protected final override fun engineUpdate(p0: Byte) { delegate.update(p0) }
     protected final override fun engineUpdate(input: ByteBuffer) { super.engineUpdate(input) }
