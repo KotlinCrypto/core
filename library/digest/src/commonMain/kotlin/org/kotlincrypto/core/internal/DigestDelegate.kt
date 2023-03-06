@@ -52,7 +52,7 @@ internal class DigestDelegate private constructor(
         if (offset < 0 || len < 0 || offset > input.size - len) throw IndexOutOfBoundsException()
 
         var i = offset
-        var remaining = len - offset
+        var remaining = len
 
         // fill buffer if not already empty
         while (bufferOffs != 0 && remaining > 0) {
