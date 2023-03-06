@@ -32,7 +32,7 @@ If you are looking for Hashing algorithms (e.g. `SHA-256`, `SHA-512`, etc), see 
 ```kotlin
 // build.gradle.kts
 dependencies {
-    val core = "0.1.0"
+    val core = "0.1.1"
     implementation("org.kotlincrypto.core:digest:$core")
     implementation("org.kotlincrypto.core:mac:$core")
 }
@@ -43,7 +43,7 @@ dependencies {
 ```groovy
 // build.gradle
 dependencies {
-    def core = "0.1.0"
+    def core = "0.1.1"
     implementation "org.kotlincrypto.core:digest:$core"
     implementation "org.kotlincrypto.core:mac:$core"
 }
@@ -55,10 +55,10 @@ dependencies {
 
 | core  | kotlin |
 |:-----:|:------:|
-| 0.1.0 | 1.8.10 |
+| 0.1.1 | 1.8.10 |
 
 <!-- TAG_VERSION -->
-[badge-latest-release]: https://img.shields.io/badge/latest--release-0.1.0-blue.svg?style=flat
+[badge-latest-release]: https://img.shields.io/badge/latest--release-0.1.1-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->
