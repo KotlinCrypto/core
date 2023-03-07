@@ -49,14 +49,6 @@ dependencies {
 }
 ```
 
-### Kotlin Version Compatibility
-
-<!-- TAG_VERSION -->
-
-| core  | kotlin |
-|:-----:|:------:|
-| 0.1.1 | 1.8.10 |
-
 <!-- TAG_VERSION -->
 [badge-latest-release]: https://img.shields.io/badge/latest--release-0.1.1-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
