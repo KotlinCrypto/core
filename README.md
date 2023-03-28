@@ -38,7 +38,7 @@ If you are looking for Mac algorithms (e.g. `HmacSHA256`, `HmacSHA512`, etc), se
 ```kotlin
 // build.gradle.kts
 dependencies {
-    val core = "0.1.1"
+    val core = "0.2.0"
     implementation("org.kotlincrypto.core:digest:$core")
     implementation("org.kotlincrypto.core:mac:$core")
 }
@@ -49,14 +49,14 @@ dependencies {
 ```groovy
 // build.gradle
 dependencies {
-    def core = "0.1.1"
+    def core = "0.2.0"
     implementation "org.kotlincrypto.core:digest:$core"
     implementation "org.kotlincrypto.core:mac:$core"
 }
 ```
 
 <!-- TAG_VERSION -->
-[badge-latest-release]: https://img.shields.io/badge/latest--release-0.1.1-blue.svg?style=flat
+[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.0-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->
