@@ -21,7 +21,7 @@ import org.kotlincrypto.core.internal.DigestState
 @OptIn(InternalKotlinCryptoApi::class)
 class TestDigest: Digest {
 
-    private val compress: (buffer: ByteArray) -> Unit
+    private val compress: (input: ByteArray, offset: Int) -> Unit
     private val finalize: (Long, Int, ByteArray) -> ByteArray
     private val reset: () -> Unit
 
@@ -31,7 +31,7 @@ class TestDigest: Digest {
         algorithm: String = "TEST",
         blockSize: Int = 64,
         digestLength: Int = 32,
-        compress: (buffer: ByteArray) -> Unit = {},
+        compress: (input: ByteArray, offset: Int) -> Unit = { _, _ -> },
         digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray = { _, _, _ -> ByteArray(blockSize) },
         reset: () -> Unit = {},
     ): super(algorithm, blockSize, digestLength) {
@@ -42,7 +42,7 @@ class TestDigest: Digest {
 
     private constructor(
         state: DigestState,
-        compress: (buffer: ByteArray) -> Unit,
+        compress: (input: ByteArray, offset: Int) -> Unit,
         digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
         reset: () -> Unit,
     ): super(state) {
@@ -51,8 +51,8 @@ class TestDigest: Digest {
         this.reset = reset
     }
 
-    override fun compress(buffer: ByteArray) {
-        compress.invoke(buffer)
+    override fun compress(input: ByteArray, offset: Int) {
+        compress.invoke(input, offset)
     }
 
     override fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray {

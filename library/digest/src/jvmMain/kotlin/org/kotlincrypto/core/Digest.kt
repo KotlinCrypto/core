@@ -157,7 +157,11 @@ public actual abstract class Digest private actual constructor(
     public actual final override fun copy(): Digest = copy(delegate.copy())
     protected actual abstract fun copy(state: DigestState): Digest
 
-    protected actual abstract fun compress(buffer: ByteArray)
+    /**
+     * Called whenever a full [blockSize] worth of bytes is available
+     * to be processed, starting at index [offset] for the [input].
+     * */
+    protected actual abstract fun compress(input: ByteArray, offset: Int)
     protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
     protected actual abstract fun resetDigest()
 }

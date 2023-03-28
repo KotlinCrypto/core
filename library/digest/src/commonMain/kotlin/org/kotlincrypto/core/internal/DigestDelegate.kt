@@ -27,7 +27,7 @@ internal class DigestDelegate private constructor(
     private val buffer: ByteArray,
     private var bufferOffs: Int,
     private var compressCount: Long,
-    private val compress: (buffer: ByteArray) -> Unit,
+    private val compress: (input: ByteArray, offset: Int) -> Unit,
     private val digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
     private val resetDigest: () -> Unit
 ): Copyable<DigestState>, Resettable, Updatable {
@@ -36,7 +36,7 @@ internal class DigestDelegate private constructor(
         buffer[bufferOffs] = input
 
         if (++bufferOffs != blockSize) return
-        compress(buffer)
+        compress(buffer, 0)
         ++compressCount
         bufferOffs = 0
     }
@@ -62,8 +62,7 @@ internal class DigestDelegate private constructor(
 
         // chunk
         while (remaining >= blockSize) {
-            input.copyInto(buffer, 0, i, i + blockSize)
-            compress(buffer)
+            compress(input, i)
             i += blockSize
             remaining -= blockSize
             ++compressCount
@@ -102,7 +101,7 @@ internal class DigestDelegate private constructor(
         @JvmSynthetic
         internal fun instance(
             state: DigestState,
-            compress: (buffer: ByteArray) -> Unit,
+            compress: (input: ByteArray, offset: Int) -> Unit,
             digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
             resetDigest: () -> Unit
         ): DigestDelegate {
@@ -125,7 +124,7 @@ internal class DigestDelegate private constructor(
             algorithm: String,
             blockSize: Int,
             digestLength: Int,
-            compress: (buffer: ByteArray) -> Unit,
+            compress: (input: ByteArray, offset: Int) -> Unit,
             digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
             resetDigest: () -> Unit
         ): DigestDelegate {
