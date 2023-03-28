@@ -2,7 +2,7 @@ public abstract class org/kotlincrypto/core/Digest : java/security/MessageDigest
 	public final fun algorithm ()Ljava/lang/String;
 	public final fun blockSize ()I
 	public final fun clone ()Ljava/lang/Object;
-	protected abstract fun compress ([B)V
+	protected abstract fun compress ([BI)V
 	public synthetic fun copy ()Ljava/lang/Object;
 	public final fun copy ()Lorg/kotlincrypto/core/Digest;
 	protected abstract fun copy (Lorg/kotlincrypto/core/internal/DigestState;)Lorg/kotlincrypto/core/Digest;

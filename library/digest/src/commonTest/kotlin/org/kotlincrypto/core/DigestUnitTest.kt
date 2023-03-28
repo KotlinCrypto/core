@@ -56,7 +56,7 @@ class DigestUnitTest: TestDigestException() {
         var compressCount = 0
 
         val digest = TestDigest(
-            compress = { compressCount++ },
+            compress = { _, _ -> compressCount++ },
             // Return byte array sized to the offset
             digest = { _, offset, _ -> ByteArray(offset) }
         )

@@ -111,7 +111,11 @@ public expect abstract class Digest private constructor(
     public final override fun copy(): Digest
     protected abstract fun copy(state: DigestState): Digest
 
-    protected abstract fun compress(buffer: ByteArray)
+    /**
+     * Called whenever a full [blockSize] worth of bytes is available
+     * to be processed, starting at index [offset] for the [input].
+     * */
+    protected abstract fun compress(input: ByteArray, offset: Int)
     protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
     protected abstract fun resetDigest()
 }

@@ -23,7 +23,13 @@
 
 Low level core cryptographic components for Kotlin Multiplatform
 
+This library has very low level APIs that are used in higher level 
+implementations. You most likely never will need to add this as a
+dependency.
+
 If you are looking for Hashing algorithms (e.g. `SHA-256`, `SHA-512`, etc), see the [hash repo][url-hash].
+
+If you are looking for Mac algorithms (e.g. `HmacSHA256`, `HmacSHA512`, etc), see the [MACs repo][url-macs].
 
 ### Get Started
 
@@ -78,3 +84,4 @@ dependencies {
 [url-license]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [url-kotlin]: https://kotlinlang.org
 [url-hash]: https://github.com/KotlinCrypto/hash
+[url-macs]: https://github.com/KotlinCrypto/MACs
