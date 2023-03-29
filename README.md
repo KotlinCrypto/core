@@ -33,6 +33,10 @@ If you are looking for Mac algorithms (e.g. `HmacSHA256`, `HmacSHA512`, etc), se
 
 ### Get Started
 
+The best way to keep `KotlinCrypto` dependencies up to date is by using the 
+[version-catalog][url-version-catalog]. Alternatively, you can use the BOM as 
+shown below.
+
 <!-- TAG_VERSION -->
 
 ```kotlin
@@ -85,3 +89,4 @@ dependencies {
 [url-kotlin]: https://kotlinlang.org
 [url-hash]: https://github.com/KotlinCrypto/hash
 [url-macs]: https://github.com/KotlinCrypto/MACs
+[url-version-catalog]: https://github.com/KotlinCrypto/version-catalog
