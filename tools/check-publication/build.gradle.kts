@@ -42,6 +42,7 @@ kmpConfiguration {
                     implementation("$group:common:$version")
                     implementation("$group:digest:$version")
                     implementation("$group:mac:$version")
+                    implementation("$group:xof:$version")
                 }
             }
         }
