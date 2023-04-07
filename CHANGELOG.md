@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.2.2 (2023-04-07)
+ - Adds abstraction for `XOF`s (`Extendable-Output Functions`)
+
 ## Version 0.2.0 (2023-03-28)
  - **BREAKING CHANGE:**
      - `Digest.compress` function was changed to also include an offset.

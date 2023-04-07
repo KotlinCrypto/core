@@ -3,7 +3,7 @@
 [![badge-latest-release]][url-latest-release]
 
 [![badge-kotlin]][url-kotlin]
-<!-- TODO: [![badge-endians]][url-endians] -->
+[![badge-endians]][url-endians]
 
 ![badge-platform-android]
 ![badge-platform-jvm]
@@ -38,31 +38,31 @@ The best way to keep `KotlinCrypto` dependencies up to date is by using the
 [version-catalog][url-version-catalog]. Alternatively, see below.
 
 <!-- TAG_VERSION -->
-<!-- TODO: implementation("org.kotlincrypto.core:xof:$core") -->
 
 ```kotlin
 // build.gradle.kts
 dependencies {
-    val core = "0.2.0"
+    val core = "0.2.2"
     implementation("org.kotlincrypto.core:digest:$core")
     implementation("org.kotlincrypto.core:mac:$core")
+    implementation("org.kotlincrypto.core:xof:$core")
 }
 ```
 
 <!-- TAG_VERSION -->
-<!-- TODO: implementation "org.kotlincrypto.core:xof:$core" -->
 
 ```groovy
 // build.gradle
 dependencies {
-    def core = "0.2.0"
+    def core = "0.2.2"
     implementation "org.kotlincrypto.core:digest:$core"
     implementation "org.kotlincrypto.core:mac:$core"
+    implementation "org.kotlincrypto.core:xof:$core"
 }
 ```
 
 <!-- TAG_VERSION -->
-[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.0-blue.svg?style=flat
+[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.2-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->
