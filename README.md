@@ -3,6 +3,7 @@
 [![badge-latest-release]][url-latest-release]
 
 [![badge-kotlin]][url-kotlin]
+<!-- TODO: [![badge-endians]][url-endians] -->
 
 ![badge-platform-android]
 ![badge-platform-jvm]
@@ -37,6 +38,7 @@ The best way to keep `KotlinCrypto` dependencies up to date is by using the
 [version-catalog][url-version-catalog]. Alternatively, see below.
 
 <!-- TAG_VERSION -->
+<!-- TODO: implementation("org.kotlincrypto.core:xof:$core") -->
 
 ```kotlin
 // build.gradle.kts
@@ -48,6 +50,7 @@ dependencies {
 ```
 
 <!-- TAG_VERSION -->
+<!-- TODO: implementation "org.kotlincrypto.core:xof:$core" -->
 
 ```groovy
 // build.gradle
@@ -64,6 +67,7 @@ dependencies {
 
 <!-- TAG_DEPENDENCIES -->
 [badge-kotlin]: https://img.shields.io/badge/kotlin-1.8.10-blue.svg?logo=kotlin
+[badge-endians]: https://img.shields.io/badge/kotlincrypto.endians-0.1.0-blue.svg
 
 <!-- TAG_PLATFORMS -->
 [badge-platform-android]: http://img.shields.io/badge/-android-6EDB8D.svg?style=flat
@@ -86,6 +90,7 @@ dependencies {
 [url-latest-release]: https://github.com/KotlinCrypto/core/releases/latest
 [url-license]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [url-kotlin]: https://kotlinlang.org
+[url-endians]: https://github.com/KotlinCrypto/endians
 [url-hash]: https://github.com/KotlinCrypto/hash
 [url-macs]: https://github.com/KotlinCrypto/MACs
 [url-version-catalog]: https://github.com/KotlinCrypto/version-catalog

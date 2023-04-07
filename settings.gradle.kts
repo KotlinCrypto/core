@@ -19,6 +19,7 @@ if (CHECK_PUBLICATION != null) {
         "common",
         "digest",
         "mac",
+        "xof",
     ).forEach { name ->
         include(":library:$name")
     }
