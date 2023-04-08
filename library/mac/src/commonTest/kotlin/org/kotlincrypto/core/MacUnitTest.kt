@@ -125,5 +125,9 @@ class MacUnitTest {
         assertEquals(finalExpected, mac.doFinal())
         assertEquals(1, doFinalCount)
         assertEquals(1, resetCount)
+
+        assertEquals(finalExpected, mac.doFinal(ByteArray(20)))
+        assertEquals(2, doFinalCount)
+        assertEquals(2, resetCount)
     }
 }
