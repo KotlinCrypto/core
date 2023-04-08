@@ -50,7 +50,7 @@ import kotlin.jvm.JvmStatic
  * @see [reader]
  * @see [Reader]
  * */
-public sealed class Xof<A: Algorithm>: Algorithm, Copyable<Xof<A>>, Resettable, Updatable {
+public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettable, Updatable {
 
     /**
      * Takes a snapshot of the current [Xof]'s state and produces

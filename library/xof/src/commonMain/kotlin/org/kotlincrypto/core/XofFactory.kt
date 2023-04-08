@@ -38,7 +38,7 @@ package org.kotlincrypto.core
  *
  * @see [XofDelegate]
  * */
-public abstract class XofFactory<A: Algorithm>
+public abstract class XofFactory<A: XofAlgorithm>
 @InternalKotlinCryptoApi
 public constructor()
 {
