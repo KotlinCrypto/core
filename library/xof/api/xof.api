@@ -22,17 +22,20 @@ public abstract class org/kotlincrypto/core/Xof$Reader {
 	public final fun use (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
+public abstract interface class org/kotlincrypto/core/XofAlgorithm : org/kotlincrypto/core/Algorithm {
+}
+
 public abstract class org/kotlincrypto/core/XofFactory {
 }
 
 protected abstract class org/kotlincrypto/core/XofFactory$XofDelegate : org/kotlincrypto/core/Xof, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
-	protected fun <init> (Lorg/kotlincrypto/core/XofFactory;Lorg/kotlincrypto/core/Algorithm;)V
+	protected fun <init> (Lorg/kotlincrypto/core/XofFactory;Lorg/kotlincrypto/core/XofAlgorithm;)V
 	public fun algorithm ()Ljava/lang/String;
 	public final fun equals (Ljava/lang/Object;)Z
-	protected final fun getDelegate ()Lorg/kotlincrypto/core/Algorithm;
+	protected final fun getDelegate ()Lorg/kotlincrypto/core/XofAlgorithm;
 	public final fun hashCode ()I
 	protected final fun newReader ()Lorg/kotlincrypto/core/Xof$Reader;
-	protected abstract fun newReader (Lorg/kotlincrypto/core/Algorithm;)Lorg/kotlincrypto/core/Xof$Reader;
+	protected abstract fun newReader (Lorg/kotlincrypto/core/XofAlgorithm;)Lorg/kotlincrypto/core/Xof$Reader;
 	public fun reset ()V
 	public fun update (B)V
 	public fun update ([B)V
