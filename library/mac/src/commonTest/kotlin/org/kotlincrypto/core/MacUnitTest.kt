@@ -16,6 +16,7 @@
 package org.kotlincrypto.core
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.fail
 
@@ -25,30 +26,48 @@ class MacUnitTest {
     @OptIn(InternalKotlinCryptoApi::class)
     private class TestMac : Mac {
 
-        constructor(key: ByteArray, algorithm: String): super(algorithm, TestEngine(key))
+        constructor(
+            key: ByteArray,
+            algorithm: String,
+            reset: () -> Unit = {},
+            doFinal: () -> ByteArray = { ByteArray(0) },
+        ): super(algorithm, TestEngine(key, reset, doFinal))
+
         private constructor(algorithm: String, engine: TestEngine): super(algorithm, engine)
 
         override fun copy(engineCopy: Engine): Mac = TestMac(algorithm(), engineCopy as TestEngine)
 
         private class TestEngine: Engine {
 
-            constructor(key: ByteArray): super(key)
-            private constructor(state: State): super(state)
+            private val reset: () -> Unit
+            private val doFinal: () -> ByteArray
+
+            constructor(
+                key: ByteArray,
+                reset: () -> Unit,
+                doFinal: () -> ByteArray,
+            ): super(key) {
+                this.reset = reset
+                this.doFinal = doFinal
+            }
+
+            private constructor(state: State, engine: TestEngine): super(state) {
+                this.reset = engine.reset
+                this.doFinal = engine.doFinal
+            }
 
             // To ensure that Java implementation initializes javax.crypto.Mac
             // on instantiation so that it does not throw IllegalStateException
             // whenever updating.
             override fun update(input: Byte) { throw ConcurrentModificationException() }
 
-            override fun reset() {}
+            override fun reset() { reset.invoke() }
             override fun update(input: ByteArray) {}
             override fun update(input: ByteArray, offset: Int, len: Int) {}
             override fun macLength(): Int = 0
-            override fun doFinal(): ByteArray = ByteArray(0)
+            override fun doFinal(): ByteArray = doFinal.invoke()
 
-            override fun copy(): Engine = TestEngine(TestState())
-
-            private inner class TestState: Engine.State()
+            override fun copy(): Engine = TestEngine(object : State() {}, this)
         }
     }
 
@@ -88,5 +107,27 @@ class MacUnitTest {
         val copy = mac.copy()
 
         assertNotEquals(mac, copy)
+    }
+
+    @Test
+    fun givenMac_whenDoFinal_thenEngineResetIsCalled() {
+        var resetCount = 0
+        var doFinalCount = 0
+        val finalExpected = ByteArray(20)
+
+        val mac = TestMac(
+            ByteArray(5),
+            "not blank",
+            reset = { resetCount++ },
+            doFinal = { doFinalCount++; finalExpected },
+        )
+        mac.update(ByteArray(20))
+        assertEquals(finalExpected, mac.doFinal())
+        assertEquals(1, doFinalCount)
+        assertEquals(1, resetCount)
+
+        assertEquals(finalExpected, mac.doFinal(ByteArray(20)))
+        assertEquals(2, doFinalCount)
+        assertEquals(2, resetCount)
     }
 }
