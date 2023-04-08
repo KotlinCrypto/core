@@ -54,14 +54,29 @@ protected actual constructor(
     public actual final override fun algorithm(): String = algorithm
     public actual fun macLength(): Int = engine.macLength()
 
-    public actual final override fun update(input: Byte) { engine.update(input) }
-    public actual final override fun update(input: ByteArray) { engine.update(input) }
-    public actual final override fun update(input: ByteArray, offset: Int, len: Int) { engine.update(input, offset, len) }
+    public actual final override fun update(input: Byte) {
+        engine.update(input)
+    }
+    public actual final override fun update(input: ByteArray) {
+        engine.update(input)
+    }
+    public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
+        engine.update(input, offset, len)
+    }
 
-    public actual final override fun reset() { engine.reset() }
+    public actual fun doFinal(): ByteArray {
+        val final = engine.doFinal()
+        engine.reset()
+        return final
+    }
+    public actual fun doFinal(input: ByteArray): ByteArray {
+        engine.update(input)
+        return doFinal()
+    }
 
-    public actual fun doFinal(): ByteArray = engine.doFinal()
-    public actual fun doFinal(input: ByteArray): ByteArray { engine.update(input); return doFinal() }
+    public actual final override fun reset() {
+        engine.reset()
+    }
 
     public actual final override fun copy(): Mac = copy(engine.copy())
     protected actual abstract fun copy(engineCopy: Engine): Mac
