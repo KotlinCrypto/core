@@ -56,16 +56,16 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
      * Takes a snapshot of the current [Xof]'s state and produces
      * a [Reader].
      *
-     * [Reader] is automatically closed after [action] completes
+     * [Reader] is automatically closed after action completes
      * such that reading from the closed [Reader] will throw
      * exception; another [Reader] must be produced if further
      * reading is required.
      *
      * The [Xof] can continue to be updated with new data or read
-     * from again as it is unaffected by [Reader] [action]s.
+     * from again as it is unaffected by [Reader.read]s.
      *
      * @param [resetXof] if true, also resets the [Xof] to its
-     *   initial state.
+     *   initial state after taking the snapshot.
      * */
     @JvmOverloads
     public fun <T: Any?> use(resetXof: Boolean = true, action: Reader.() -> T): T = reader(resetXof).use(action)
@@ -81,7 +81,7 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
      * from again as it is unaffected by [Reader.read]s.
      *
      * @param [resetXof] if true, also resets the [Xof] to its
-     *   initial state.
+     *   initial state after taking the snapshot.
      * */
     @JvmOverloads
     public fun reader(resetXof: Boolean = true): Reader {
@@ -114,8 +114,8 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
             private set
 
         /**
-         * Helper function which automatically calls [close]
-         * once [action] completes.
+         * Helper function which automatically invokes [close]
+         * once action completes.
          * */
         public fun <T: Any?> use(action: Reader.() -> T): T {
             return try {
@@ -129,8 +129,7 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
          * Reads the [Xof] snapshot's state for when [Reader] was
          * produced, filling the provided [out] array completely.
          *
-         * This can be called multiple times within the [Xof.use]
-         * block (before [close] is automatically called).
+         * This can be called multiple times until [close] has been invoked.
          *
          * @param [out] The array to fill
          * @return The number of bytes written to [out]
@@ -144,8 +143,7 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
          * produced, filling the provided [out] array for specified
          * [offset] and [len] arguments.
          *
-         * This can be called multiple times within the [Xof.use]
-         * block (before [close] is automatically called).
+         * This can be called multiple times until [close] has been invoked.
          *
          * @param [out] The array to put the data into
          * @param [offset] The index for [out] to start putting data
@@ -169,8 +167,10 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
 
         /**
          * Closes the [Reader], rendering it no-longer usable for [read]s.
+         * Attempting to [read] again after closure will result in an
+         * [IllegalStateException] being thrown.
          *
-         * Successive calls after initial closure do nothing.
+         * Successive invocations to [close] do nothing.
          * */
         public fun close() {
             if (isClosed) return
