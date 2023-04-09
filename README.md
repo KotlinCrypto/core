@@ -28,6 +28,184 @@ NOTE: For Jvm, `Digest` extends `MessageDigest` and `Mac` extends `javax.crypto.
 
 Utilized by [KotlinCrypto/hash][url-hash] and [KotlinCrypto/MACs][url-macs]
 
+### Library Authors
+
+Modules in `core` are intentionally **single purpose** and **small** such that you 
+are able to include them in your APIs without having to import some massive crypto 
+library. Consumers of your APIs can then import the higher level implementations 
+to use with your library (giving them the **choice** of what algorithms they wish 
+to use, importing only what they need).
+
+This also means that as new higher level functions get implemented, you do not need 
+to do anything.
+
+```kotlin
+/**
+ * This feature of Foo requires a dependency if you wish to use it.
+ * See: https://github.com/KotlinCrypto/hash
+ * */
+class FooFeatureA(digest: Digest) {
+    // ...
+}
+```
+
+### Usage
+
+<details>
+    <summary>Digest</summary>
+
+```kotlin
+// Using SHA256 from hash repo as an example
+import org.kotlincrypto.hash.sha2.SHA256
+
+fun main() {
+    val digest = SHA256()
+    val bytes = Random.Default.nextBytes(615)
+    
+    // Digest implements Algorithm
+    println(digest.algorithm())
+    
+    // Digest implements Updatable
+    digest.update(5.toByte())
+    digest.update(bytes)
+    digest.update(bytes, 10, 88)
+
+    // Digest implements Resettable
+    digest.reset()
+
+    digest.update(bytes)
+
+    // Digest implements Copyable
+    val copy = digest.copy()
+
+    val hash = digest.digest()
+    val hash2 = copy.digest(bytes)
+}
+```
+
+</details>
+
+<details>
+    <summary>Mac</summary>
+
+```kotlin
+// Using SecureRandom from the secure-random repo as an example
+import org.kotlincrypto.SecureRandom
+// Using HmacSHA256 from the MACs repo as an example
+import org.kotlincrypto.macs.HmacSHA256
+
+fun main() {
+    val key = SecureRandom().nextBytesOf(100)
+    val mac = HmacSHA256(key)
+    val bytes = Random.Default.nextBytes(615)
+
+    // Mac implements Algorithm
+    println(mac.algorithm())
+
+    // Mac implements Updatable
+    mac.update(5.toByte())
+    mac.update(bytes)
+    mac.update(bytes, 10, 88)
+
+    // Mac implements Resettable
+    mac.reset()
+
+    mac.update(bytes)
+
+    // Mac implements Copyable
+    val copy = mac.copy()
+
+    val hash = mac.doFinal()
+    val hash2 = copy.doFinal(bytes)
+}
+```
+
+</details>
+
+<details>
+    <summary>Xof</summary>
+
+`XOF`s (i.e. [Extendable-Output Functions][url-pub-xof]) were introduced with `SHA3`.
+
+`XOF`s are very similar to `Digest` and `Mac`, except that instead of calling `digest()` 
+or `doFinal()` which returns a fixed size `ByteArray`, their output can be however long
+you wish.
+
+As such, [KotlinCrypto][url-kotlin-crypto] takes the approach of making them distinctly 
+separate from those types, while implementing the same interfaces (`Algorithm`, `Copyable`, 
+`Resettable`, `Updatable`).
+
+The only difference is that `Xof`s are read.
+
+```kotlin
+// Using SHAKE128 from hash repo as an example
+import org.kotlincrypto.hash.sha3.SHAKE128
+
+fun main() {
+    val xof = SHAKE128.xOf()
+    val bytes = Random.Default.nextBytes(615)
+
+    // Xof implements Algorithm
+    println(xof.algorithm())
+
+    // Xof implements Updatable
+    xof.update(5.toByte())
+    xof.update(bytes)
+    xof.update(bytes, 10, 88)
+
+    // Xof implements Resettable
+    xof.reset()
+
+    xof.update(bytes)
+
+    // Xof implements Copyable
+    xof.copy()
+
+    val out1 = ByteArray(100)
+    val out2 = ByteArray(12345)
+
+    // Use produces a Reader which auto-closes when your action finishes.
+    // Reader is using a snapshot of the Xof state (thus the
+    // optional argument to resetXof with a default of true).
+    xof.use(resetXof = false) { read(out1, 0, out1.size); read(out2) }
+
+    val out3 = ByteArray(out1.size)
+    val out4 = ByteArray(out2.size)
+
+    // Can also create a Reader that won't auto-close
+    val reader = xof.reader(resetXof = false)
+    reader.read(out3)
+    reader.read(out4)
+    reader.close()
+    
+    try {
+        // Has been closed and cannot be read from
+        // anymore.
+        reader.use { read(out4) }
+    } catch (e: IllegalStateException) {
+        e.printStackTrace()
+    }
+
+    // Contents are the same because Reader uses
+    // a snapshot of Xof, which was not updated
+    // between production of Readers.
+    assertContentEquals(out1 + out2, out3 + out4)
+    
+    // Still able to update Xof b/c Reader uses a snapshot
+    xof.update(10.toByte())
+    xof.use { read(out3); read(out4) }
+    
+    try {
+        assertContentEquals(out1 + out2, out3 + out4)
+        throw IllegalStateException()
+    } catch (_: AssertionError) {
+        // pass
+    }
+}
+```
+
+</details>
+
 ### Get Started
 
 The best way to keep `KotlinCrypto` dependencies up to date is by using the 
@@ -86,7 +264,9 @@ dependencies {
 [url-latest-release]: https://github.com/KotlinCrypto/core/releases/latest
 [url-license]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [url-kotlin]: https://kotlinlang.org
+[url-kotlin-crypto]: https://github.com/KotlinCrypto
 [url-endians]: https://github.com/KotlinCrypto/endians
 [url-hash]: https://github.com/KotlinCrypto/hash
 [url-macs]: https://github.com/KotlinCrypto/MACs
 [url-version-catalog]: https://github.com/KotlinCrypto/version-catalog
+[url-pub-xof]: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
