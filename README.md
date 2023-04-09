@@ -24,13 +24,9 @@
 
 Low level core cryptographic components for Kotlin Multiplatform
 
-This library has very low level APIs that are used in higher level 
-implementations. You most likely never will need to add this as a
-dependency.
+NOTE: For Jvm, `Digest` extends `MessageDigest` and `Mac` extends `javax.crypto.Mac` for interoperability
 
-If you are looking for Hashing algorithms (e.g. `SHA-256`, `SHA-512`, etc), see the [hash repo][url-hash].
-
-If you are looking for Mac algorithms (e.g. `HmacSHA256`, `HmacSHA512`, etc), see the [MACs repo][url-macs].
+Utilized by [KotlinCrypto/hash][url-hash] and [KotlinCrypto/MACs][url-macs]
 
 ### Get Started
 
