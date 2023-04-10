@@ -59,32 +59,6 @@ public expect abstract class Digest private constructor(
      * Implementors of [Digest] should have a private secondary constructor
      * that is utilized by its [copy] implementation.
      *
-     * e.g.
-     *
-     *     class Md5: Digest {
-     *
-     *         private val x: IntArray
-     *         private val state: IntArray
-     *
-     *         constructor(): super("MD5", 64, 16) {
-     *             x =  = IntArray(16)
-     *             state = intArrayOf(
-     *                 1732584193,
-     *                 -271733879,
-     *                 -1732584194,
-     *                 271733878,
-     *             )
-     *         }
-     *         private constructor(state: DigestState, md5: Md5): super(state) {
-     *             x = md5.x.copyOf()
-     *             this.state = md5.state.copyOf()
-     *         }
-     *
-     *         protected override fun copy(state: DigestState): Md5 = Md5(state, this)
-     *
-     *         // ...
-     *     }
-     *
      * @see [DigestState]
      * */
     @InternalKotlinCryptoApi
@@ -94,10 +68,13 @@ public expect abstract class Digest private constructor(
     public fun blockSize(): Int
     public fun digestLength(): Int
 
-    public final override fun update(input: Byte)
     public final override fun update(input: ByteArray)
     @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
     public final override fun update(input: ByteArray, offset: Int, len: Int)
+
+    public override fun update(input: Byte)
+    // Input arguments are always checked for validity before this is called
+    protected open fun update(offset: Int, len: Int, input: ByteArray)
 
     public fun digest(): ByteArray
     public fun digest(input: ByteArray): ByteArray
