@@ -23,10 +23,11 @@ public abstract class org/kotlincrypto/core/Digest : java/security/MessageDigest
 	public final fun reset ()V
 	protected abstract fun resetDigest ()V
 	public final fun toString ()Ljava/lang/String;
-	public fun update (B)V
-	protected fun update (II[B)V
+	public final fun update (B)V
 	public final fun update ([B)V
 	public final fun update ([BII)V
+	protected fun updateDigest (B)V
+	protected fun updateDigest ([BII)V
 }
 
 public abstract class org/kotlincrypto/core/internal/DigestState {

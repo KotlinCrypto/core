@@ -68,13 +68,10 @@ public expect abstract class Digest private constructor(
     public fun blockSize(): Int
     public fun digestLength(): Int
 
+    public final override fun update(input: Byte)
     public final override fun update(input: ByteArray)
     @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
     public final override fun update(input: ByteArray, offset: Int, len: Int)
-
-    public override fun update(input: Byte)
-    // Input arguments are always checked for validity before this is called
-    protected open fun update(offset: Int, len: Int, input: ByteArray)
 
     public fun digest(): ByteArray
     public fun digest(input: ByteArray): ByteArray
@@ -95,4 +92,18 @@ public expect abstract class Digest private constructor(
     protected abstract fun compress(input: ByteArray, offset: Int)
     protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
     protected abstract fun resetDigest()
+
+    /**
+     * Protected, direct access to the [Digest]'s buffer. All external input
+     * is directed here such that implementations can override and intercept
+     * if necessary.
+     * */
+    protected open fun updateDigest(input: Byte)
+
+    /**
+     * Protected, direct access to the [Digest]'s buffer. All external input
+     * is validated before being directed here such that implementations can
+     * override and intercept if necessary.
+     * */
+    protected open fun updateDigest(input: ByteArray, offset: Int, len: Int)
 }
