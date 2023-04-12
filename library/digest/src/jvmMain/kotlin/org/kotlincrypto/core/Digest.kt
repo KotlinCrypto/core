@@ -17,7 +17,7 @@ package org.kotlincrypto.core
 
 import org.kotlincrypto.core.internal.DigestDelegate
 import org.kotlincrypto.core.internal.DigestState
-import org.kotlincrypto.core.internal.commonIfArgumentsValid
+import org.kotlincrypto.core.internal.commonCheckArgs
 import org.kotlincrypto.core.internal.commonToString
 import java.nio.ByteBuffer
 import java.security.DigestException
@@ -95,9 +95,8 @@ public actual abstract class Digest private actual constructor(
     }
     @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
-        input.commonIfArgumentsValid(offset, len) {
-            updateDigest(input, offset, len)
-        }
+        input.commonCheckArgs(offset, len)
+        updateDigest(input, offset, len)
     }
 
     public actual final override fun digest(): ByteArray = delegate.digest()

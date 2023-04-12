@@ -17,7 +17,6 @@ package org.kotlincrypto.core.internal
 
 import org.kotlincrypto.core.Copyable
 import org.kotlincrypto.core.Resettable
-import org.kotlincrypto.core.Updatable
 import kotlin.jvm.JvmSynthetic
 
 internal class DigestDelegate private constructor(

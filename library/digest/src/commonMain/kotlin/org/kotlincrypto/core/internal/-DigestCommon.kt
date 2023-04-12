@@ -18,26 +18,15 @@
 package org.kotlincrypto.core.internal
 
 import org.kotlincrypto.core.Digest
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 
 @Suppress("NOTHING_TO_INLINE")
 internal inline fun Digest.commonToString(): String {
     return "Digest[${algorithm()}]@${hashCode()}"
 }
 
-@OptIn(ExperimentalContracts::class)
 @Suppress("NOTHING_TO_INLINE")
 @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
-internal inline fun ByteArray.commonIfArgumentsValid(offset: Int, len: Int, block: () -> Unit) {
-    contract {
-        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
-    }
-
+internal inline fun ByteArray.commonCheckArgs(offset: Int, len: Int) {
     if (size - offset < len) throw IllegalArgumentException("Input too short")
-    if (len == 0) return
     if (offset < 0 || len < 0 || offset > size - len) throw IndexOutOfBoundsException()
-
-    block()
 }
