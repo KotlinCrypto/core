@@ -26,6 +26,8 @@ public abstract class org/kotlincrypto/core/Digest : java/security/MessageDigest
 	public final fun update (B)V
 	public final fun update ([B)V
 	public final fun update ([BII)V
+	protected fun updateDigest (B)V
+	protected fun updateDigest ([BII)V
 }
 
 public abstract class org/kotlincrypto/core/internal/DigestState {

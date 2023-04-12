@@ -17,7 +17,6 @@ package org.kotlincrypto.core.internal
 
 import org.kotlincrypto.core.Copyable
 import org.kotlincrypto.core.Resettable
-import org.kotlincrypto.core.Updatable
 import kotlin.jvm.JvmSynthetic
 
 internal class DigestDelegate private constructor(
@@ -30,9 +29,9 @@ internal class DigestDelegate private constructor(
     private val compress: (input: ByteArray, offset: Int) -> Unit,
     private val digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
     private val resetDigest: () -> Unit
-): Copyable<DigestState>, Resettable, Updatable {
+): Copyable<DigestState>, Resettable {
 
-    override fun update(input: Byte) {
+    internal fun update(input: Byte) {
         buffer[bufferOffs] = input
 
         if (++bufferOffs != blockSize) return
@@ -41,16 +40,7 @@ internal class DigestDelegate private constructor(
         bufferOffs = 0
     }
 
-    override fun update(input: ByteArray) {
-        update(input, 0, input.size)
-    }
-
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
-    override fun update(input: ByteArray, offset: Int, len: Int) {
-        if (input.size - offset < len) throw IllegalArgumentException("Input too short")
-        if (len == 0) return
-        if (offset < 0 || len < 0 || offset > input.size - len) throw IndexOutOfBoundsException()
-
+    internal fun update(input: ByteArray, offset: Int, len: Int) {
         var i = offset
         var remaining = len
 

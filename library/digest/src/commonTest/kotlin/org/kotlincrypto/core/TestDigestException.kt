@@ -31,27 +31,6 @@ abstract class TestDigestException: Updatable {
     }
 
     @Test
-    fun givenDigest_whenLength0_thenThrowsExpected() {
-        // Input length check will pass here, but
-        // this would produce an ArrayIndexOutOfBounds exception
-        // unless len is 0
-        update(ByteArray(0), -1, 0)
-
-        // This ensures that both jvm and non-Jvm check
-        // input length _before_ length == 0 which will
-        // simply return and not produce an error.
-        //
-        // If len > 0, this would throw an ArrayIndexOutOfBounds
-        // exception because offset > input.size
-        try {
-            update(ByteArray(0), 1, 0)
-            fail()
-        } catch (_: IllegalArgumentException) {
-            // pass
-        }
-    }
-
-    @Test
     fun givenDigest_whenLengthNegative_thenThrows() {
         try {
             update(ByteArray(0), 0, -1)

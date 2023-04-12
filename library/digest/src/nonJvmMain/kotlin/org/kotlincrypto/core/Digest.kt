@@ -17,6 +17,7 @@ package org.kotlincrypto.core
 
 import org.kotlincrypto.core.internal.DigestDelegate
 import org.kotlincrypto.core.internal.DigestState
+import org.kotlincrypto.core.internal.commonCheckArgs
 import org.kotlincrypto.core.internal.commonToString
 
 /**
@@ -62,12 +63,7 @@ public actual abstract class Digest private actual constructor(
         algorithm: String,
         blockSize: Int,
         digestLength: Int
-    ): this(
-        algorithm = algorithm,
-        blockSize = blockSize,
-        digestLength = digestLength,
-        state = null
-    )
+    ): this(algorithm, blockSize, digestLength, null)
 
     /**
      * Creates a new [Digest] for the copied [state] of another [Digest]
@@ -76,55 +72,32 @@ public actual abstract class Digest private actual constructor(
      * Implementors of [Digest] should have a private secondary constructor
      * that is utilized by its [copy] implementation.
      *
-     * e.g.
-     *
-     *     class Md5: Digest {
-     *
-     *         private val x: IntArray
-     *         private val state: IntArray
-     *
-     *         constructor(): super("MD5", 64, 16) {
-     *             x =  = IntArray(16)
-     *             state = intArrayOf(
-     *                 1732584193,
-     *                 -271733879,
-     *                 -1732584194,
-     *                 271733878,
-     *             )
-     *         }
-     *         private constructor(state: DigestState, md5: Md5): super(state) {
-     *             x = md5.x.copyOf()
-     *             this.state = md5.state.copyOf()
-     *         }
-     *
-     *         protected override fun copy(state: DigestState): Md5 = Md5(state, this)
-     *
-     *         // ...
-     *     }
-     *
      * @see [DigestState]
      * */
     @InternalKotlinCryptoApi
-    protected actual constructor(
-        state: DigestState
-    ): this(
-        algorithm = state.algorithm,
-        blockSize = state.blockSize,
-        digestLength = state.digestLength,
-        state = state
-    )
+    protected actual constructor(state: DigestState): this(state.algorithm, state.blockSize, state.digestLength, state)
 
     public actual final override fun algorithm(): String = delegate.algorithm
     public actual fun blockSize(): Int = delegate.blockSize
     public actual fun digestLength(): Int = delegate.digestLength
 
-    public actual final override fun update(input: Byte) { delegate.update(input) }
-    public actual final override fun update(input: ByteArray) { delegate.update(input) }
+    public actual override fun update(input: Byte) {
+        updateDigest(input)
+    }
+    public actual final override fun update(input: ByteArray) {
+        updateDigest(input, 0, input.size)
+    }
     @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
-    public actual final override fun update(input: ByteArray, offset: Int, len: Int) { delegate.update(input, offset, len) }
+    public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
+        input.commonCheckArgs(offset, len)
+        updateDigest(input, offset, len)
+    }
 
     public actual fun digest(): ByteArray = delegate.digest()
-    public actual fun digest(input: ByteArray): ByteArray { delegate.update(input); return delegate.digest() }
+    public actual fun digest(input: ByteArray): ByteArray {
+        updateDigest(input, 0, input.size)
+        return delegate.digest()
+    }
 
     public actual final override fun reset() { delegate.reset() }
 
@@ -142,4 +115,22 @@ public actual abstract class Digest private actual constructor(
     protected actual abstract fun compress(input: ByteArray, offset: Int)
     protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
     protected actual abstract fun resetDigest()
+
+    /**
+     * Protected, direct access to the [Digest]'s buffer. All external input
+     * is directed here such that implementations can override and intercept
+     * if necessary.
+     * */
+    protected actual open fun updateDigest(input: Byte) {
+        delegate.update(input)
+    }
+
+    /**
+     * Protected, direct access to the [Digest]'s buffer. All external input
+     * is validated before being directed here such that implementations can
+     * override and intercept if necessary.
+     * */
+    protected actual open fun updateDigest(input: ByteArray, offset: Int, len: Int) {
+        delegate.update(input, offset, len)
+    }
 }
