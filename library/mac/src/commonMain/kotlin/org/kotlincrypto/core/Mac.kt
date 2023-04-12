@@ -69,57 +69,6 @@ protected constructor(
      *
      * Implementors of [Engine] **must** initialize the instance with the
      * provided key parameter.
-     *
-     * e.g.
-     *
-     *     public abstract class HMac: Mac {
-     *
-     *         @Throws(IllegalArgumentException::class)
-     *         protected constructor(
-     *             key: ByteArray,
-     *             algorithm: String,
-     *             digest: Digest,
-     *         ): super(algorithm, Engine(key, digest))
-     *
-     *         protected constructor(
-     *             algorithm: String,
-     *             engine: HMac.Engine
-     *         ): super(algorithm, engine)
-     *
-     *         protected class Engine: Mac.Engine {
-     *
-     *             private val state: State
-     *
-     *             @Throws(IllegalArgumentException::class)
-     *             internal constructor(key: ByteArray, digest: Digest): super(key) {
-     *                 digest.reset()
-     *
-     *                 val preparedKey = // ...
-     *
-     *                 state = State(
-     *                     iKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x36 },
-     *                     oKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x5C },
-     *                     digest = digest,
-     *                 )
-     *
-     *                 digest.update(state.iKey)
-     *             }
-     *
-     *             private constructor(state: State): super(state) {
-     *                 this.state = State(state.iKey, state.oKey, digest.copy())
-     *             }
-     *
-     *             override fun copy(): Engine = Engine(state)
-     *
-     *             private inner class State(
-     *                 val iKey: ByteArray,
-     *                 val oKey: ByteArray,
-     *                 val digest: Digest,
-     *             ): Mac.Engine.State()
-     *
-     *             // ...
-     *         }
-     *     }
      * */
     protected abstract class Engine: Copyable<Engine>, Resettable, Updatable {
 
@@ -140,6 +89,8 @@ protected constructor(
 
         public abstract fun macLength(): Int
         public abstract fun doFinal(): ByteArray
+
+        public override fun update(input: ByteArray)
 
         final override fun equals(other: Any?): Boolean
         final override fun hashCode(): Int

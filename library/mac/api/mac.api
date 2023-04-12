@@ -22,6 +22,7 @@ protected abstract class org/kotlincrypto/core/Mac$Engine : javax/crypto/MacSpi,
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
 	public abstract fun macLength ()I
+	public fun update ([B)V
 }
 
 protected abstract class org/kotlincrypto/core/Mac$Engine$State {

@@ -58,9 +58,10 @@ protected actual constructor(
         engine.update(input)
     }
     public actual final override fun update(input: ByteArray) {
-        engine.update(input)
+        engine.update(input, 0, input.size)
     }
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
+        if (offset < 0 || len < 0 || offset > input.size - len) throw IllegalArgumentException("Bad arguments")
         engine.update(input, offset, len)
     }
 
@@ -70,7 +71,7 @@ protected actual constructor(
         return final
     }
     public actual fun doFinal(input: ByteArray): ByteArray {
-        engine.update(input)
+        engine.update(input, 0, input.size)
         return doFinal()
     }
 
@@ -90,57 +91,6 @@ protected actual constructor(
      *
      * Implementors of [Engine] **must** initialize the instance with the
      * provided key parameter.
-     *
-     * e.g.
-     *
-     *     public abstract class HMac: Mac {
-     *
-     *         @Throws(IllegalArgumentException::class)
-     *         protected constructor(
-     *             key: ByteArray,
-     *             algorithm: String,
-     *             digest: Digest,
-     *         ): super(algorithm, Engine(key, digest))
-     *
-     *         protected constructor(
-     *             algorithm: String,
-     *             engine: HMac.Engine
-     *         ): super(algorithm, engine)
-     *
-     *         protected class Engine: Mac.Engine {
-     *
-     *             private val state: State
-     *
-     *             @Throws(IllegalArgumentException::class)
-     *             internal constructor(key: ByteArray, digest: Digest): super(key) {
-     *                 digest.reset()
-     *
-     *                 val preparedKey = // ...
-     *
-     *                 state = State(
-     *                     iKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x36 },
-     *                     oKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x5C },
-     *                     digest = digest,
-     *                 )
-     *
-     *                 digest.update(state.iKey)
-     *             }
-     *
-     *             private constructor(state: State): super(state) {
-     *                 this.state = State(state.iKey, state.oKey, digest.copy())
-     *             }
-     *
-     *             override fun copy(): Engine = Engine(state)
-     *
-     *             private inner class State(
-     *                 val iKey: ByteArray,
-     *                 val oKey: ByteArray,
-     *                 val digest: Digest,
-     *             ): Mac.Engine.State()
-     *
-     *             // ...
-     *         }
-     *     }
      * */
     protected actual abstract class Engine: Copyable<Engine>, Resettable, Updatable {
 
@@ -163,6 +113,8 @@ protected actual constructor(
 
         public actual abstract fun macLength(): Int
         public actual abstract fun doFinal(): ByteArray
+
+        public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
 
         public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode == hashCode
         public actual final override fun hashCode(): Int = hashCode

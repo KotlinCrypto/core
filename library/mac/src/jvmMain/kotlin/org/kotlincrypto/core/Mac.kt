@@ -76,57 +76,6 @@ protected actual constructor(
      *
      * Implementors of [Engine] **must** initialize the instance with the
      * provided key parameter.
-     *
-     * e.g.
-     *
-     *     public abstract class HMac: Mac {
-     *
-     *         @Throws(IllegalArgumentException::class)
-     *         protected constructor(
-     *             key: ByteArray,
-     *             algorithm: String,
-     *             digest: Digest,
-     *         ): super(algorithm, Engine(key, digest))
-     *
-     *         protected constructor(
-     *             algorithm: String,
-     *             engine: HMac.Engine
-     *         ): super(algorithm, engine)
-     *
-     *         protected class Engine: Mac.Engine {
-     *
-     *             private val state: State
-     *
-     *             @Throws(IllegalArgumentException::class)
-     *             internal constructor(key: ByteArray, digest: Digest): super(key) {
-     *                 digest.reset()
-     *
-     *                 val preparedKey = // ...
-     *
-     *                 state = State(
-     *                     iKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x36 },
-     *                     oKey = ByteArray(digest.blockSize()) { i -> preparedKey[i] xor 0x5C },
-     *                     digest = digest,
-     *                 )
-     *
-     *                 digest.update(state.iKey)
-     *             }
-     *
-     *             private constructor(state: State): super(state) {
-     *                 this.state = State(state.iKey, state.oKey, digest.copy())
-     *             }
-     *
-     *             override fun copy(): Engine = Engine(state)
-     *
-     *             private inner class State(
-     *                 val iKey: ByteArray,
-     *                 val oKey: ByteArray,
-     *                 val digest: Digest,
-     *             ): Mac.Engine.State()
-     *
-     *             // ...
-     *         }
-     *     }
      * */
     protected actual abstract class Engine: MacSpi, Cloneable, Copyable<Engine>, Resettable, Updatable {
 
@@ -150,9 +99,17 @@ protected actual constructor(
         public actual abstract fun macLength(): Int
         public actual abstract fun doFinal(): ByteArray
 
+        public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
+
         protected final override fun engineUpdate(p0: Byte) { update(p0) }
-        protected final override fun engineUpdate(input: ByteBuffer?) { super.engineUpdate(input) }
-        protected final override fun engineUpdate(p0: ByteArray, p1: Int, p2: Int) { update(p0, p1, p2) }
+        protected final override fun engineUpdate(input: ByteBuffer?) {
+            if (input == null) return
+            super.engineUpdate(input)
+        }
+        protected final override fun engineUpdate(p0: ByteArray, p1: Int, p2: Int) {
+            // javax.crypto.Mac checks offset and len arguments
+            update(p0, p1, p2)
+        }
         protected final override fun engineReset() { reset() }
         protected final override fun engineGetMacLength(): Int = macLength()
         protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) { /* no-op */ }
