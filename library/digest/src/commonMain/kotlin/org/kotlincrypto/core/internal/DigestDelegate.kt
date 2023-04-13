@@ -122,7 +122,7 @@ internal class DigestDelegate private constructor(
             require(algorithm.isNotBlank()) { "algorithm cannot be blank" }
             require(blockSize > 0) { "blockSize must be greater than 0" }
             require(blockSize % 8 == 0) { "blockSize must be a factor of 8" }
-            require(digestLength > 0) { "digestLength must be greater than 0" }
+            require(digestLength >= 0) { "digestLength cannot be negative" }
 
             return DigestDelegate(
                 algorithm = algorithm,
