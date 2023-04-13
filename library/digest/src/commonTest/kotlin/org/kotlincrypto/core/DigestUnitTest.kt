@@ -18,6 +18,7 @@ package org.kotlincrypto.core
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import kotlin.test.fail
 
 class DigestUnitTest: TestDigestException() {
 
@@ -33,6 +34,19 @@ class DigestUnitTest: TestDigestException() {
 
     override fun update(input: ByteArray, offset: Int, len: Int) {
         digest.update(input, offset, len)
+    }
+
+    @Test
+    fun givenDigest_whenLengthNegative_thenThrowsException() {
+        // accepts 0 length
+        TestDigest(digestLength = 0)
+
+        try {
+            TestDigest(digestLength = -1)
+            fail()
+        } catch (_: IllegalArgumentException) {
+            // pass
+        }
     }
 
     @Test

@@ -46,7 +46,7 @@ public expect abstract class Digest private constructor(
      *  - [algorithm] is blank
      *  - [blockSize] is less than or equal to 0
      *  - [blockSize] is not a factor of 8
-     *  - [digestLength] is less than or equal to 0
+     *  - [digestLength] is less than 0
      * */
     @InternalKotlinCryptoApi
     @Throws(IllegalArgumentException::class)
