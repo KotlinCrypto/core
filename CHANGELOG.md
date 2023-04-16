@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 0.2.4 (2023-04-16)
+ - Adds `Digest.updateDigest` protected open functions for implementors 
+   to override when needing access to input before it is buffered [[#34]][34]
+ - Adds input argument check for nonJvm `Mac.update` when `offset` and `len` 
+   parameters are specified [[#35]][35]
+ - Updates `Digest.digestLength` constructor argument check to now accept 0 
+   as a valid length [[#36]][36]
+     - Previously, passing 0 would throw an `IllegalArgumentException`.
+
 ## Version 0.2.3 (2023-04-08)
  - Fix `nonJvm` `Mac.doFinal` not calling `engine.reset()` [[#27]][27]
      - Only implementation of `Mac` is `Hmac` via `MACs` repo, which is
@@ -28,3 +37,6 @@
 [25]: https://github.com/KotlinCrypto/core/pull/25
 [27]: https://github.com/KotlinCrypto/core/pull/27
 [29]: https://github.com/KotlinCrypto/core/pull/29
+[34]: https://github.com/KotlinCrypto/core/pull/34
+[35]: https://github.com/KotlinCrypto/core/pull/35
+[36]: https://github.com/KotlinCrypto/core/pull/36

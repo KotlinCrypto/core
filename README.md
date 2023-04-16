@@ -24,7 +24,8 @@
 
 Low level core cryptographic components for Kotlin Multiplatform
 
-NOTE: For Jvm, `Digest` extends `MessageDigest` and `Mac` extends `javax.crypto.Mac` for interoperability
+NOTE: For Jvm, `Digest` extends `java.security.MessageDigest` and `Mac` extends `javax.crypto.Mac` 
+for interoperability.
 
 Utilized by [KotlinCrypto/hash][url-hash] and [KotlinCrypto/MACs][url-macs]
 
@@ -127,22 +128,22 @@ fun main() {
 
 `XOF`s (i.e. [Extendable-Output Functions][url-pub-xof]) were introduced with `SHA3`.
 
-`XOF`s are very similar to `Digest` and `Mac`, except that instead of calling `digest()` 
-or `doFinal()` which returns a fixed size `ByteArray`, their output can be however long
-you wish.
+`XOF`s are very similar to `Digest` and `Mac` except that instead of calling `digest()` 
+or `doFinal()`, which returns a fixed size `ByteArray`, their output size can be variable 
+in length.
 
 As such, [KotlinCrypto][url-kotlin-crypto] takes the approach of making them distinctly 
-separate from those types, while implementing the same interfaces (`Algorithm`, `Copyable`, 
+different from those types, while implementing the same interfaces (`Algorithm`, `Copyable`, 
 `Resettable`, `Updatable`).
 
-The only difference is that `Xof`s are read.
+Output for an `Xof` is done by reading, instead.
 
 ```kotlin
 // Using SHAKE128 from hash repo as an example
 import org.kotlincrypto.hash.sha3.SHAKE128
 
 fun main() {
-    val xof = SHAKE128.xOf()
+    val xof: Xof<SHAKE128> = SHAKE128.xOf()
     val bytes = Random.Default.nextBytes(615)
 
     // Xof implements Algorithm
@@ -177,10 +178,10 @@ fun main() {
     reader.read(out3)
     reader.read(out4)
     reader.close()
-    
+
     try {
-        // Has been closed and cannot be read from
-        // anymore.
+        // The Reader has been closed and will throw
+        // exception when trying to read from again.
         reader.use { read(out4) }
     } catch (e: IllegalStateException) {
         e.printStackTrace()
@@ -190,11 +191,12 @@ fun main() {
     // a snapshot of Xof, which was not updated
     // between production of Readers.
     assertContentEquals(out1 + out2, out3 + out4)
-    
-    // Still able to update Xof b/c Reader uses a snapshot
+
+    // Still able to update Xof, independent of the production
+    // and usage of Readers.
     xof.update(10.toByte())
     xof.use { read(out3); read(out4) }
-    
+
     try {
         assertContentEquals(out1 + out2, out3 + out4)
         throw IllegalStateException()
@@ -216,7 +218,7 @@ The best way to keep `KotlinCrypto` dependencies up to date is by using the
 ```kotlin
 // build.gradle.kts
 dependencies {
-    val core = "0.2.3"
+    val core = "0.2.4"
     implementation("org.kotlincrypto.core:digest:$core")
     implementation("org.kotlincrypto.core:mac:$core")
     implementation("org.kotlincrypto.core:xof:$core")
@@ -228,7 +230,7 @@ dependencies {
 ```groovy
 // build.gradle
 dependencies {
-    def core = "0.2.3"
+    def core = "0.2.4"
     implementation "org.kotlincrypto.core:digest:$core"
     implementation "org.kotlincrypto.core:mac:$core"
     implementation "org.kotlincrypto.core:xof:$core"
@@ -236,7 +238,7 @@ dependencies {
 ```
 
 <!-- TAG_VERSION -->
-[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.3-blue.svg?style=flat
+[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.4-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->
