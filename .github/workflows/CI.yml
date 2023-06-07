@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [ 14, 23, 33 ]
+        api-level: [ 21, 23, 29 ]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
