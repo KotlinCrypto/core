@@ -1,7 +1,7 @@
 [versions]
 android = "7.4.2"
 androidxTestRunner = "1.5.2"
-binaryCompat = "0.13.0"
+binaryCompat = "0.13.1"
 configuration = "0.1.0"
 endians = "0.1.0"
 gradleVersions = "0.46.0"
