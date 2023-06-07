@@ -85,7 +85,7 @@ jobs:
           java-version: 19
 
       - name: Build
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.4.2
 
       - name: Run Android Instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
