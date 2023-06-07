@@ -21,6 +21,7 @@ import java.nio.ByteBuffer
 import java.security.Key
 import java.security.spec.AlgorithmParameterSpec
 import javax.crypto.MacSpi
+import javax.crypto.spec.SecretKeySpec
 
 /**
  * Core abstraction for Message Authentication Code implementations. Extends
@@ -56,8 +57,10 @@ protected actual constructor(
     init {
         commonInit(algorithm)
 
-        // So that 'javax.crypto.Mac.initialized' gets set to true
-        super.init(null)
+        // Engine.engineInit is overridden as no-op, so this does
+        // nothing other than set `javax.crypto.Mac.initialized`
+        // to true
+        super.init(SecretKeySpec(ByteArray(1), algorithm))
     }
 
     public actual final override fun algorithm(): String = algorithm
