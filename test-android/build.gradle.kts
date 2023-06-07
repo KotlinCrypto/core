@@ -22,7 +22,7 @@ repositories {
 }
 
 kmpConfiguration {
-    configure {
+    this.configure {
         androidLibrary {
             kotlinJvmTarget = JavaVersion.VERSION_11
             compileSourceCompatibility = JavaVersion.VERSION_11
@@ -47,7 +47,7 @@ kmpConfiguration {
 
             sourceSetTestInstrumented {
                 dependencies {
-                    implementation(project(":library:digest"))
+//                    implementation(project(":library:digest"))
                     implementation(project(":library:mac"))
                     implementation(libs.androidx.test.runner)
                     implementation(kotlin("test"))

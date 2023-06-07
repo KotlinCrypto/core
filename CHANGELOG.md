@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 0.2.5 (2023-06-07)
+ - Fixes Android API 23 and below not accepting `null` for `Mac.init` key
+   parameter [[#38]][38]
+ - Updates `kotlin` to `1.8.21` [[#40]][40]
+
 ## Version 0.2.4 (2023-04-16)
  - Adds `Digest.updateDigest` protected open functions for implementors 
    to override when needing access to input before it is buffered [[#34]][34]
@@ -40,3 +45,5 @@
 [34]: https://github.com/KotlinCrypto/core/pull/34
 [35]: https://github.com/KotlinCrypto/core/pull/35
 [36]: https://github.com/KotlinCrypto/core/pull/36
+[38]: https://github.com/KotlinCrypto/core/pull/38
+[40]: https://github.com/KotlinCrypto/core/pull/40

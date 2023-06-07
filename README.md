@@ -218,7 +218,7 @@ The best way to keep `KotlinCrypto` dependencies up to date is by using the
 ```kotlin
 // build.gradle.kts
 dependencies {
-    val core = "0.2.4"
+    val core = "0.2.5"
     implementation("org.kotlincrypto.core:digest:$core")
     implementation("org.kotlincrypto.core:mac:$core")
     implementation("org.kotlincrypto.core:xof:$core")
@@ -230,7 +230,7 @@ dependencies {
 ```groovy
 // build.gradle
 dependencies {
-    def core = "0.2.4"
+    def core = "0.2.5"
     implementation "org.kotlincrypto.core:digest:$core"
     implementation "org.kotlincrypto.core:mac:$core"
     implementation "org.kotlincrypto.core:xof:$core"
@@ -238,11 +238,11 @@ dependencies {
 ```
 
 <!-- TAG_VERSION -->
-[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.4-blue.svg?style=flat
+[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.5-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->
-[badge-kotlin]: https://img.shields.io/badge/kotlin-1.8.10-blue.svg?logo=kotlin
+[badge-kotlin]: https://img.shields.io/badge/kotlin-1.8.21-blue.svg?logo=kotlin
 [badge-endians]: https://img.shields.io/badge/kotlincrypto.endians-0.1.0-blue.svg
 
 <!-- TAG_PLATFORMS -->
