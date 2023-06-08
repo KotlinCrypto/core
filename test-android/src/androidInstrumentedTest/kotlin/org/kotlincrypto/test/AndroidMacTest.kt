@@ -22,7 +22,7 @@ import org.kotlincrypto.core.InternalKotlinCryptoApi
 import org.kotlincrypto.core.Mac
 import java.security.NoSuchAlgorithmException
 import java.security.NoSuchProviderException
-import javax.crypto.MacSpi
+import java.security.Provider
 import javax.crypto.spec.SecretKeySpec
 import kotlin.test.*
 
@@ -100,29 +100,20 @@ class AndroidMacTest {
     }
 
     @Test
-    fun givenAndroid_whenProvider_spiIsDeReferencedAfterInitialRetrieval() {
-        val mac = TestMac(key)
-        val provider = mac.provider ?: return // no test
+    fun givenAndroid_whenProvider_getServiceThrowsException() {
+        val (mac, provider) = testMacAndProviderOrNull() ?: return
 
-        val service = provider.getService("Mac", mac.algorithm)
-        val instance = service.newInstance(null)
-        assertFalse(instance is MacSpi)
-
-        // should return the service instance
-        assertEquals(service, instance)
+        try {
+            provider.getService("Mac", mac.algorithm)
+            fail()
+        } catch (_: NoSuchAlgorithmException) {
+            // pass
+        }
     }
 
     @Test
-    fun givenAndroid_whenProvider_thenIsNotCachedInMacSERVICE() {
-        val mac = TestMac(key)
-        val provider = mac.provider ?: return // no test
-
-        // Android 23 and below javax.crypto.Mac uses
-        // a static org.apache.harmony.security.fortress.Engine
-        //
-        // this simply ensures that our wrapper provider is not being
-        // cached. This is the horrible provider architecture rearing
-        // its head.
+    fun givenAndroid_whenMacGetInstanceForAlgorithm_thenIsNotCachedInMacSERVICE() {
+        val (mac, _) = testMacAndProviderOrNull() ?: return
 
         try {
             javax.crypto.Mac.getInstance(mac.algorithm)
@@ -130,6 +121,11 @@ class AndroidMacTest {
         } catch (_: NoSuchAlgorithmException) {
             // pass
         }
+    }
+
+    @Test
+    fun givenAndroid_whenMacGetInstanceForAlgorithmAndProviderName_thenIsNotCachedInMacSERVICE() {
+        val (mac, provider) = testMacAndProviderOrNull() ?: return
 
         try {
             javax.crypto.Mac.getInstance(mac.algorithm, provider.name)
@@ -137,6 +133,11 @@ class AndroidMacTest {
         } catch (_: NoSuchProviderException) {
             // pass
         }
+    }
+
+    @Test
+    fun givenAndroid_whenMacGetInstanceForAlgorithmAndProvider_thenIsNotCachedInMacSERVICE() {
+        val (mac, provider) = testMacAndProviderOrNull() ?: return
 
         try {
             // Even if the provider is used in getInstance, the spi should
@@ -148,5 +149,11 @@ class AndroidMacTest {
         } catch (_: NoSuchAlgorithmException) {
             // pass
         }
+    }
+
+    private fun testMacAndProviderOrNull(): Pair<Mac, Provider>? {
+        val mac = TestMac(key)
+        val provider = mac.provider ?: return null
+        return Pair(mac, provider)
     }
 }

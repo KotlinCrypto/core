@@ -17,7 +17,9 @@ package org.kotlincrypto.core.internal
 
 import org.kotlincrypto.core.KC_ANDROID_SDK_INT
 import org.kotlincrypto.core.InternalKotlinCryptoApi
+import java.security.NoSuchAlgorithmException
 import java.security.Provider
+import java.security.ProviderException
 import javax.crypto.MacSpi
 
 /**
@@ -41,11 +43,11 @@ internal class AndroidApi23MacSpiProvider private constructor(
     private val algorithm: String,
 ): Provider("KC", 0.0, "") {
 
-    override fun getService(type: String?, algorithm: String?): Service {
-        return if (type == "Mac" && algorithm == this.algorithm) {
+    override fun getService(type: String?, algorithm: String?): Service = synchronized(this) {
+        if (type == "Mac" && algorithm == this.algorithm && spi != null) {
             SpiProviderService()
         } else {
-            super.getService(type, algorithm)
+            throw NoSuchAlgorithmException("type[$type] and algorithm[$algorithm] not supported")
         }
     }
 
@@ -69,6 +71,7 @@ internal class AndroidApi23MacSpiProvider private constructor(
             // we cannot provide a new instance if called again and do not want to return the
             // same, already initialized org.kotlincrypto.Mac.Engine
             this@AndroidApi23MacSpiProvider.spi = null
+
             return spi
         }
     }
