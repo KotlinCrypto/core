@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Version 0.2.5 (2023-06-08)
+## Version 0.2.6 (2023-06-08)
  - Fixes Android API 21-23 requiring a `Provider` in order to set
    `javax.crypto.Mac.spiImpl` when `javax.crypto.Mac.init` is
    invoked [[#44]][44]
