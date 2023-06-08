@@ -15,14 +15,23 @@
  **/
 package org.kotlincrypto.core
 
+import junit.framework.TestCase.assertEquals
 import java.security.InvalidKeyException
 import javax.crypto.spec.SecretKeySpec
 import kotlin.test.Test
+import kotlin.test.assertNull
 import kotlin.test.fail
 
 class JvmMacUnitTest {
 
     private val key = ByteArray(20) { it.toByte() }
+
+    @Test
+    fun givenJvm_whenNotAndroid_providerIsNotSet() {
+        val mac = TestMac(key, "My Algorithm", doFinal = { key })
+        assertEquals(key, mac.doFinal())
+        assertNull(mac.provider)
+    }
 
     @Test
     fun givenJvm_whenJavaxCryptoMacInitInvoked_thenThrowsException() {
