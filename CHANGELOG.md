@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## Version 0.2.5 (2023-06-08)
+ - Fixes Android API 21-23 requiring a `Provider` in order to set
+   `javax.crypto.Mac.spiImpl` when `javax.crypto.Mac.init` is
+   invoked [[#44]][44]
+ - Throw `InvalidKeyException` if `javax.crypto.Mac.init` is invoked [[#43]][43]
+     - All `org.kotlincrypto.core.Mac` APIs are constructed such that
+       implementations always require a key as a constructor argument
+       and are initialized immediately. As such, if a java caller
+       attempts to re-initialize the `Mac` with a different key, they
+       may assume the output thus produced is using the new key. This
+       is not the case as `Kotlin Crypto` does not use a provider based
+       architecture so a new, uninitialized `Mac` cannot be created.
+     - Note that `Mac.init` is **not** available from `commonMain`. It is
+       a remnant of bad API design requiring ability to lazily initialize
+       things which `Kotlin Crypto` will **never** support as it leads
+       to monolithic structures, instead of building on good abstractions.
+       If `Mac.init` is required to be called, a wholly new instance of the
+       `org.kotlincrypto.core.Mac` implementation should be instantiated
+       with the new key.
+
 ## Version 0.2.5 (2023-06-07)
  - Fixes Android API 23 and below not accepting `null` for `Mac.init` key
    parameter [[#38]][38]
@@ -47,3 +67,5 @@
 [36]: https://github.com/KotlinCrypto/core/pull/36
 [38]: https://github.com/KotlinCrypto/core/pull/38
 [40]: https://github.com/KotlinCrypto/core/pull/40
+[43]: https://github.com/KotlinCrypto/core/pull/43
+[44]: https://github.com/KotlinCrypto/core/pull/44
