@@ -19,11 +19,10 @@ import org.kotlincrypto.core.KC_ANDROID_SDK_INT
 import org.kotlincrypto.core.InternalKotlinCryptoApi
 import java.security.NoSuchAlgorithmException
 import java.security.Provider
-import java.security.ProviderException
 import javax.crypto.MacSpi
 
 /**
- * Android API 1-23 requires that a Provider be set, otherwise
+ * Android API 21-23 requires that a Provider be set, otherwise
  * when [javax.crypto.Mac.init] is called it will not use the
  * provided [org.kotlincrypto.core.Mac.Engine] (i.e., [spi]).
  *
@@ -37,7 +36,7 @@ import javax.crypto.MacSpi
  * See: https://github.com/KotlinCrypto/core/issues/42
  * */
 @Suppress("DEPRECATION")
-internal class AndroidApi23MacSpiProvider private constructor(
+internal class AndroidApi21to23MacSpiProvider private constructor(
     @Volatile
     private var spi: MacSpi?,
     private val algorithm: String,
@@ -59,20 +58,20 @@ internal class AndroidApi23MacSpiProvider private constructor(
         /* aliases    */ null,
         /* attributes */ null
     ) {
-        override fun newInstance(constructorParameter: Any?): Any = synchronized(this@AndroidApi23MacSpiProvider) {
+        override fun newInstance(constructorParameter: Any?): Any = synchronized(this@AndroidApi21to23MacSpiProvider) {
             // simply return this if spi reference was dropped. b/c this is not
             // an instance of MacSpi, android's implementation of javax.crypto.Mac
             // will throw an exception which is what we want.
-            val spi = spi ?: return@synchronized this
+            val engine = spi ?: throw NoSuchAlgorithmException("algorithm[$algorithm] not supported")
 
             // javax.crypto.Mac.init was called with a blanked key via org.kotlincrypto.Mac's
             // init block in order to set javax.crypto.Mac.initialized to true. return
             // the MacSpi (i.e. org.kotlincrypto.Mac.Engine), and null the reference as
             // we cannot provide a new instance if called again and do not want to return the
             // same, already initialized org.kotlincrypto.Mac.Engine
-            this@AndroidApi23MacSpiProvider.spi = null
+            spi = null
 
-            return spi
+            return engine
         }
     }
 
@@ -80,10 +79,14 @@ internal class AndroidApi23MacSpiProvider private constructor(
 
         @JvmStatic
         @JvmSynthetic
-        internal fun createOrNull(engine: MacSpi, algorithm: String): AndroidApi23MacSpiProvider? {
+        internal fun createOrNull(engine: MacSpi, algorithm: String): AndroidApi21to23MacSpiProvider? {
             @OptIn(InternalKotlinCryptoApi::class)
             return KC_ANDROID_SDK_INT?.let { sdkInt ->
-                if (sdkInt < 24) AndroidApi23MacSpiProvider(engine, algorithm) else null
+                if (sdkInt in 21..23) {
+                    AndroidApi21to23MacSpiProvider(engine, algorithm)
+                } else {
+                    null
+                }
             }
         }
     }

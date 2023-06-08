@@ -92,7 +92,7 @@ class AndroidMacTest {
     @Test
     fun givenAndroid_whenApi23OrBelow_thenUsesProvider() {
         val provider = TestMac(key).provider
-        if (Build.VERSION.SDK_INT < 24) {
+        if (Build.VERSION.SDK_INT in 21..23) {
             assertNotNull(provider)
         } else {
             assertNull(provider)

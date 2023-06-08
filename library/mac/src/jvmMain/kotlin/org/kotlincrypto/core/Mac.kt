@@ -15,7 +15,7 @@
  **/
 package org.kotlincrypto.core
 
-import org.kotlincrypto.core.internal.AndroidApi23MacSpiProvider
+import org.kotlincrypto.core.internal.AndroidApi21to23MacSpiProvider
 import org.kotlincrypto.core.internal.commonInit
 import org.kotlincrypto.core.internal.commonToString
 import java.nio.ByteBuffer
@@ -51,7 +51,7 @@ protected actual constructor(
     private val engine: Engine,
 ) : javax.crypto.Mac(
     /* macSpi    */ engine,
-    /* provider  */ AndroidApi23MacSpiProvider.createOrNull(engine, algorithm),
+    /* provider  */ AndroidApi21to23MacSpiProvider.createOrNull(engine, algorithm),
     /* algorithm */ algorithm
 ),  Algorithm,
     Copyable<Mac>,
