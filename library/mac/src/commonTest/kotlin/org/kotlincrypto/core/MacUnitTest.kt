@@ -22,55 +22,6 @@ import kotlin.test.fail
 
 class MacUnitTest {
 
-    @Suppress("UnnecessaryOptInAnnotation")
-    @OptIn(InternalKotlinCryptoApi::class)
-    private class TestMac : Mac {
-
-        constructor(
-            key: ByteArray,
-            algorithm: String,
-            reset: () -> Unit = {},
-            doFinal: () -> ByteArray = { ByteArray(0) },
-        ): super(algorithm, TestEngine(key, reset, doFinal))
-
-        private constructor(algorithm: String, engine: TestEngine): super(algorithm, engine)
-
-        override fun copy(engineCopy: Engine): Mac = TestMac(algorithm(), engineCopy as TestEngine)
-
-        private class TestEngine: Engine {
-
-            private val reset: () -> Unit
-            private val doFinal: () -> ByteArray
-
-            constructor(
-                key: ByteArray,
-                reset: () -> Unit,
-                doFinal: () -> ByteArray,
-            ): super(key) {
-                this.reset = reset
-                this.doFinal = doFinal
-            }
-
-            private constructor(state: State, engine: TestEngine): super(state) {
-                this.reset = engine.reset
-                this.doFinal = engine.doFinal
-            }
-
-            // To ensure that Java implementation initializes javax.crypto.Mac
-            // on instantiation so that it does not throw IllegalStateException
-            // whenever updating.
-            override fun update(input: Byte) { throw ConcurrentModificationException() }
-
-            override fun reset() { reset.invoke() }
-            override fun update(input: ByteArray) {}
-            override fun update(input: ByteArray, offset: Int, len: Int) {}
-            override fun macLength(): Int = 0
-            override fun doFinal(): ByteArray = doFinal.invoke()
-
-            override fun copy(): Engine = TestEngine(object : State() {}, this)
-        }
-    }
-
     @Test
     fun givenMac_whenEmptyKey_thenThrowsException() {
         try {

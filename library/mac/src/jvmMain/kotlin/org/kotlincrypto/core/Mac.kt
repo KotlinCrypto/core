@@ -18,6 +18,7 @@ package org.kotlincrypto.core
 import org.kotlincrypto.core.internal.commonInit
 import org.kotlincrypto.core.internal.commonToString
 import java.nio.ByteBuffer
+import java.security.InvalidKeyException
 import java.security.Key
 import java.security.spec.AlgorithmParameterSpec
 import javax.crypto.MacSpi
@@ -83,6 +84,7 @@ protected actual constructor(
     protected actual abstract class Engine: MacSpi, Cloneable, Copyable<Engine>, Resettable, Updatable {
 
         private val hashCode: Int = Any().hashCode()
+        private var isInitialized = false
 
         /**
          * Initializes a new [Engine] with the provided [key].
@@ -115,7 +117,25 @@ protected actual constructor(
         }
         protected final override fun engineReset() { reset() }
         protected final override fun engineGetMacLength(): Int = macLength()
-        protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) { /* no-op */ }
+
+        // Is called immediately from Mac init block with a blanked key (required in order to set
+        // javax.crypto.Mac.initialized to true.
+        protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) {
+            if (isInitialized) {
+
+                // Throw an exception b/c if caller is trying to re-init the javax.crypto.Mac with a new key,
+                // the normal behavior is to blank the Spi state. If they do not know this is an issue,
+                // any output would not be correct b/c implementations do not re-init. KotlinCrypto users
+                // already know it's initialized because the API is designed to require the key upon instantiation
+                // so init is never needed to be called.
+                throw InvalidKeyException(
+                    "org.kotlincrypto.Mac does not support re-initialization " +
+                    "(it's already initialized). A new instance is required to be created."
+                )
+            }
+
+            isInitialized = true
+        }
         protected final override fun engineDoFinal(): ByteArray = doFinal()
 
         public final override fun clone(): Any = copy()
