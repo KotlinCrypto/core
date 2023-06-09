@@ -140,7 +140,15 @@ protected actual constructor(
 
             isInitialized = true
         }
-        protected final override fun engineDoFinal(): ByteArray = doFinal()
+        protected final override fun engineDoFinal(): ByteArray {
+            val b = doFinal()
+
+            // Android API 23 and below javax.crypto.Mac does not call engineReset()
+            @OptIn(InternalKotlinCryptoApi::class)
+            KC_ANDROID_SDK_INT?.let { sdkInt -> if (sdkInt <= 23) reset() }
+
+            return b
+        }
 
         public final override fun clone(): Any = copy()
 
