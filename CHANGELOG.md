@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 0.2.7 (2023-06-09)
+ - Fixes Android API 23 and below not calling `javax.crypto.MacSpi.engineReset`
+   whenever `javax.crypto.Mac.doFinal` is invoked [[#46]][46]
+
 ## Version 0.2.6 (2023-06-08)
  - Fixes Android API 21-23 requiring a `Provider` in order to set
    `javax.crypto.Mac.spiImpl` when `javax.crypto.Mac.init` is
@@ -69,3 +73,4 @@
 [40]: https://github.com/KotlinCrypto/core/pull/40
 [43]: https://github.com/KotlinCrypto/core/pull/43
 [44]: https://github.com/KotlinCrypto/core/pull/44
+[46]: https://github.com/KotlinCrypto/core/pull/46
