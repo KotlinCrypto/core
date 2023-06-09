@@ -29,7 +29,7 @@ kmpConfiguration {
             compileTargetCompatibility = JavaVersion.VERSION_11
 
             android {
-                namespace = "org.kotlincrypto.test"
+                namespace = "org.kotlincrypto.core"
                 compileSdk = 33
 
                 defaultConfig {
@@ -46,11 +46,15 @@ kmpConfiguration {
             }
 
             sourceSetTestInstrumented {
+                kotlin.srcDir("src/androidInstrumentedTest/digest")
+                kotlin.srcDir("src/androidInstrumentedTest/mac")
+
                 dependencies {
-//                    implementation(project(":library:digest"))
-                    implementation(project(":library:mac"))
                     implementation(libs.androidx.test.runner)
                     implementation(kotlin("test"))
+
+                    implementation(project(":library:digest"))
+                    implementation(project(":library:mac"))
                 }
             }
         }
