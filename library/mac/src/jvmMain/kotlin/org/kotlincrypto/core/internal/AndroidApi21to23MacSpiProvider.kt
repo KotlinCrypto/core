@@ -59,16 +59,13 @@ internal class AndroidApi21to23MacSpiProvider private constructor(
         /* attributes */ null
     ) {
         override fun newInstance(constructorParameter: Any?): Any = synchronized(this@AndroidApi21to23MacSpiProvider) {
-            // simply return this if spi reference was dropped. b/c this is not
-            // an instance of MacSpi, android's implementation of javax.crypto.Mac
-            // will throw an exception which is what we want.
             val engine = spi ?: throw NoSuchAlgorithmException("algorithm[$algorithm] not supported")
 
-            // javax.crypto.Mac.init was called with a blanked key via org.kotlincrypto.Mac's
-            // init block in order to set javax.crypto.Mac.initialized to true. return
-            // the MacSpi (i.e. org.kotlincrypto.Mac.Engine), and null the reference as
+            // javax.crypto.Mac.init was called with a blanked key via org.kotlincrypto.core.Mac's
+            // init block in order to set javax.crypto.Mac.initialized to true. Return
+            // the MacSpi (i.e. org.kotlincrypto.core.Mac.Engine), and null the reference as
             // we cannot provide a new instance if called again and do not want to return the
-            // same, already initialized org.kotlincrypto.Mac.Engine
+            // same, already initialized org.kotlincrypto.core.Mac.Engine
             spi = null
 
             return engine
