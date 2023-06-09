@@ -123,24 +123,32 @@ protected actual constructor(
         protected final override fun engineGetMacLength(): Int = macLength()
 
         // Is called immediately from Mac init block with a blanked key (required in order to set
-        // javax.crypto.Mac.initialized to true.
+        // javax.crypto.Mac.initialized to true).
         protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) {
             if (isInitialized) {
 
                 // Throw an exception b/c if caller is trying to re-init the javax.crypto.Mac with a new key,
-                // the normal behavior is to blank the Spi state. If they do not know this is an issue,
-                // any output would not be correct b/c implementations do not re-init. KotlinCrypto users
+                // the normal behavior is to blank the MacSpi state. If caller does not know this is an issue,
+                // any further output would not be correct b/c implementations do not re-init. KotlinCrypto users
                 // already know it's initialized because the API is designed to require the key upon instantiation
-                // so init is never needed to be called.
+                // so init is never needed to be called, nor is init function available from commonMain source set.
                 throw InvalidKeyException(
-                    "org.kotlincrypto.Mac does not support re-initialization " +
+                    "org.kotlincrypto.core.Mac does not support re-initialization " +
                     "(it's already initialized). A new instance is required to be created."
                 )
             }
 
             isInitialized = true
         }
-        protected final override fun engineDoFinal(): ByteArray = doFinal()
+        protected final override fun engineDoFinal(): ByteArray {
+            val b = doFinal()
+
+            // Android API 23 and below javax.crypto.Mac does not call engineReset()
+            @OptIn(InternalKotlinCryptoApi::class)
+            KC_ANDROID_SDK_INT?.let { sdkInt -> if (sdkInt <= 23) reset() }
+
+            return b
+        }
 
         public final override fun clone(): Any = copy()
 

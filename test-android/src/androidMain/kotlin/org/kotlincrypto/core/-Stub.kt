@@ -13,6 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.test
+package org.kotlincrypto.core
 
 internal fun stub() { /* no-op */ }
