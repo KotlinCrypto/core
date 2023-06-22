@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core.internal
+package org.kotlincrypto.core.digest.internal
 
 import org.kotlincrypto.core.Copyable
 import org.kotlincrypto.core.Resettable

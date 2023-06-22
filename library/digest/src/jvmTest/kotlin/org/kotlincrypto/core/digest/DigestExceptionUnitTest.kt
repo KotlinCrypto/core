@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core
+package org.kotlincrypto.core.digest
 
 import java.security.MessageDigest
 

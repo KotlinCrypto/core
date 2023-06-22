@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core
+package org.kotlincrypto.core.digest
 
-import org.kotlincrypto.core.internal.DigestDelegate
-import org.kotlincrypto.core.internal.DigestState
-import org.kotlincrypto.core.internal.commonCheckArgs
-import org.kotlincrypto.core.internal.commonToString
-import java.nio.ByteBuffer
-import java.security.DigestException
-import java.security.MessageDigest
+import org.kotlincrypto.core.*
+import org.kotlincrypto.core.digest.internal.DigestDelegate
+import org.kotlincrypto.core.digest.internal.DigestState
+import org.kotlincrypto.core.digest.internal.commonCheckArgs
+import org.kotlincrypto.core.digest.internal.commonToString
 
 /**
- * Core abstraction for Message Digest implementations. Extends
- * Java's [MessageDigest] for compatibility.
+ * Core abstraction for Message Digest implementations.
  *
  * A Digest provides secure one-way hash functions that take in
  * arbitrary sized data and output a fixed-length hash value.
@@ -40,9 +37,7 @@ public actual abstract class Digest private actual constructor(
     blockSize: Int,
     digestLength: Int,
     state: DigestState?,
-) : MessageDigest(algorithm),
-    Algorithm,
-    Cloneable,
+) : Algorithm,
     Copyable<Digest>,
     Resettable,
     Updatable
@@ -87,7 +82,7 @@ public actual abstract class Digest private actual constructor(
     public actual fun blockSize(): Int = delegate.blockSize
     public actual fun digestLength(): Int = delegate.digestLength
 
-    public actual final override fun update(input: Byte) {
+    public actual override fun update(input: Byte) {
         updateDigest(input)
     }
     public actual final override fun update(input: ByteArray) {
@@ -99,13 +94,11 @@ public actual abstract class Digest private actual constructor(
         updateDigest(input, offset, len)
     }
 
-    public actual final override fun digest(): ByteArray = delegate.digest()
-    public actual final override fun digest(input: ByteArray): ByteArray {
+    public actual fun digest(): ByteArray = delegate.digest()
+    public actual fun digest(input: ByteArray): ByteArray {
         updateDigest(input, 0, input.size)
         return delegate.digest()
     }
-    @Throws(IllegalArgumentException::class, DigestException::class)
-    public final override fun digest(buf: ByteArray, offset: Int, len: Int): Int = super.digest(buf, offset, len)
 
     public actual final override fun reset() { delegate.reset() }
 
@@ -113,7 +106,6 @@ public actual abstract class Digest private actual constructor(
     public actual final override fun hashCode(): Int = delegate.hashCode()
     public actual final override fun toString(): String = commonToString()
 
-    public final override fun clone(): Any = copy()
     public actual final override fun copy(): Digest = copy(delegate.copy())
     protected actual abstract fun copy(state: DigestState): Digest
 
@@ -142,17 +134,4 @@ public actual abstract class Digest private actual constructor(
     protected actual open fun updateDigest(input: ByteArray, offset: Int, len: Int) {
         delegate.update(input, offset, len)
     }
-
-    // MessageDigestSpi
-    protected final override fun engineGetDigestLength(): Int = delegate.digestLength
-    protected final override fun engineUpdate(p0: Byte) { updateDigest(p0) }
-    protected final override fun engineUpdate(input: ByteBuffer) { super.engineUpdate(input) }
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
-    protected final override fun engineUpdate(p0: ByteArray, p1: Int, p2: Int) { update(p0, p1, p2) }
-    protected final override fun engineDigest(): ByteArray = delegate.digest()
-    @Throws(DigestException::class)
-    protected final override fun engineDigest(buf: ByteArray, offset: Int, len: Int): Int {
-        return super.engineDigest(buf, offset, len)
-    }
-    protected final override fun engineReset() { delegate.reset() }
 }

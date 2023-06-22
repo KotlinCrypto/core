@@ -15,9 +15,9 @@
  **/
 @file:Suppress("KotlinRedundantDiagnosticSuppress")
 
-package org.kotlincrypto.core.internal
+package org.kotlincrypto.core.digest.internal
 
-import org.kotlincrypto.core.Digest
+import org.kotlincrypto.core.digest.Digest
 
 @Suppress("NOTHING_TO_INLINE")
 internal inline fun Digest.commonToString(): String {
