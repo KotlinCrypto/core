@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core
+package org.kotlincrypto.core.mac
 
-import org.kotlincrypto.core.internal.commonInit
-import org.kotlincrypto.core.internal.commonToString
+import org.kotlincrypto.core.*
+import org.kotlincrypto.core.mac.internal.commonInit
+import org.kotlincrypto.core.mac.internal.commonToString
 
 /**
  * Core abstraction for Message Authentication Code implementations.

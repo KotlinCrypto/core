@@ -15,9 +15,9 @@
  **/
 @file:Suppress("KotlinRedundantDiagnosticSuppress")
 
-package org.kotlincrypto.core.internal
+package org.kotlincrypto.core.mac.internal
 
-import org.kotlincrypto.core.Mac
+import org.kotlincrypto.core.mac.Mac
 
 @Throws(IllegalArgumentException::class)
 @Suppress("NOTHING_TO_INLINE", "UnusedReceiverParameter")

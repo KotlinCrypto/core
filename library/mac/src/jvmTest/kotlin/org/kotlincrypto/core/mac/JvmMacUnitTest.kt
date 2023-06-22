@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core
+package org.kotlincrypto.core.mac
 
 import junit.framework.TestCase.assertEquals
+import org.kotlincrypto.core.mac.TestMac
 import java.security.InvalidKeyException
 import javax.crypto.spec.SecretKeySpec
 import kotlin.test.Test

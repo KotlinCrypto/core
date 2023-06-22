@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core
+package org.kotlincrypto.core.mac
+
+import org.kotlincrypto.core.*
 
 /**
  * Core abstraction for Message Authentication Code implementations.

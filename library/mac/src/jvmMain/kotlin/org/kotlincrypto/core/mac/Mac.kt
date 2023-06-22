@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core
+package org.kotlincrypto.core.mac
 
-import org.kotlincrypto.core.internal.AndroidApi21to23MacSpiProvider
-import org.kotlincrypto.core.internal.commonInit
-import org.kotlincrypto.core.internal.commonToString
+import org.kotlincrypto.core.*
+import org.kotlincrypto.core.mac.internal.AndroidApi21to23MacSpiProvider
+import org.kotlincrypto.core.mac.internal.commonInit
+import org.kotlincrypto.core.mac.internal.commonToString
 import java.nio.ByteBuffer
 import java.security.InvalidKeyException
 import java.security.Key
@@ -133,7 +134,7 @@ protected actual constructor(
                 // already know it's initialized because the API is designed to require the key upon instantiation
                 // so init is never needed to be called, nor is init function available from commonMain source set.
                 throw InvalidKeyException(
-                    "org.kotlincrypto.core.Mac does not support re-initialization " +
+                    "org.kotlincrypto.core.mac.Mac does not support re-initialization " +
                     "(it's already initialized). A new instance is required to be created."
                 )
             }

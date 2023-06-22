@@ -1,15 +1,15 @@
-public abstract class org/kotlincrypto/core/Mac : javax/crypto/Mac, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
+public abstract class org/kotlincrypto/core/mac/Mac : javax/crypto/Mac, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
 	public final fun algorithm ()Ljava/lang/String;
 	public synthetic fun copy ()Ljava/lang/Object;
-	public final fun copy ()Lorg/kotlincrypto/core/Mac;
-	protected abstract fun copy (Lorg/kotlincrypto/core/Mac$Engine;)Lorg/kotlincrypto/core/Mac;
+	public final fun copy ()Lorg/kotlincrypto/core/mac/Mac;
+	protected abstract fun copy (Lorg/kotlincrypto/core/mac/Mac$Engine;)Lorg/kotlincrypto/core/mac/Mac;
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
 	public final fun macLength ()I
 	public final fun toString ()Ljava/lang/String;
 }
 
-protected abstract class org/kotlincrypto/core/Mac$Engine : javax/crypto/MacSpi, java/lang/Cloneable, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
+protected abstract class org/kotlincrypto/core/mac/Mac$Engine : javax/crypto/MacSpi, java/lang/Cloneable, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
 	public final fun clone ()Ljava/lang/Object;
 	public abstract fun doFinal ()[B
 	protected final fun engineDoFinal ()[B
@@ -25,7 +25,7 @@ protected abstract class org/kotlincrypto/core/Mac$Engine : javax/crypto/MacSpi,
 	public fun update ([B)V
 }
 
-protected abstract class org/kotlincrypto/core/Mac$Engine$State {
-	public fun <init> (Lorg/kotlincrypto/core/Mac$Engine;)V
+protected abstract class org/kotlincrypto/core/mac/Mac$Engine$State {
+	public fun <init> (Lorg/kotlincrypto/core/mac/Mac$Engine;)V
 }
 

@@ -15,7 +15,7 @@
  **/
 @file:Suppress("UnnecessaryOptInAnnotation")
 
-package org.kotlincrypto.core
+package org.kotlincrypto.core.mac
 
 import android.os.Build
 import java.security.NoSuchAlgorithmException

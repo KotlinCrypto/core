@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-package org.kotlincrypto.core.internal
+package org.kotlincrypto.core.mac.internal
 
 import org.kotlincrypto.core.KC_ANDROID_SDK_INT
 import org.kotlincrypto.core.InternalKotlinCryptoApi
@@ -24,9 +24,9 @@ import javax.crypto.MacSpi
 /**
  * Android API 21-23 requires that a Provider be set, otherwise
  * when [javax.crypto.Mac.init] is called it will not use the
- * provided [org.kotlincrypto.core.Mac.Engine] (i.e., [spi]).
+ * provided [org.kotlincrypto.core.mac.Mac.Engine] (i.e., [spi]).
  *
- * This simply wraps the [org.kotlincrypto.core.Mac.Engine]
+ * This simply wraps the [org.kotlincrypto.core.mac.Mac.Engine]
  * such that initial [javax.crypto.Mac.init] call sets it
  * as the spiImpl, and does not look to system providers
  * for an instance that supports the [algorithm].
@@ -61,11 +61,11 @@ internal class AndroidApi21to23MacSpiProvider private constructor(
         override fun newInstance(constructorParameter: Any?): Any = synchronized(this@AndroidApi21to23MacSpiProvider) {
             val engine = spi ?: throw NoSuchAlgorithmException("algorithm[$algorithm] not supported")
 
-            // javax.crypto.Mac.init was called with a blanked key via org.kotlincrypto.core.Mac's
+            // javax.crypto.Mac.init was called with a blanked key via org.kotlincrypto.core.mac.Mac's
             // init block in order to set javax.crypto.Mac.initialized to true. Return
-            // the MacSpi (i.e. org.kotlincrypto.core.Mac.Engine), and null the reference as
+            // the MacSpi (i.e. org.kotlincrypto.core.mac.Mac.Engine), and null the reference as
             // we cannot provide a new instance if called again and do not want to return the
-            // same, already initialized org.kotlincrypto.core.Mac.Engine
+            // same, already initialized org.kotlincrypto.core.mac.Mac.Engine
             spi = null
 
             return engine
