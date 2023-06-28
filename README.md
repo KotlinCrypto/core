@@ -92,12 +92,12 @@ fun main() {
 ```kotlin
 // Using SecureRandom from the secure-random repo as an example
 import org.kotlincrypto.SecureRandom
-// Using HmacSHA256 from the MACs repo as an example
-import org.kotlincrypto.macs.HmacSHA256
+// Using HmacSHA3_256 from the MACs repo as an example
+import org.kotlincrypto.macs.hmac.sha3.HmacSHA3_256
 
 fun main() {
     val key = SecureRandom().nextBytesOf(100)
-    val mac = HmacSHA256(key)
+    val mac = HmacSHA3_256(key)
     val bytes = Random.Default.nextBytes(615)
 
     // Mac implements Algorithm
@@ -218,7 +218,7 @@ The best way to keep `KotlinCrypto` dependencies up to date is by using the
 ```kotlin
 // build.gradle.kts
 dependencies {
-    val core = "0.2.7"
+    val core = "0.3.0"
     implementation("org.kotlincrypto.core:digest:$core")
     implementation("org.kotlincrypto.core:mac:$core")
     implementation("org.kotlincrypto.core:xof:$core")
@@ -230,7 +230,7 @@ dependencies {
 ```groovy
 // build.gradle
 dependencies {
-    def core = "0.2.7"
+    def core = "0.3.0"
     implementation "org.kotlincrypto.core:digest:$core"
     implementation "org.kotlincrypto.core:mac:$core"
     implementation "org.kotlincrypto.core:xof:$core"
@@ -238,7 +238,7 @@ dependencies {
 ```
 
 <!-- TAG_VERSION -->
-[badge-latest-release]: https://img.shields.io/badge/latest--release-0.2.7-blue.svg?style=flat
+[badge-latest-release]: https://img.shields.io/badge/latest--release-0.3.0-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->

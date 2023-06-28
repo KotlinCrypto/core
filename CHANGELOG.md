@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 0.3.0 (2023-06-28)
+ - Fixes JPMS split packages [[#48]][48]
+     - **API BREAKING CHANGES**
+     - Package names were changed for `digest`, `mac`, and `xof` dependencies
+     - Example:
+         - `org.kotlincrypto.core.Digest` was moved to `org.kotlincrypto.core.digest.Digest`
+         - `org.kotlincrypto.core.Mac` was moved to `org.kotlincrypto.core.mac.Mac`
+         - `org.kotlincrypto.core.Xof` was moved to `org.kotlincrypto.core.xof.Xof`
+
 ## Version 0.2.7 (2023-06-09)
  - Fixes Android API 23 and below not calling `javax.crypto.MacSpi.engineReset`
    whenever `javax.crypto.Mac.doFinal` is invoked [[#46]][46]
@@ -74,3 +83,4 @@
 [43]: https://github.com/KotlinCrypto/core/pull/43
 [44]: https://github.com/KotlinCrypto/core/pull/44
 [46]: https://github.com/KotlinCrypto/core/pull/46
+[48]: https://github.com/KotlinCrypto/core/pull/48
