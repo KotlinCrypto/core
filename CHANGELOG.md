@@ -8,6 +8,7 @@
          - `org.kotlincrypto.core.Digest` was moved to `org.kotlincrypto.core.digest.Digest`
          - `org.kotlincrypto.core.Mac` was moved to `org.kotlincrypto.core.mac.Mac`
          - `org.kotlincrypto.core.Xof` was moved to `org.kotlincrypto.core.xof.Xof`
+ - See the [ANNOUNCEMENT][discussion-3] for more information on `0.3.0` release
 
 ## Version 0.2.7 (2023-06-09)
  - Fixes Android API 23 and below not calling `javax.crypto.MacSpi.engineReset`
@@ -69,6 +70,7 @@
 ## Version 0.1.0 (2023-03-04)
  - Initial Release
 
+[discussion-3]: https://github.com/orgs/KotlinCrypto/discussions/3
 [12]: https://github.com/KotlinCrypto/core/pull/12
 [16]: https://github.com/KotlinCrypto/core/pull/16
 [21]: https://github.com/KotlinCrypto/core/pull/21
