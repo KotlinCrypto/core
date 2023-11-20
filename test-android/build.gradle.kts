@@ -45,14 +45,25 @@ kmpConfiguration {
                 }
             }
 
+            sourceSetTest {
+                kotlin.srcDir("src/androidUnitTest/digest")
+                kotlin.srcDir("src/androidUnitTest/mac")
+            }
+
             sourceSetTestInstrumented {
                 kotlin.srcDir("src/androidInstrumentedTest/digest")
                 kotlin.srcDir("src/androidInstrumentedTest/mac")
 
                 dependencies {
                     implementation(libs.androidx.test.runner)
-                    implementation(kotlin("test"))
+                }
+            }
+        }
 
+        common {
+            sourceSetTest {
+                dependencies {
+                    implementation(kotlin("test"))
                     implementation(project(":library:digest"))
                     implementation(project(":library:mac"))
                 }

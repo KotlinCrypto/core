@@ -15,25 +15,14 @@
  **/
 package org.kotlincrypto.core
 
-@InternalKotlinCryptoApi
-public val KC_ANDROID_SDK_INT: Int? by lazy {
-    if (
-        System.getProperty("java.runtime.name")
-            ?.contains("android", ignoreCase = true) != true
-    ) {
-        // Not Android runtime
-        return@lazy null
-    }
+import kotlin.test.Test
+import kotlin.test.assertNull
 
-    try {
-        val clazz = Class.forName("android.os.Build\$VERSION")
+@OptIn(InternalKotlinCryptoApi::class)
+class AndroidSdkIntUnitTest {
 
-        try {
-            clazz?.getField("SDK_INT")?.getInt(null)
-        } catch (_: Throwable) {
-            clazz?.getField("SDK")?.get(null)?.toString()?.toIntOrNull()
-        }
-    } catch (_: Throwable) {
-        null
+    @Test
+    fun givenAndroidSdkInt_whenNOTAndroidRuntime_thenIsNull() {
+        assertNull(KC_ANDROID_SDK_INT)
     }
 }
