@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 0.4.0 (2023-11-30)
+ - Adds check for Android Runtime to `KC_ANDROID_SDK_INT` [[#51]][51]
+     - Android Unit Tests: `KC_ANDROID_SDK_INT` will now be `null`
+     - Android Runtime: `KC_ANDROID_SDK_INT` will **NOT** be `null`
+ - Updates `kotlin` to `1.9.21` [[#52]][52]
+ - Updates `endians` to `0.2.0` [[#52]][52]
+
 ## Version 0.3.0 (2023-06-28)
  - Fixes JPMS split packages [[#48]][48]
      - **API BREAKING CHANGES**
@@ -86,3 +93,5 @@
 [44]: https://github.com/KotlinCrypto/core/pull/44
 [46]: https://github.com/KotlinCrypto/core/pull/46
 [48]: https://github.com/KotlinCrypto/core/pull/48
+[51]: https://github.com/KotlinCrypto/core/pull/51
+[52]: https://github.com/KotlinCrypto/core/pull/52
