@@ -19,7 +19,6 @@
 ![badge-support-apple-silicon]
 ![badge-support-js-ir]
 ![badge-support-linux-arm]
-![badge-support-linux-mips]
 
 <!--
 ![badge-platform-wasm]
