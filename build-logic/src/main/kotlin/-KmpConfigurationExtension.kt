@@ -32,8 +32,8 @@ fun KmpConfigurationExtension.configureShared(
         }
 
         js()
-//        wasm()
-        wasmNativeAll()
+//        wasmJs {}
+//        wasmWasi {}
 
         androidNativeAll()
 
@@ -46,9 +46,7 @@ fun KmpConfigurationExtension.configureShared(
         mingwAll()
 
         common {
-            if (publish) {
-                pluginIds("publication")
-            }
+            if (publish) { pluginIds("publication") }
 
             sourceSetTest {
                 dependencies {
@@ -57,9 +55,7 @@ fun KmpConfigurationExtension.configureShared(
             }
         }
 
-        kotlin {
-            explicitApi()
-        }
+        kotlin { explicitApi() }
 
         action.execute(this)
     }
