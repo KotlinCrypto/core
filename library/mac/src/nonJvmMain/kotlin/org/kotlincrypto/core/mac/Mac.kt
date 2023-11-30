@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+
 package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
@@ -61,6 +63,7 @@ protected actual constructor(
     public actual final override fun update(input: ByteArray) {
         engine.update(input, 0, input.size)
     }
+    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
         if (offset < 0 || len < 0 || offset > input.size - len) throw IllegalArgumentException("Bad arguments")
         engine.update(input, offset, len)
