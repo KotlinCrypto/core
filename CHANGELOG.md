@@ -6,6 +6,14 @@
      - Android Runtime: `KC_ANDROID_SDK_INT` will **NOT** be `null`
  - Updates `kotlin` to `1.9.21` [[#52]][52]
  - Updates `endians` to `0.2.0` [[#52]][52]
+ - Drops support for the following deprecated targets:
+     - `iosArm32`
+     - `watchosX86`
+     - `linuxArm32Hfp`
+     - `linuxMips32`
+     - `linuxMipsel32`
+     - `mingwX86`
+     - `wasm32`
 
 ## Version 0.3.0 (2023-06-28)
  - Fixes JPMS split packages [[#48]][48]
