@@ -18,5 +18,5 @@ plugins {
 }
 
 kmpConfiguration {
-    configureShared(publish = true) {}
+    configureShared(java9ModuleName = "org.kotlincrypto.core", publish = true) {}
 }
