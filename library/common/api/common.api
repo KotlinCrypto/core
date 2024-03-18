@@ -22,6 +22,3 @@ public abstract interface class org/kotlincrypto/core/Updatable {
 	public abstract fun update ([BII)V
 }
 
-public final class org/kotlincrypto/core/_AndroidSdkIntKt {
-}
-

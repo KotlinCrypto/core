@@ -9,6 +9,7 @@
 ![badge-platform-jvm]
 ![badge-platform-js]
 ![badge-platform-js-node]
+![badge-platform-wasm]
 ![badge-platform-linux]
 ![badge-platform-macos]
 ![badge-platform-ios]
@@ -19,10 +20,6 @@
 ![badge-support-apple-silicon]
 ![badge-support-js-ir]
 ![badge-support-linux-arm]
-
-<!--
-![badge-platform-wasm]
--->
 
 Low level core cryptographic components for Kotlin Multiplatform
 
@@ -244,8 +241,8 @@ dependencies {
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->
-[badge-kotlin]: https://img.shields.io/badge/kotlin-1.9.21-blue.svg?logo=kotlin
-[badge-endians]: https://img.shields.io/badge/kotlincrypto.endians-0.2.0-blue.svg
+[badge-kotlin]: https://img.shields.io/badge/kotlin-1.9.23-blue.svg?logo=kotlin
+[badge-endians]: https://img.shields.io/badge/kotlincrypto.endians-0.3.0-blue.svg
 
 <!-- TAG_PLATFORMS -->
 [badge-platform-android]: http://img.shields.io/badge/-android-6EDB8D.svg?style=flat

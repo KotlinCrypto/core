@@ -1,12 +1,11 @@
 [versions]
 android = "8.1.4"
 androidxTestRunner = "1.5.2"
-binaryCompat = "0.13.2"
-configuration = "0.1.5"
-endians = "0.2.0"
-gradleVersions = "0.50.0"
-kotlin = "1.9.21"
-publish = "0.25.3"
+binaryCompat = "0.14.0"
+configuration = "0.2.1"
+endians = "0.3.0"
+kotlin = "1.9.23"
+publish = "0.27.0"
 
 [libraries]
 kotlincrypto-endians-endians = { module = "org.kotlincrypto.endians:endians", version.ref = "endians" }
@@ -21,4 +20,3 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "android
 android-library = { id = "com.android.library", version.ref = "android" }
 binaryCompat = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompat" }
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-gradleVersions = { id = "com.github.ben-manes.versions", version.ref = "gradleVersions" }
