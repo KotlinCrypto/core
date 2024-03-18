@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 0.5.0 (2024-03-18)
+ - Updates `kotlin` to `1.9.23` [[#55]][55]
+ - Updates `endians` to `0.3.0` [[#55]][55]
+ - Add experimental support for `wasmJs` & `wasmWasi` [[#55]][55]
+ - Add support for Java9 `JPMS` via Multi-Release jar [[#56]][56]
+
 ## Version 0.4.0 (2023-11-30)
  - Adds check for Android Runtime to `KC_ANDROID_SDK_INT` [[#51]][51]
      - Android Unit Tests: `KC_ANDROID_SDK_INT` will now be `null`
@@ -103,3 +109,5 @@
 [48]: https://github.com/KotlinCrypto/core/pull/48
 [51]: https://github.com/KotlinCrypto/core/pull/51
 [52]: https://github.com/KotlinCrypto/core/pull/52
+[55]: https://github.com/KotlinCrypto/core/pull/55
+[56]: https://github.com/KotlinCrypto/core/pull/56
