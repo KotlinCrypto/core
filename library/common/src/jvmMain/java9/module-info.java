@@ -1,5 +1,5 @@
 module org.kotlincrypto.core {
-    requires kotlin.stdlib;
+    requires transitive kotlin.stdlib;
 
     exports org.kotlincrypto.core;
 }
