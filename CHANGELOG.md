@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Version 0.5.0 (2024-03-18)
+## Version 0.5.1 (2024-03-18)
  - Use `transitive` keyword for `JPMS` `module-info.java` files [[#58]][58]
 
 ## Version 0.5.0 (2024-03-18)
