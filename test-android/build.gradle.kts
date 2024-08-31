@@ -30,7 +30,7 @@ kmpConfiguration {
 
             android {
                 namespace = "org.kotlincrypto.core"
-                compileSdk = 33
+                compileSdk = 34
 
                 defaultConfig {
                     minSdk = 14
