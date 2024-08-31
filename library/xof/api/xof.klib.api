@@ -1,0 +1,54 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, wasmJs, wasmWasi, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <org.kotlincrypto.core:xof>
+abstract interface org.kotlincrypto.core.xof/XofAlgorithm : org.kotlincrypto.core/Algorithm // org.kotlincrypto.core.xof/XofAlgorithm|null[0]
+
+abstract class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.xof/XofFactory { // org.kotlincrypto.core.xof/XofFactory|null[0]
+    abstract inner class XofDelegate : org.kotlincrypto.core.xof/Xof<#A>, org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.xof/XofFactory.XofDelegate|null[0]
+        constructor <init>(#A) // org.kotlincrypto.core.xof/XofFactory.XofDelegate.<init>|<init>(2:0){}[0]
+
+        final val delegate // org.kotlincrypto.core.xof/XofFactory.XofDelegate.delegate|{}delegate[0]
+            final fun <get-delegate>(): #A // org.kotlincrypto.core.xof/XofFactory.XofDelegate.delegate.<get-delegate>|<get-delegate>(){}[0]
+
+        abstract fun newReader(#A): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/XofFactory.XofDelegate.newReader|newReader(2:0){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core.xof/XofFactory.XofDelegate.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // org.kotlincrypto.core.xof/XofFactory.XofDelegate.hashCode|hashCode(){}[0]
+        final fun newReader(): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/XofFactory.XofDelegate.newReader|newReader(){}[0]
+        open fun algorithm(): kotlin/String // org.kotlincrypto.core.xof/XofFactory.XofDelegate.algorithm|algorithm(){}[0]
+        open fun reset() // org.kotlincrypto.core.xof/XofFactory.XofDelegate.reset|reset(){}[0]
+        open fun update(kotlin/Byte) // org.kotlincrypto.core.xof/XofFactory.XofDelegate.update|update(kotlin.Byte){}[0]
+        open fun update(kotlin/ByteArray) // org.kotlincrypto.core.xof/XofFactory.XofDelegate.update|update(kotlin.ByteArray){}[0]
+        open fun update(kotlin/ByteArray, kotlin/Int, kotlin/Int) // org.kotlincrypto.core.xof/XofFactory.XofDelegate.update|update(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+sealed class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.xof/Xof : org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Copyable<org.kotlincrypto.core.xof/Xof<#A>>, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.xof/Xof|null[0]
+    constructor <init>() // org.kotlincrypto.core.xof/Xof.<init>|<init>(){}[0]
+
+    abstract fun newReader(): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/Xof.newReader|newReader(){}[0]
+    final fun <#A1: kotlin/Any?> use(kotlin/Boolean =..., kotlin/Function1<org.kotlincrypto.core.xof/Xof.Reader<#A>, #A1>): #A1 // org.kotlincrypto.core.xof/Xof.use|use(kotlin.Boolean;kotlin.Function1<org.kotlincrypto.core.xof.Xof.Reader<1:0>,0:0>){0§<kotlin.Any?>}[0]
+    final fun reader(kotlin/Boolean =...): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/Xof.reader|reader(kotlin.Boolean){}[0]
+    final fun toString(): kotlin/String // org.kotlincrypto.core.xof/Xof.toString|toString(){}[0]
+
+    abstract inner class Reader { // org.kotlincrypto.core.xof/Xof.Reader|null[0]
+        constructor <init>() // org.kotlincrypto.core.xof/Xof.Reader.<init>|<init>(){}[0]
+
+        final var bytesRead // org.kotlincrypto.core.xof/Xof.Reader.bytesRead|{}bytesRead[0]
+            final fun <get-bytesRead>(): kotlin/Long // org.kotlincrypto.core.xof/Xof.Reader.bytesRead.<get-bytesRead>|<get-bytesRead>(){}[0]
+        final var isClosed // org.kotlincrypto.core.xof/Xof.Reader.isClosed|{}isClosed[0]
+            final fun <get-isClosed>(): kotlin/Boolean // org.kotlincrypto.core.xof/Xof.Reader.isClosed.<get-isClosed>|<get-isClosed>(){}[0]
+
+        abstract fun closeProtected() // org.kotlincrypto.core.xof/Xof.Reader.closeProtected|closeProtected(){}[0]
+        abstract fun readProtected(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Long) // org.kotlincrypto.core.xof/Xof.Reader.readProtected|readProtected(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Long){}[0]
+        final fun <#A2: kotlin/Any?> use(kotlin/Function1<org.kotlincrypto.core.xof/Xof.Reader<#A>, #A2>): #A2 // org.kotlincrypto.core.xof/Xof.Reader.use|use(kotlin.Function1<org.kotlincrypto.core.xof.Xof.Reader<2:0>,0:0>){0§<kotlin.Any?>}[0]
+        final fun close() // org.kotlincrypto.core.xof/Xof.Reader.close|close(){}[0]
+        final fun read(kotlin/ByteArray): kotlin/Int // org.kotlincrypto.core.xof/Xof.Reader.read|read(kotlin.ByteArray){}[0]
+        final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // org.kotlincrypto.core.xof/Xof.Reader.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+        final fun toString(): kotlin/String // org.kotlincrypto.core.xof/Xof.Reader.toString|toString(){}[0]
+    }
+}
