@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 0.5.3 (2024-08-31)
+ - Updates `kotlin` to `1.9.24` [[#61]][61]
+ - Updates `endians` to `0.3.1` [[#61]][61]
+ - Fixes multiplatform metadata manifest `unique_name` parameter for 
+   all source sets to be truly unique. [[#61]][61]
+ - Updates jvm `.kotlin_module` with truly unique file name. [[#61]][61]
+
 ## Version 0.5.1 (2024-03-18)
  - Use `transitive` keyword for `JPMS` `module-info.java` files [[#58]][58]
 
@@ -115,3 +122,4 @@
 [55]: https://github.com/KotlinCrypto/core/pull/55
 [56]: https://github.com/KotlinCrypto/core/pull/56
 [58]: https://github.com/KotlinCrypto/core/pull/58
+[61]: https://github.com/KotlinCrypto/core/pull/61
