@@ -73,92 +73,85 @@ internal value class Buffer private constructor(internal val value: ByteArray) {
 }
 
 @Suppress("NOTHING_TO_INLINE")
-internal inline fun Buffer.update(
+internal inline fun Buffer.commonUpdate(
     input: Byte,
-    bufOffsGetAndIncrement: () -> Int,
-    bufOffsReset: () -> Unit,
-    compress: (buf: ByteArray, offset: Int) -> Unit,
-    compressCountIncrement: () -> Unit,
+    bufOffsPlusPlus: Int,
+    doCompression: (buf: ByteArray, offset: Int) -> Unit,
 ) {
-    val bufOffs = bufOffsGetAndIncrement()
-    value[bufOffs] = input
+    val buf = value
+    buf[bufOffsPlusPlus] = input
 
-    // value.size == blockSize
-    if ((bufOffs + 1) != value.size) return
-    compress(value, 0)
-    compressCountIncrement()
-    bufOffsReset()
+    // buf.size == blockSize
+    if ((bufOffsPlusPlus + 1) != buf.size) return
+    doCompression(buf, 0)
 }
 
 @Suppress("NOTHING_TO_INLINE")
-internal inline fun Buffer.update(
+internal inline fun Buffer.commonUpdate(
     input: ByteArray,
     offset: Int,
     len: Int,
-    bufOffsGet: () -> Int,
-    bufOffsGetAndIncrement: () -> Int,
-    bufOffsReset: () -> Unit,
+    bufOffs: Int,
+    bufOffsSet: (value: Int) -> Unit,
     compress: (buf: ByteArray, offset: Int) -> Unit,
-    compressCountIncrement: () -> Unit,
+    compressCountAdd: (value: Int) -> Unit,
 ) {
-    var i = offset
-    var remaining = len
+    val buf = value
+    val blockSize = buf.size
+    var offsInput = offset
+    val limit = offsInput + len
+    var offsBuf = bufOffs
+    var compressions = 0
 
-    // Fill buffer if not already empty
-    while (bufOffsGet() != 0 && remaining > 0) {
-        update(
-            input[i++],
-            bufOffsGetAndIncrement,
-            bufOffsReset,
-            compress,
-            compressCountIncrement,
-        )
-        --remaining
+    if (offsBuf > 0) {
+        // Need to use buffered data (if possible)
+
+        if (offsBuf + len < blockSize) {
+            // Not enough for a compression. Add it to the buffer.
+            input.copyInto(buf, offsBuf, offsInput, limit)
+            bufOffsSet(offsBuf + len)
+            return
+        }
+
+        // Add enough input to do a compression
+        val needed = blockSize - offsBuf
+        input.copyInto(buf, offsBuf, offsInput, offsInput + needed)
+        compress(buf, 0)
+        offsBuf = 0
+        offsInput += needed
+        compressions++
     }
 
-    // Chunk
-    while (remaining >= value.size) {
-        compress(input, i)
-        i += value.size
-        remaining -= value.size
-        compressCountIncrement()
+    // Chunk blocks (if possible)
+    while (offsInput < limit) {
+        val offsNext = offsInput + blockSize
+
+        if (offsNext > limit) {
+            // Not enough for a compression. Add it to the buffer.
+            input.copyInto(buf, 0, offsInput, limit)
+            offsBuf = limit - offsInput
+            break
+        }
+
+        compress(input, offsInput)
+        compressions++
+        offsInput = offsNext
     }
 
-    // Add remaining to buffer
-    while (remaining-- > 0) {
-        update(
-            input[i++],
-            bufOffsGetAndIncrement,
-            bufOffsReset,
-            compress,
-            compressCountIncrement,
-        )
-    }
+    // Update globals
+    bufOffsSet(offsBuf)
+    compressCountAdd(compressions)
 }
 
 @Suppress("NOTHING_TO_INLINE")
-internal inline fun Buffer.digest(
+internal inline fun Buffer.commonDigest(
     bufOffs: Int,
     compressCount: Long,
     digest: (bitLength: Long, offs: Int, buf: ByteArray) -> ByteArray,
-    resetBufOffs: () -> Unit,
-    resetCompressCount: () -> Unit,
-    resetDigest: () -> Unit,
+    reset: () -> Unit,
 ): ByteArray {
     val bitLength = ((compressCount * value.size) + bufOffs) * 8
     val final = digest(bitLength, bufOffs, value)
-    reset(resetBufOffs, resetCompressCount, resetDigest)
+    reset()
     return final
-}
-
-@Suppress("NOTHING_TO_INLINE")
-internal inline fun Buffer.reset(
-    resetBufOffs: () -> Unit,
-    resetCompressCount: () -> Unit,
-    resetDigest: () -> Unit,
-) {
-    value.fill(0)
-    resetBufOffs()
-    resetCompressCount()
-    resetDigest()
 }
