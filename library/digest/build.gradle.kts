@@ -22,7 +22,7 @@ kmpConfiguration {
         common {
             sourceSetMain {
                 dependencies {
-                    api(project(":library:common"))
+                    api(project(":library:core"))
                 }
             }
         }
