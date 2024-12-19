@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Version 0.5.3 (2024-12-19)
+## Version 0.5.4 (2024-12-19)
  - Adds benchmarking to repository [[#64]][64]
  - Refactors `Digest` internals (performance improvements) [[#66]][66]
  - Changes module `:common` name to `:core` to be more in line with its 
