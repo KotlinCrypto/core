@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 0.5.3 (2024-12-19)
+ - Adds benchmarking to repository [[#64]][64]
+ - Refactors `Digest` internals (performance improvements) [[#66]][66]
+ - Changes module `:common` name to `:core` to be more in line with its 
+   package name of `org.kotlincrypto.core`
+     - Publication coordinates have changed from `org.kotlincrypto.core:common` 
+       to `org.kotlincrypto.core:core`
+
 ## Version 0.5.3 (2024-08-31)
  - Updates `kotlin` to `1.9.24` [[#61]][61]
  - Updates `endians` to `0.3.1` [[#61]][61]
