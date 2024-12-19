@@ -31,16 +31,7 @@ import org.kotlincrypto.core.digest.internal.DigestState
  *
  * https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms
  * */
-public expect abstract class Digest private constructor(
-    algorithm: String,
-    blockSize: Int,
-    digestLength: Int,
-    state: DigestState?,
-) : Algorithm,
-    Copyable<Digest>,
-    Resettable,
-    Updatable
-{
+public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Updatable {
 
     /**
      * Creates a new [Digest] for the specified parameters.
@@ -81,10 +72,6 @@ public expect abstract class Digest private constructor(
 
     public final override fun reset()
 
-    public final override fun equals(other: Any?): Boolean
-    public final override fun hashCode(): Int
-    public final override fun toString(): String
-
     public final override fun copy(): Digest
     protected abstract fun copy(state: DigestState): Digest
 
@@ -109,4 +96,8 @@ public expect abstract class Digest private constructor(
      * override and intercept if necessary.
      * */
     protected open fun updateDigest(input: ByteArray, offset: Int, len: Int)
+
+    public final override fun equals(other: Any?): Boolean
+    public final override fun hashCode(): Int
+    public final override fun toString(): String
 }

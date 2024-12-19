@@ -18,8 +18,8 @@
 package org.kotlincrypto.core.digest
 
 import org.kotlincrypto.core.*
-import org.kotlincrypto.core.digest.internal.DigestDelegate
-import org.kotlincrypto.core.digest.internal.DigestState
+import org.kotlincrypto.core.digest.internal.*
+import org.kotlincrypto.core.digest.internal.Buffer.Companion.buf
 import org.kotlincrypto.core.digest.internal.commonCheckArgs
 import org.kotlincrypto.core.digest.internal.commonToString
 import java.nio.ByteBuffer
@@ -38,24 +38,13 @@ import java.security.MessageDigest
  *
  * https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms
  * */
-public actual abstract class Digest private actual constructor(
-    algorithm: String,
-    blockSize: Int,
-    digestLength: Int,
-    state: DigestState?,
-) : MessageDigest(algorithm),
-    Algorithm,
-    Cloneable,
-    Copyable<Digest>,
-    Resettable,
-    Updatable
-{
+public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyable<Digest>, Resettable, Updatable {
 
-    private val delegate = if (state != null) {
-        DigestDelegate.instance(state, ::compress, ::digest, ::resetDigest)
-    } else {
-        DigestDelegate.instance(algorithm, blockSize, digestLength, ::compress, ::digest, ::resetDigest)
-    }
+    private val algorithm: String
+    private val digestLength: Int
+    private val buf: Buffer
+    private var bufOffs: Int
+    private var compressCount: Long
 
     /**
      * Creates a new [Digest] for the specified parameters.
@@ -68,11 +57,13 @@ public actual abstract class Digest private actual constructor(
      * */
     @InternalKotlinCryptoApi
     @Throws(IllegalArgumentException::class)
-    protected actual constructor(
-        algorithm: String,
-        blockSize: Int,
-        digestLength: Int
-    ): this(algorithm, blockSize, digestLength, null)
+    protected actual constructor(algorithm: String, blockSize: Int, digestLength: Int): super(algorithm) {
+        this.buf = Buffer.initialize(algorithm, blockSize, digestLength)
+        this.algorithm = algorithm
+        this.digestLength = digestLength
+        this.bufOffs = 0
+        this.compressCount = 0L
+    }
 
     /**
      * Creates a new [Digest] for the copied [state] of another [Digest]
@@ -84,11 +75,17 @@ public actual abstract class Digest private actual constructor(
      * @see [DigestState]
      * */
     @InternalKotlinCryptoApi
-    protected actual constructor(state: DigestState): this(state.algorithm, state.blockSize, state.digestLength, state)
+    protected actual constructor(state: DigestState): super(state.algorithm) {
+        this.algorithm = state.algorithm
+        this.digestLength = state.digestLength
+        this.buf = state.buf()
+        this.bufOffs = state.bufOffs
+        this.compressCount = state.compressCount
+    }
 
-    public actual final override fun algorithm(): String = delegate.algorithm
-    public actual fun blockSize(): Int = delegate.blockSize
-    public actual fun digestLength(): Int = delegate.digestLength
+    public actual final override fun algorithm(): String = algorithm
+    public actual fun blockSize(): Int = buf.value.size
+    public actual fun digestLength(): Int = digestLength
 
     public actual final override fun update(input: Byte) {
         updateDigest(input)
@@ -102,22 +99,36 @@ public actual abstract class Digest private actual constructor(
         updateDigest(input, offset, len)
     }
 
-    public actual final override fun digest(): ByteArray = delegate.digest()
+    public actual final override fun digest(): ByteArray = buf.digest(
+        bufOffs = bufOffs,
+        compressCount = compressCount,
+        digest = ::digest,
+        resetBufOffs = { bufOffs = 0 },
+        resetCompressCount = { compressCount = 0 },
+        resetDigest = ::resetDigest,
+    )
     public actual final override fun digest(input: ByteArray): ByteArray {
         updateDigest(input, 0, input.size)
-        return delegate.digest()
+        return digest()
     }
     @Throws(IllegalArgumentException::class, DigestException::class)
     public final override fun digest(buf: ByteArray, offset: Int, len: Int): Int = super.digest(buf, offset, len)
 
-    public actual final override fun reset() { delegate.reset() }
-
-    public actual final override fun equals(other: Any?): Boolean = other is Digest && other.delegate == delegate
-    public actual final override fun hashCode(): Int = delegate.hashCode()
-    public actual final override fun toString(): String = commonToString()
+    public actual final override fun reset() {
+        buf.reset(
+            resetBufOffs = { bufOffs = 0 },
+            resetCompressCount = { compressCount = 0 },
+            resetDigest = ::resetDigest,
+        )
+    }
 
     public final override fun clone(): Any = copy()
-    public actual final override fun copy(): Digest = copy(delegate.copy())
+    public actual final override fun copy(): Digest = buf.toState(
+        algorithm = algorithm,
+        digestLength = digestLength,
+        bufOffs = bufOffs,
+        compressCount = compressCount,
+    ).let { copy(it) }
     protected actual abstract fun copy(state: DigestState): Digest
 
     /**
@@ -134,7 +145,13 @@ public actual abstract class Digest private actual constructor(
      * if necessary.
      * */
     protected actual open fun updateDigest(input: Byte) {
-        delegate.update(input)
+        buf.update(
+            input = input,
+            bufOffsGetAndIncrement = { bufOffs++ },
+            bufOffsReset = { bufOffs = 0 },
+            compress = ::compress,
+            compressCountIncrement = { compressCount++ },
+        )
     }
 
     /**
@@ -143,19 +160,32 @@ public actual abstract class Digest private actual constructor(
      * override and intercept if necessary.
      * */
     protected actual open fun updateDigest(input: ByteArray, offset: Int, len: Int) {
-        delegate.update(input, offset, len)
+        buf.update(
+            input = input,
+            offset = offset,
+            len = len,
+            bufOffsGet = { bufOffs },
+            bufOffsGetAndIncrement = { bufOffs++ },
+            bufOffsReset = { bufOffs = 0 },
+            compress = ::compress,
+            compressCountIncrement = { compressCount++ },
+        )
     }
 
     // MessageDigestSpi
-    protected final override fun engineGetDigestLength(): Int = delegate.digestLength
+    protected final override fun engineGetDigestLength(): Int = digestLength
     protected final override fun engineUpdate(p0: Byte) { updateDigest(p0) }
     protected final override fun engineUpdate(input: ByteBuffer) { super.engineUpdate(input) }
     @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
     protected final override fun engineUpdate(p0: ByteArray, p1: Int, p2: Int) { update(p0, p1, p2) }
-    protected final override fun engineDigest(): ByteArray = delegate.digest()
+    protected final override fun engineDigest(): ByteArray = digest()
     @Throws(DigestException::class)
     protected final override fun engineDigest(buf: ByteArray, offset: Int, len: Int): Int {
         return super.engineDigest(buf, offset, len)
     }
-    protected final override fun engineReset() { delegate.reset() }
+    protected final override fun engineReset() { reset() }
+
+    public actual final override fun equals(other: Any?): Boolean = other is Digest && other.buf == buf
+    public actual final override fun hashCode(): Int = buf.hashCode()
+    public actual final override fun toString(): String = commonToString()
 }
