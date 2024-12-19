@@ -39,7 +39,7 @@ kmpConfiguration {
         common {
             sourceSetMain {
                 dependencies {
-                    implementation("$group:common:$version")
+                    implementation("$group:core:$version")
                     implementation("$group:digest:$version")
                     implementation("$group:mac:$version")
                     implementation("$group:xof:$version")

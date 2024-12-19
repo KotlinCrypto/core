@@ -32,7 +32,7 @@ if (CHECK_PUBLICATION != null) {
     include(":tools:check-publication")
 } else {
     listOf(
-        "common",
+        "core",
         "digest",
         "mac",
         "xof",

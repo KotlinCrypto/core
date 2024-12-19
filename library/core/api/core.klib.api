@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <org.kotlincrypto.core:common>
+// Library unique name: <org.kotlincrypto.core:core>
 open annotation class org.kotlincrypto.core/ExperimentalKotlinCryptoApi : kotlin/Annotation { // org.kotlincrypto.core/ExperimentalKotlinCryptoApi|null[0]
     constructor <init>() // org.kotlincrypto.core/ExperimentalKotlinCryptoApi.<init>|<init>(){}[0]
 }
