@@ -99,13 +99,11 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
         updateDigest(input, offset, len)
     }
 
-    public actual final override fun digest(): ByteArray = buf.digest(
+    public actual final override fun digest(): ByteArray = buf.commonDigest(
         bufOffs = bufOffs,
         compressCount = compressCount,
         digest = ::digest,
-        resetBufOffs = { bufOffs = 0 },
-        resetCompressCount = { compressCount = 0 },
-        resetDigest = ::resetDigest,
+        reset = ::reset,
     )
     public actual final override fun digest(input: ByteArray): ByteArray {
         updateDigest(input, 0, input.size)
@@ -115,11 +113,10 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     public final override fun digest(buf: ByteArray, offset: Int, len: Int): Int = super.digest(buf, offset, len)
 
     public actual final override fun reset() {
-        buf.reset(
-            resetBufOffs = { bufOffs = 0 },
-            resetCompressCount = { compressCount = 0 },
-            resetDigest = ::resetDigest,
-        )
+        buf.value.fill(0)
+        bufOffs = 0
+        compressCount = 0
+        resetDigest()
     }
 
     public final override fun clone(): Any = copy()
@@ -145,12 +142,14 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
      * if necessary.
      * */
     protected actual open fun updateDigest(input: Byte) {
-        buf.update(
+        buf.commonUpdate(
             input = input,
-            bufOffsGetAndIncrement = { bufOffs++ },
-            bufOffsReset = { bufOffs = 0 },
-            compress = ::compress,
-            compressCountIncrement = { compressCount++ },
+            bufOffsPlusPlus = bufOffs++,
+            doCompression = { buf, offset ->
+                compress(buf, offset)
+                bufOffs = 0
+                compressCount++
+            },
         )
     }
 
@@ -160,15 +159,14 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
      * override and intercept if necessary.
      * */
     protected actual open fun updateDigest(input: ByteArray, offset: Int, len: Int) {
-        buf.update(
+        buf.commonUpdate(
             input = input,
             offset = offset,
             len = len,
-            bufOffsGet = { bufOffs },
-            bufOffsGetAndIncrement = { bufOffs++ },
-            bufOffsReset = { bufOffs = 0 },
+            bufOffs = bufOffs,
+            bufOffsSet = { bufOffs = it },
             compress = ::compress,
-            compressCountIncrement = { compressCount++ },
+            compressCountAdd = { compressCount += it },
         )
     }
 
