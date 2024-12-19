@@ -74,7 +74,6 @@ internal class AndroidApi21to23MacSpiProvider private constructor(
 
     internal companion object {
 
-        @JvmStatic
         @JvmSynthetic
         internal fun createOrNull(engine: MacSpi, algorithm: String): AndroidApi21to23MacSpiProvider? {
             @OptIn(InternalKotlinCryptoApi::class)
