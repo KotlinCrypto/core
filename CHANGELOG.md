@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.5.5 (2024-12-20)
+ - Fixes optimization issues with `Digest.update` internals [[#70]][70]
+
 ## Version 0.5.4 (2024-12-19)
  - Adds benchmarking to repository [[#64]][64]
  - Refactors `Digest` internals (performance improvements) [[#66]][66]
@@ -131,3 +134,6 @@
 [56]: https://github.com/KotlinCrypto/core/pull/56
 [58]: https://github.com/KotlinCrypto/core/pull/58
 [61]: https://github.com/KotlinCrypto/core/pull/61
+[64]: https://github.com/KotlinCrypto/core/pull/64
+[66]: https://github.com/KotlinCrypto/core/pull/66
+[70]: https://github.com/KotlinCrypto/core/pull/70
