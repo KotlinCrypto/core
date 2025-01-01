@@ -67,31 +67,29 @@ class DigestUnitTest: TestDigestException() {
 
     @Test
     fun givenDigest_whenUpdated_thenChunksProperly() {
-        var compressCount = 0
-
         val digest = TestDigest(
-            compress = { _, _ -> compressCount++ },
             // Return byte array sized to the offset
             digest = { _, offset, _ -> ByteArray(offset) }
         )
 
         digest.update(ByteArray(digest.blockSize() - 1))
-        assertEquals(0, compressCount)
+        assertEquals(0, digest.compressCount())
 
         digest.update(ByteArray(digest.blockSize() + 1))
-        assertEquals(2, compressCount)
+        assertEquals(2, digest.compressCount())
 
         digest.update(ByteArray(digest.blockSize() - 1))
-        assertEquals(2, compressCount)
+        assertEquals(2, digest.compressCount())
 
         digest.update(4)
-        assertEquals(3, compressCount)
+        assertEquals(3, digest.compressCount())
 
         digest.update(ByteArray(digest.blockSize()))
-        assertEquals(4, compressCount)
+        assertEquals(4, digest.compressCount())
 
         // Check the internal bufferOffset was 0 after all that
         assertEquals(0, digest.digest().size)
+        assertEquals(0, digest.compressCount())
     }
 
     @Test

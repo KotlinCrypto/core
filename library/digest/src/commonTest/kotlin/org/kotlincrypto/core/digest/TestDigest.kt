@@ -49,6 +49,8 @@ class TestDigest: Digest {
         this.reset = reset
     }
 
+    fun compressCount(): Long = compressions()
+
     override fun compress(input: ByteArray, offset: Int) {
         compress.invoke(input, offset)
     }
