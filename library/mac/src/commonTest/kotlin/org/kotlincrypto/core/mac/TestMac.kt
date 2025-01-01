@@ -15,10 +15,6 @@
  **/
 package org.kotlincrypto.core.mac
 
-import org.kotlincrypto.core.InternalKotlinCryptoApi
-
-@Suppress("UnnecessaryOptInAnnotation")
-@OptIn(InternalKotlinCryptoApi::class)
 class TestMac : Mac {
 
     constructor(

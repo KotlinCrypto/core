@@ -36,13 +36,15 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     /**
      * Creates a new [Digest] for the specified parameters.
      *
+     * @param [algorithm] See [Algorithm.algorithm]
+     * @param [blockSize] See [Digest.blockSize]
+     * @param [digestLength] See [Digest.digestLength]
      * @throws [IllegalArgumentException] when:
      *  - [algorithm] is blank
      *  - [blockSize] is less than or equal to 0
      *  - [blockSize] is not a factor of 8
-     *  - [digestLength] is less than 0
+     *  - [digestLength] is negative
      * */
-    @InternalKotlinCryptoApi
     @Throws(IllegalArgumentException::class)
     protected constructor(algorithm: String, blockSize: Int, digestLength: Int)
 
@@ -53,51 +55,110 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * Implementors of [Digest] should have a private secondary constructor
      * that is utilized by its [copy] implementation.
      *
+     * e.g.
+     *
+     *     public class SHA256: Digest {
+     *
+     *         public constructor(): super("SHA-256", 64, 32) {
+     *             // Initialize...
+     *         }
+     *         private constructor(thiz: SHA256, state: DigestState): super(state) {
+     *             // Copy implementation details...
+     *         }
+     *         protected override fun copy(state: DigestState): Digest = SHA256(this, state)
+     *         // ...
+     *     }
+     *
      * @see [DigestState]
      * */
-    @InternalKotlinCryptoApi
     protected constructor(state: DigestState)
 
-    public final override fun algorithm(): String
+    /**
+     * The number of byte blocks (in factors of 8) that the implementation
+     * requires before one round of input processing is to occur. This value
+     * is also representative of the digest's buffer size, and will always
+     * be greater than 0.
+     * */
     public fun blockSize(): Int
+
+    /**
+     * The number of bytes the implementation returns when [digest] is called.
+     * */
     public fun digestLength(): Int
 
+    // See Algorithm interface documentation
+    public final override fun algorithm(): String
+
+    // See Updatable interface documentation
     public final override fun update(input: Byte)
+    // See Updatable interface documentation
     public final override fun update(input: ByteArray)
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
+    // See Updatable interface documentation
     public final override fun update(input: ByteArray, offset: Int, len: Int)
 
+    /**
+     * Completes the computation, performing final operations and returning
+     * the resultant array of bytes. The [Digest] is [reset] afterward.
+     * */
     public fun digest(): ByteArray
+
+    /**
+     * Updates the instance with provided [input], then completes the computation,
+     * performing final operations and returning the resultant array of bytes. The
+     * [Digest] is [reset] afterward.
+     * */
     public fun digest(input: ByteArray): ByteArray
 
+    // See Resettable interface documentation
     public final override fun reset()
 
+    // See Copyable interface documentation
     public final override fun copy(): Digest
+
+    /**
+     * Called by the public [copy] function which produces the
+     * [DigestState] needed to create a wholly new instance.
+     * */
     protected abstract fun copy(state: DigestState): Digest
 
     /**
-     * Called whenever a full [blockSize] worth of bytes is available
-     * to be processed, starting at index [offset] for the [input].
+     * Called whenever a full [blockSize] worth of bytes are available for processing,
+     * starting at index [offset] for the provided [input]. Implementations **must not**
+     * alter [input].
      * */
     protected abstract fun compress(input: ByteArray, offset: Int)
-    protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
-    protected abstract fun resetDigest()
 
     /**
-     * Protected, direct access to the [Digest]'s buffer. All external input
-     * is directed here such that implementations can override and intercept
-     * if necessary.
+     * Called to complete the computation, providing any input that may be
+     * buffered awaiting processing.
+     *
+     * @param [bitLength] The number of bits that have been processed, including
+     *   those remaining in the [buffer]
+     * @param [bufferOffset] The index at which the next input would be placed in
+     *   the [buffer]
+     * @param [buffer] Unprocessed input
+     * */
+    protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
+
+    /**
+     * Optional override for implementations to intercept cleansed input before
+     * being processed by the [Digest] abstraction.
      * */
     protected open fun updateDigest(input: Byte)
 
     /**
-     * Protected, direct access to the [Digest]'s buffer. All external input
-     * is validated before being directed here such that implementations can
-     * override and intercept if necessary.
+     * Optional override for implementations to intercept cleansed input before
+     * being processed by the [Digest] abstraction. Parameters passed to this
+     * function are always valid and have been checked for appropriateness.
      * */
     protected open fun updateDigest(input: ByteArray, offset: Int, len: Int)
 
+    protected abstract fun resetDigest()
+
+    /** @suppress */
     public final override fun equals(other: Any?): Boolean
+    /** @suppress */
     public final override fun hashCode(): Int
+    /** @suppress */
     public final override fun toString(): String
 }

@@ -47,7 +47,6 @@ import javax.crypto.spec.SecretKeySpec
  * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
 public actual abstract class Mac
-@InternalKotlinCryptoApi
 @Throws(IllegalArgumentException::class)
 protected actual constructor(
     algorithm: String,
@@ -68,17 +67,31 @@ protected actual constructor(
         // Engine.engineInit is overridden as no-op, so this does
         // nothing other than set `javax.crypto.Mac.initialized`
         // to true
-        super.init(SecretKeySpec(ByteArray(1), algorithm))
+        super.init(SecretKeySpec(INIT_KEY, algorithm))
     }
 
-    public actual final override fun algorithm(): String = algorithm
+    /**
+     * The number of bytes the implementation returns when [doFinal] is called.
+     * */
     public actual fun macLength(): Int = macLength
 
+    // See Algorithm interface documentation
+    public actual final override fun algorithm(): String = algorithm
+
+    // See Copyable interface documentation
     public actual final override fun copy(): Mac = copy(engine.copy())
+
+    /**
+     * Called by the public [copy] function which produces the
+     * [Engine] copy needed to create a wholly new instance.
+     * */
     protected actual abstract fun copy(engineCopy: Engine): Mac
 
+    /** @suppress */
     public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
+    /** @suppress */
     public actual final override fun hashCode(): Int = engine.hashCode()
+    /** @suppress */
     public actual final override fun toString(): String = commonToString()
 
     /**
@@ -98,35 +111,49 @@ protected actual constructor(
          *
          * @throws [IllegalArgumentException] if [key] is empty.
          * */
-        @InternalKotlinCryptoApi
         @Throws(IllegalArgumentException::class)
         public actual constructor(key: ByteArray): super() { require(key.isNotEmpty()) { "key cannot be empty" } }
 
         /**
          * Creates a new [Engine] for the copied [State]
          * */
-        @InternalKotlinCryptoApi
         protected actual constructor(state: State): super()
 
+        /**
+         * The number of bytes the implementation returns when [doFinal] is called.
+         * */
         public actual abstract fun macLength(): Int
+
+        /**
+         * Completes the computation, performing final operations and returning
+         * the resultant array of bytes. The [Engine] is [reset] afterward.
+         * */
         public actual abstract fun doFinal(): ByteArray
 
+        // See Updatable interface documentation
         public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
 
+        // MacSpi
+        /** @suppress */
         protected final override fun engineUpdate(p0: Byte) { update(p0) }
+        /** @suppress */
         protected final override fun engineUpdate(input: ByteBuffer?) {
             if (input == null) return
             super.engineUpdate(input)
         }
+        /** @suppress */
         protected final override fun engineUpdate(p0: ByteArray, p1: Int, p2: Int) {
             // javax.crypto.Mac checks offset and len arguments
             update(p0, p1, p2)
         }
+        /** @suppress */
         protected final override fun engineReset() { reset() }
+        /** @suppress */
         protected final override fun engineGetMacLength(): Int = macLength()
 
         // Is called immediately from Mac init block with a blanked key (required in order to set
         // javax.crypto.Mac.initialized to true).
+        /** @suppress */
         protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) {
             if (isInitialized) {
 
@@ -143,6 +170,7 @@ protected actual constructor(
 
             isInitialized = true
         }
+        /** @suppress */
         protected final override fun engineDoFinal(): ByteArray {
             val b = doFinal()
 
@@ -153,11 +181,19 @@ protected actual constructor(
             return b
         }
 
+        /** @suppress */
         public final override fun clone(): Any = copy()
 
+        /** @suppress */
         public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode == hashCode
+        /** @suppress */
         public actual final override fun hashCode(): Int = hashCode
 
+        // Unfortunate API design for the copy functionality...
         protected actual abstract inner class State
+    }
+
+    private companion object {
+        private val INIT_KEY = ByteArray(1)
     }
 }

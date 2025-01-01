@@ -22,10 +22,17 @@ public abstract class org/kotlincrypto/core/xof/Xof$Reader {
 	public final fun use (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
+public final class org/kotlincrypto/core/xof/Xof$Utils {
+	public static final field INSTANCE Lorg/kotlincrypto/core/xof/Xof$Utils;
+	public static final fun leftEncode (J)[B
+	public static final fun rightEncode (J)[B
+}
+
 public abstract interface class org/kotlincrypto/core/xof/XofAlgorithm : org/kotlincrypto/core/Algorithm {
 }
 
 public abstract class org/kotlincrypto/core/xof/XofFactory {
+	public fun <init> ()V
 }
 
 protected abstract class org/kotlincrypto/core/xof/XofFactory$XofDelegate : org/kotlincrypto/core/xof/Xof, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {

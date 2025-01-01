@@ -7,6 +7,9 @@
 
 // Library unique name: <org.kotlincrypto.core:digest>
 abstract class org.kotlincrypto.core.digest/Digest : org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Copyable<org.kotlincrypto.core.digest/Digest>, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.digest/Digest|null[0]
+    constructor <init>(kotlin/String, kotlin/Int, kotlin/Int) // org.kotlincrypto.core.digest/Digest.<init>|<init>(kotlin.String;kotlin.Int;kotlin.Int){}[0]
+    constructor <init>(org.kotlincrypto.core.digest.internal/DigestState) // org.kotlincrypto.core.digest/Digest.<init>|<init>(org.kotlincrypto.core.digest.internal.DigestState){}[0]
+
     abstract fun compress(kotlin/ByteArray, kotlin/Int) // org.kotlincrypto.core.digest/Digest.compress|compress(kotlin.ByteArray;kotlin.Int){}[0]
     abstract fun copy(org.kotlincrypto.core.digest.internal/DigestState): org.kotlincrypto.core.digest/Digest // org.kotlincrypto.core.digest/Digest.copy|copy(org.kotlincrypto.core.digest.internal.DigestState){}[0]
     abstract fun digest(kotlin/Long, kotlin/Int, kotlin/ByteArray): kotlin/ByteArray // org.kotlincrypto.core.digest/Digest.digest|digest(kotlin.Long;kotlin.Int;kotlin.ByteArray){}[0]

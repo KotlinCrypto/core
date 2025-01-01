@@ -16,7 +16,6 @@
 package org.kotlincrypto.core.benchmarks
 
 import kotlinx.benchmark.*
-import org.kotlincrypto.core.InternalKotlinCryptoApi
 import org.kotlincrypto.core.digest.Digest
 import org.kotlincrypto.core.digest.internal.DigestState
 import kotlin.random.Random
@@ -28,7 +27,6 @@ import kotlin.random.Random
 @Measurement(iterations = 5, time = 3)
 open class DigestBenchmark {
 
-    @OptIn(InternalKotlinCryptoApi::class)
     private class TestDigest: Digest {
         constructor(): super("Benchmark", 32, 32)
         private constructor(state: DigestState): super(state)

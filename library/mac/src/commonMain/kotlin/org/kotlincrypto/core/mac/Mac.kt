@@ -37,7 +37,6 @@ import org.kotlincrypto.core.*
  * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
 public expect abstract class Mac
-@InternalKotlinCryptoApi
 @Throws(IllegalArgumentException::class)
 protected constructor(
     algorithm: String,
@@ -48,24 +47,51 @@ protected constructor(
     Updatable
 {
 
-    public final override fun algorithm(): String
+    /**
+     * The number of bytes the implementation returns when [doFinal] is called.
+     * */
     public fun macLength(): Int
 
+    // See Algorithm interface documentation
+    public final override fun algorithm(): String
+
+    // See Updatable interface documentation
     public final override fun update(input: Byte)
+    // See Updatable interface documentation
     public final override fun update(input: ByteArray)
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
+    // See Updatable interface documentation
     public final override fun update(input: ByteArray, offset: Int, len: Int)
 
-    public final override fun reset()
-
+    /**
+     * Completes the computation, performing final operations and returning
+     * the resultant array of bytes. The [Mac] is [reset] afterward.
+     * */
     public fun doFinal(): ByteArray
+
+    /**
+     * Updates the instance with provided [input], then completes the computation,
+     * performing final operations and returning the resultant array of bytes. The
+     * [Mac] is [reset] afterward.
+     * */
     public fun doFinal(input: ByteArray): ByteArray
 
+    // See Resettable interface documentation
+    public final override fun reset()
+
+    // See Copyable interface documentation
     public final override fun copy(): Mac
+
+    /**
+     * Called by the public [copy] function which produces the
+     * [Engine] copy needed to create a wholly new instance.
+     * */
     protected abstract fun copy(engineCopy: Engine): Mac
 
+    /** @suppress */
     public final override fun equals(other: Any?): Boolean
+    /** @suppress */
     public final override fun hashCode(): Int
+    /** @suppress */
     public final override fun toString(): String
 
     /**
@@ -81,24 +107,34 @@ protected constructor(
          *
          * @throws [IllegalArgumentException] if [key] is empty.
          * */
-        @InternalKotlinCryptoApi
         @Throws(IllegalArgumentException::class)
         public constructor(key: ByteArray)
 
         /**
          * Creates a new [Engine] for the copied [State]
          * */
-        @InternalKotlinCryptoApi
         protected constructor(state: State)
 
+        /**
+         * The number of bytes the implementation returns when [doFinal] is called.
+         * */
         public abstract fun macLength(): Int
+
+        /**
+         * Completes the computation, performing final operations and returning
+         * the resultant array of bytes. The [Engine] is [reset] afterward.
+         * */
         public abstract fun doFinal(): ByteArray
 
+        // See Updatable interface documentation
         public override fun update(input: ByteArray)
 
+        /** @suppress */
         final override fun equals(other: Any?): Boolean
+        /** @suppress */
         final override fun hashCode(): Int
 
+        // Unfortunate API design for the copy functionality...
         protected abstract inner class State()
     }
 }

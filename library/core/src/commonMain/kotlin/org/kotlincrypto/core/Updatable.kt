@@ -15,12 +15,33 @@
  **/
 package org.kotlincrypto.core
 
-/**
- * Denotes a class as being able to be [update]ed.
- * */
 public interface Updatable {
+
+    /**
+     * Updates the instance with the specified byte.
+     *
+     * @param [input] The byte to update the instance with.
+     * */
     public fun update(input: Byte)
+
+    /**
+     * Updates the instance with the specified array of bytes.
+     *
+     * @param [input] The array of bytes to update the instance with.
+     * */
     public fun update(input: ByteArray)
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
+
+    /**
+     * Updates the instance with the specified array of bytes,
+     * starting at [offset]
+     *
+     * @param [input] The array of bytes to update the instance with.
+     * @param [offset] The index to start from in the array of bytes.
+     * @param [len] The number of bytes to use, starting at [offset].
+     * @throws [IllegalArgumentException] if [input] size is inappropriate
+     *   for given [len] parameter.
+     * @throws [IndexOutOfBoundsException] if [offset] and [len] are
+     *   inappropriate.
+     * */
     public fun update(input: ByteArray, offset: Int, len: Int)
 }

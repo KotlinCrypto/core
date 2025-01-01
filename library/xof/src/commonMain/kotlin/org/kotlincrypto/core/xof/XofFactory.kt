@@ -29,7 +29,6 @@ import org.kotlincrypto.core.*
  *
  *         // ...
  *
- *         @OptIn(InternalKotlinCryptoApi::class)
  *         companion object: XofFactory<SHAKE128>() {
  *             @JvmStatic
  *             fun xOf(): Xof<SHAKE128> = object : XofDelegate(SHAKE128()) {
@@ -40,10 +39,7 @@ import org.kotlincrypto.core.*
  *
  * @see [XofDelegate]
  * */
-public abstract class XofFactory<A: XofAlgorithm>
-@InternalKotlinCryptoApi
-public constructor()
-{
+public abstract class XofFactory<A: XofAlgorithm> public constructor() {
 
     /**
      * Wrapper for a Digest, Mac, etc. to act as a delegate to
