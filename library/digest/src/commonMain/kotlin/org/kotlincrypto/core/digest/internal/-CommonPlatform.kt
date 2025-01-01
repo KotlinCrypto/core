@@ -30,3 +30,12 @@ internal inline fun ByteArray.commonCheckArgs(offset: Int, len: Int) {
     if (size - offset < len) throw IllegalArgumentException("Input too short")
     if (offset < 0 || len < 0 || offset > size - len) throw IndexOutOfBoundsException()
 }
+
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun Int.commonCalculateCompressions(multiplier: Int): Long {
+    var count = this.toLong()
+    if (multiplier > 0) {
+        count += (Int.MAX_VALUE.toLong() * multiplier)
+    }
+    return count
+}

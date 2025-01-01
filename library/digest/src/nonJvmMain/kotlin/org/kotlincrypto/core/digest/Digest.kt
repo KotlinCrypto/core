@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING", "KotlinRedundantDiagnosticSuppress")
 
 package org.kotlincrypto.core.digest
 
@@ -40,7 +40,8 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     private val digestLength: Int
     private val buf: Buffer
     private var bufOffs: Int
-    private var compressCount: Long
+    private var compressCount: Int
+    private var compressCountMultiplier: Int
 
     /**
      * Creates a new [Digest] for the specified parameters.
@@ -59,8 +60,9 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         this.buf = Buffer.initialize(algorithm, blockSize, digestLength)
         this.algorithm = algorithm
         this.digestLength = digestLength
-        bufOffs = 0
-        compressCount = 0L
+        this.bufOffs = 0
+        this.compressCount = 0
+        this.compressCountMultiplier = 0
     }
 
     /**
@@ -92,6 +94,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         this.buf = state.buf()
         this.bufOffs = state.bufOffs
         this.compressCount = state.compressCount
+        this.compressCountMultiplier = state.compressCountMultiplier
     }
 
     /**
@@ -130,7 +133,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * */
     public actual fun digest(): ByteArray = buf.commonDigest(
         bufOffs = bufOffs,
-        compressCount = compressCount,
+        compressCount = compressions(),
         digest = ::digest,
         reset = ::reset,
     )
@@ -149,7 +152,8 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public actual final override fun reset() {
         buf.value.fill(0)
         bufOffs = 0
-        compressCount = 0L
+        compressCount = 0
+        compressCountMultiplier = 0
         resetDigest()
     }
 
@@ -159,6 +163,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         digestLength = digestLength,
         bufOffs = bufOffs,
         compressCount = compressCount,
+        compressCountMultiplier = compressCountMultiplier,
     ).let { copy(it) }
 
     /**
@@ -166,7 +171,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * variable is updated **after** each [compress] invocation, and
      * subsequently set to `0` upon [reset] invocation.
      * */
-    protected actual fun compressions(): Long = compressCount
+    protected actual fun compressions(): Long = compressCount.commonCalculateCompressions(compressCountMultiplier)
 
     /**
      * Called by the public [copy] function which produces the
@@ -204,7 +209,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
             doCompression = { buf, offset ->
                 compress(buf, offset)
                 bufOffs = 0
-                compressCount++
+                compressCountIncrement()
             },
         )
     }
@@ -222,11 +227,18 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
             bufOffs = bufOffs,
             bufOffsSet = { bufOffs = it },
             compress = ::compress,
-            compressCountIncrement = { compressCount++ },
+            compressCountIncrement = ::compressCountIncrement,
         )
     }
 
     protected actual abstract fun resetDigest()
+
+    private fun compressCountIncrement() {
+        if (++compressCount != Int.MIN_VALUE) return
+        // Int.MAX_VALUE reached and went negative
+        compressCount = 1
+        compressCountMultiplier++
+    }
 
     /** @suppress */
     public actual final override fun equals(other: Any?): Boolean = other is Digest && other.buf == buf
