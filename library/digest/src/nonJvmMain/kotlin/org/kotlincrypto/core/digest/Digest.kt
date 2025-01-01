@@ -87,6 +87,8 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      *     }
      *
      * @see [DigestState]
+     * @throws [IllegalStateException] If [DigestState] has already been used to instantiate
+     *   another instance of [Digest]
      * */
     protected actual constructor(state: DigestState) {
         this.algorithm = state.algorithm
@@ -174,8 +176,12 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     protected actual fun compressions(): Long = compressCount.commonCalculateCompressions(compressCountMultiplier)
 
     /**
-     * Called by the public [copy] function which produces the
-     * [DigestState] needed to create a wholly new instance.
+     * Called by the public [copy] function which produces the [DigestState]
+     * needed to create a wholly new instance.
+     *
+     * **NOTE:** [DigestState] can only be consumed once and should **NOT**
+     * be held on to. Attempting to instantiate multiple [Digest] instances
+     * with a single [DigestState] will raise an [IllegalStateException].
      * */
     protected actual abstract fun copy(state: DigestState): Digest
 

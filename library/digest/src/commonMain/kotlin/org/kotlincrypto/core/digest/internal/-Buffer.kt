@@ -53,13 +53,23 @@ internal value class Buffer private constructor(internal val value: ByteArray) {
         compressCount,
         compressCountMultiplier,
     ) {
-        val buf = Buffer(buf.value.copyOf())
+        @Volatile
+        var buf: Buffer? = Buffer(buf.value.copyOf())
     }
 
     internal companion object {
 
         @JvmSynthetic
-        internal fun DigestState.buf(): Buffer = Buffer((this as State).buf.value.copyOf())
+        @Throws(IllegalStateException::class)
+        internal fun DigestState.buf(): Buffer {
+            val state = this as State
+            val buf = state.buf
+            state.buf = null
+            check(buf != null) {
+                "DigestState cannot be consumed more than once. Call copy again."
+            }
+            return buf
+        }
 
         @JvmSynthetic
         @Throws(IllegalArgumentException::class)
