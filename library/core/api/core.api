@@ -22,3 +22,7 @@ public abstract interface class org/kotlincrypto/core/Updatable {
 	public abstract fun update ([BII)V
 }
 
+public final class org/kotlincrypto/core/_AndroidSdkIntKt {
+	public static final fun getKC_ANDROID_SDK_INT ()Ljava/lang/Integer;
+}
+

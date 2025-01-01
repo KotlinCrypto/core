@@ -53,7 +53,6 @@ apiValidation {
     if (CHECK_PUBLICATION) {
         ignoredProjects.add("check-publication")
     } else {
-        nonPublicMarkers.add("org.kotlincrypto.core.InternalKotlinCryptoApi")
         ignoredProjects.add("benchmarks")
     }
 }

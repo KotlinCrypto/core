@@ -23,7 +23,7 @@ package org.kotlincrypto.core
  *
  * Any usage of a declaration annotated with [ExperimentalKotlinCryptoApi]
  * must be accepted by annotating that usage with the [OptIn]
- * annotation, e.g @OptIn(ExperimentalKotlinCryptoApi::class), or by using
+ * annotation, e.g. @OptIn(ExperimentalKotlinCryptoApi::class), or by using
  * the following compiler argument:
  *
  *   -Xopt-in=org.kotlincrypto.core.ExperimentalKotlinCryptoApi
@@ -51,7 +51,7 @@ public annotation class ExperimentalKotlinCryptoApi
  *
  * Any usage of a declaration annotated with [InternalKotlinCryptoApi]
  * must be accepted by annotating that usage with the [OptIn]
- * annotation, e.g @OptIn(InternalKotlinCryptoApi::class), or by using
+ * annotation, e.g. @OptIn(InternalKotlinCryptoApi::class), or by using
  * the following compiler argument:
  *
  *   -Xopt-in=org.kotlincrypto.core.InternalKotlinCryptoApi

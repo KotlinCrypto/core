@@ -15,7 +15,6 @@
  **/
 package org.kotlincrypto.core.digest
 
-import org.kotlincrypto.core.InternalKotlinCryptoApi
 import org.kotlincrypto.core.digest.internal.DigestState
 import java.lang.AssertionError
 import java.security.MessageDigest
@@ -28,8 +27,6 @@ import kotlin.test.assertContentEquals
  * */
 class JvmDigestUnitTest {
 
-    @Suppress("UnnecessaryOptInAnnotation")
-    @OptIn(InternalKotlinCryptoApi::class)
     class MessageDigestWrap: Digest {
 
         private val delegate: MessageDigest

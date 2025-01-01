@@ -39,7 +39,6 @@ import org.kotlincrypto.core.mac.internal.commonToString
  * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
 public actual abstract class Mac
-@InternalKotlinCryptoApi
 @Throws(IllegalArgumentException::class)
 protected actual constructor(
     private val algorithm: String,
@@ -50,44 +49,69 @@ protected actual constructor(
     Updatable
 {
 
-    init {
-        commonInit(algorithm)
-    }
+    init { commonInit(algorithm) }
 
-    public actual final override fun algorithm(): String = algorithm
+    /**
+     * The number of bytes the implementation returns when [doFinal] is called.
+     * */
     public actual fun macLength(): Int = engine.macLength()
 
+    // See Algorithm interface documentation
+    public actual final override fun algorithm(): String = algorithm
+
+    // See Updatable interface documentation
     public actual final override fun update(input: Byte) {
         engine.update(input)
     }
+    // See Updatable interface documentation
     public actual final override fun update(input: ByteArray) {
         engine.update(input, 0, input.size)
     }
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
+    // See Updatable interface documentation
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
         if (offset < 0 || len < 0 || offset > input.size - len) throw IllegalArgumentException("Bad arguments")
         engine.update(input, offset, len)
     }
 
+    /**
+     * Completes the computation, performing final operations and returning
+     * the resultant array of bytes. The [Mac] is [reset] afterward.
+     * */
     public actual fun doFinal(): ByteArray {
         val final = engine.doFinal()
         engine.reset()
         return final
     }
+
+    /**
+     * Updates the instance with provided [input], then completes the computation,
+     * performing final operations and returning the resultant array of bytes. The
+     * [Mac] is [reset] afterward.
+     * */
     public actual fun doFinal(input: ByteArray): ByteArray {
         engine.update(input, 0, input.size)
         return doFinal()
     }
 
+    // See Resettable interface documentation
     public actual final override fun reset() {
         engine.reset()
     }
 
+    // See Copyable interface documentation
     public actual final override fun copy(): Mac = copy(engine.copy())
+
+    /**
+     * Called by the public [copy] function which produces the
+     * [Engine] copy needed to create a wholly new instance.
+     * */
     protected actual abstract fun copy(engineCopy: Engine): Mac
 
+    /** @suppress */
     public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
+    /** @suppress */
     public actual final override fun hashCode(): Int = engine.hashCode()
+    /** @suppress */
     public actual final override fun toString(): String = commonToString()
 
     /**
@@ -105,24 +129,36 @@ protected actual constructor(
          *
          * @throws [IllegalArgumentException] if [key] is empty.
          * */
-        @InternalKotlinCryptoApi
         @Throws(IllegalArgumentException::class)
-        public actual constructor(key: ByteArray) { require(key.isNotEmpty()) { "key cannot be empty" } }
+        public actual constructor(key: ByteArray) {
+            require(key.isNotEmpty()) { "key cannot be empty" }
+        }
 
         /**
          * Creates a new [Engine] for the copied [State]
          * */
-        @InternalKotlinCryptoApi
         protected actual constructor(state: State)
 
+        /**
+         * The number of bytes the implementation returns when [doFinal] is called.
+         * */
         public actual abstract fun macLength(): Int
+
+        /**
+         * Completes the computation, performing final operations and returning
+         * the resultant array of bytes. The [Engine] is [reset] afterward.
+         * */
         public actual abstract fun doFinal(): ByteArray
 
+        // See Updatable interface documentation
         public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
 
+        /** @suppress */
         public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode == hashCode
+        /** @suppress */
         public actual final override fun hashCode(): Int = hashCode
 
+        // Unfortunate API design for the copy functionality...
         protected actual abstract inner class State
     }
 }

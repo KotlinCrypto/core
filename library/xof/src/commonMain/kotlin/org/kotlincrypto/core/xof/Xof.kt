@@ -136,7 +136,6 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
          * @return The number of bytes written to [out]
          * @throws [IllegalStateException] if [isClosed] is true
          * */
-        @Throws(IllegalStateException::class)
         public fun read(out: ByteArray): Int = read(out, 0, out.size)
 
         /**
@@ -154,7 +153,6 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
          * @throws [IllegalStateException] if [isClosed] is true
          * @throws [IndexOutOfBoundsException] if [offset] and/or [len] are inappropriate
          * */
-        @Throws(IllegalArgumentException::class, IllegalStateException::class, IndexOutOfBoundsException::class)
         public fun read(out: ByteArray, offset: Int, len: Int): Int {
             if (isClosed) throw IllegalStateException("Reader is closed")
             if (out.size - offset < len) throw IllegalArgumentException("out is too short")

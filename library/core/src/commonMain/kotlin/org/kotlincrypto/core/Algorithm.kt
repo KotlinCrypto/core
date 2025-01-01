@@ -15,9 +15,12 @@
  **/
 package org.kotlincrypto.core
 
-/**
- * Denotes a class as a user of a specified cryptographic [algorithm]
- * */
 public interface Algorithm {
+
+    /**
+     * Returns a string that identifies the algorithm, independent of
+     * implementation details. The name should be a standard Java Security
+     * name (such as "SHA-256").
+     * */
     public fun algorithm(): String
 }

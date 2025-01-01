@@ -9,6 +9,8 @@
 abstract interface org.kotlincrypto.core.xof/XofAlgorithm : org.kotlincrypto.core/Algorithm // org.kotlincrypto.core.xof/XofAlgorithm|null[0]
 
 abstract class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.xof/XofFactory { // org.kotlincrypto.core.xof/XofFactory|null[0]
+    constructor <init>() // org.kotlincrypto.core.xof/XofFactory.<init>|<init>(){}[0]
+
     abstract inner class XofDelegate : org.kotlincrypto.core.xof/Xof<#A>, org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.xof/XofFactory.XofDelegate|null[0]
         constructor <init>(#A) // org.kotlincrypto.core.xof/XofFactory.XofDelegate.<init>|<init>(2:0){}[0]
 
@@ -50,5 +52,10 @@ sealed class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.
         final fun read(kotlin/ByteArray): kotlin/Int // org.kotlincrypto.core.xof/Xof.Reader.read|read(kotlin.ByteArray){}[0]
         final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // org.kotlincrypto.core.xof/Xof.Reader.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
         final fun toString(): kotlin/String // org.kotlincrypto.core.xof/Xof.Reader.toString|toString(){}[0]
+    }
+
+    final object Utils { // org.kotlincrypto.core.xof/Xof.Utils|null[0]
+        final fun leftEncode(kotlin/Long): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.leftEncode|leftEncode(kotlin.Long){}[0]
+        final fun rightEncode(kotlin/Long): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.rightEncode|rightEncode(kotlin.Long){}[0]
     }
 }

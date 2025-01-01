@@ -45,13 +45,15 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     /**
      * Creates a new [Digest] for the specified parameters.
      *
+     * @param [algorithm] See [Algorithm.algorithm]
+     * @param [blockSize] See [Digest.blockSize]
+     * @param [digestLength] See [Digest.digestLength]
      * @throws [IllegalArgumentException] when:
      *  - [algorithm] is blank
      *  - [blockSize] is less than or equal to 0
      *  - [blockSize] is not a factor of 8
-     *  - [digestLength] is less than 0
+     *  - [digestLength] is negative
      * */
-    @InternalKotlinCryptoApi
     @Throws(IllegalArgumentException::class)
     protected actual constructor(algorithm: String, blockSize: Int, digestLength: Int) {
         this.buf = Buffer.initialize(algorithm, blockSize, digestLength)
@@ -68,9 +70,22 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * Implementors of [Digest] should have a private secondary constructor
      * that is utilized by its [copy] implementation.
      *
+     * e.g.
+     *
+     *     public class SHA256: Digest {
+     *
+     *         public constructor(): super("SHA-256", 64, 32) {
+     *             // Initialize...
+     *         }
+     *         private constructor(thiz: SHA256, state: DigestState): super(state) {
+     *             // Copy implementation details...
+     *         }
+     *         protected override fun copy(state: DigestState): Digest = SHA256(this, state)
+     *         // ...
+     *     }
+     *
      * @see [DigestState]
      * */
-    @InternalKotlinCryptoApi
     protected actual constructor(state: DigestState) {
         this.algorithm = state.algorithm
         this.digestLength = state.digestLength
@@ -79,33 +94,58 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         this.compressCount = state.compressCount
     }
 
-    public actual final override fun algorithm(): String = algorithm
+    /**
+     * The number of byte blocks (in factors of 8) that the implementation
+     * requires before one round of input processing is to occur. This value
+     * is also representative of the digest's buffer size, and will always
+     * be greater than 0.
+     * */
     public actual fun blockSize(): Int = buf.value.size
+
+    /**
+     * The number of bytes the implementation returns when [digest] is called.
+     * */
     public actual fun digestLength(): Int = digestLength
 
+    // See Algorithm interface documentation
+    public actual final override fun algorithm(): String = algorithm
+
+    // See Updatable interface documentation
     public actual override fun update(input: Byte) {
         updateDigest(input)
     }
+    // See Updatable interface documentation
     public actual final override fun update(input: ByteArray) {
         updateDigest(input, 0, input.size)
     }
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
+    // See Updatable interface documentation
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
         input.commonCheckArgs(offset, len)
         updateDigest(input, offset, len)
     }
 
+    /**
+     * Completes the computation, performing final operations and returning
+     * the resultant array of bytes. The [Digest] is [reset] afterward.
+     * */
     public actual fun digest(): ByteArray = buf.commonDigest(
         bufOffs = bufOffs,
         compressCount = compressCount,
         digest = ::digest,
         reset = ::reset,
     )
+
+    /**
+     * Updates the instance with provided [input], then completes the computation,
+     * performing final operations and returning the resultant array of bytes. The
+     * [Digest] is [reset] afterward.
+     * */
     public actual fun digest(input: ByteArray): ByteArray {
         updateDigest(input, 0, input.size)
         return digest()
     }
 
+    // See Resettable interface documentation
     public actual final override fun reset() {
         buf.value.fill(0)
         bufOffs = 0
@@ -113,26 +153,42 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         resetDigest()
     }
 
+    // See Copyable interface documentation
     public actual final override fun copy(): Digest = buf.toState(
         algorithm = algorithm,
         digestLength = digestLength,
         bufOffs = bufOffs,
         compressCount = compressCount,
     ).let { copy(it) }
+
+    /**
+     * Called by the public [copy] function which produces the
+     * [DigestState] needed to create a wholly new instance.
+     * */
     protected actual abstract fun copy(state: DigestState): Digest
 
     /**
-     * Called whenever a full [blockSize] worth of bytes is available
-     * to be processed, starting at index [offset] for the [input].
+     * Called whenever a full [blockSize] worth of bytes are available for processing,
+     * starting at index [offset] for the provided [input]. Implementations **must not**
+     * alter [input].
      * */
     protected actual abstract fun compress(input: ByteArray, offset: Int)
-    protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
-    protected actual abstract fun resetDigest()
 
     /**
-     * Protected, direct access to the [Digest]'s buffer. All external input
-     * is directed here such that implementations can override and intercept
-     * if necessary.
+     * Called to complete the computation, providing any input that may be
+     * buffered awaiting processing.
+     *
+     * @param [bitLength] The number of bits that have been processed, including
+     *   those remaining in the [buffer]
+     * @param [bufferOffset] The index at which the next input would be placed in
+     *   the [buffer]
+     * @param [buffer] Unprocessed input
+     * */
+    protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
+
+    /**
+     * Optional override for implementations to intercept cleansed input before
+     * being processed by the [Digest] abstraction.
      * */
     protected actual open fun updateDigest(input: Byte) {
         buf.commonUpdate(
@@ -147,9 +203,9 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     }
 
     /**
-     * Protected, direct access to the [Digest]'s buffer. All external input
-     * is validated before being directed here such that implementations can
-     * override and intercept if necessary.
+     * Optional override for implementations to intercept cleansed input before
+     * being processed by the [Digest] abstraction. Parameters passed to this
+     * function are always valid and have been checked for appropriateness.
      * */
     protected actual open fun updateDigest(input: ByteArray, offset: Int, len: Int) {
         buf.commonUpdate(
@@ -163,7 +219,12 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         )
     }
 
+    protected actual abstract fun resetDigest()
+
+    /** @suppress */
     public actual final override fun equals(other: Any?): Boolean = other is Digest && other.buf == buf
+    /** @suppress */
     public actual final override fun hashCode(): Int = buf.hashCode()
+    /** @suppress */
     public actual final override fun toString(): String = commonToString()
 }
