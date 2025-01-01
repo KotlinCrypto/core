@@ -116,6 +116,13 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public final override fun copy(): Digest
 
     /**
+     * The number of compressions this [Digest] has completed. Backing
+     * variable is updated **after** each [compress] invocation, and
+     * subsequently set to `0` upon [reset] invocation.
+     * */
+    protected fun compressions(): Long
+
+    /**
      * Called by the public [copy] function which produces the
      * [DigestState] needed to create a wholly new instance.
      * */

@@ -163,6 +163,13 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     ).let { copy(it) }
 
     /**
+     * The number of compressions this [Digest] has completed. Backing variable
+     * is updated **after** completion of each [compress] invocation, and then
+     * subsequently set to `0` upon [reset] invocation.
+     * */
+    protected actual fun compressions(): Long = compressCount
+
+    /**
      * Called by the public [copy] function which produces the
      * [DigestState] needed to create a wholly new instance.
      * */
@@ -216,7 +223,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
             bufOffs = bufOffs,
             bufOffsSet = { bufOffs = it },
             compress = ::compress,
-            compressCountAdd = { compressCount += it },
+            compressCountIncrement = { compressCount++ },
         )
     }
 

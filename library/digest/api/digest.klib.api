@@ -16,6 +16,7 @@ abstract class org.kotlincrypto.core.digest/Digest : org.kotlincrypto.core/Algor
     abstract fun resetDigest() // org.kotlincrypto.core.digest/Digest.resetDigest|resetDigest(){}[0]
     final fun algorithm(): kotlin/String // org.kotlincrypto.core.digest/Digest.algorithm|algorithm(){}[0]
     final fun blockSize(): kotlin/Int // org.kotlincrypto.core.digest/Digest.blockSize|blockSize(){}[0]
+    final fun compressions(): kotlin/Long // org.kotlincrypto.core.digest/Digest.compressions|compressions(){}[0]
     final fun copy(): org.kotlincrypto.core.digest/Digest // org.kotlincrypto.core.digest/Digest.copy|copy(){}[0]
     final fun digest(): kotlin/ByteArray // org.kotlincrypto.core.digest/Digest.digest|digest(){}[0]
     final fun digest(kotlin/ByteArray): kotlin/ByteArray // org.kotlincrypto.core.digest/Digest.digest|digest(kotlin.ByteArray){}[0]

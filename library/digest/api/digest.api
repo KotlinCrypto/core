@@ -5,6 +5,7 @@ public abstract class org/kotlincrypto/core/digest/Digest : java/security/Messag
 	public final fun blockSize ()I
 	public final fun clone ()Ljava/lang/Object;
 	protected abstract fun compress ([BI)V
+	protected final fun compressions ()J
 	public synthetic fun copy ()Ljava/lang/Object;
 	public final fun copy ()Lorg/kotlincrypto/core/digest/Digest;
 	protected abstract fun copy (Lorg/kotlincrypto/core/digest/internal/DigestState;)Lorg/kotlincrypto/core/digest/Digest;
