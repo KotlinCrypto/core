@@ -43,7 +43,8 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     private val digestLength: Int
     private val buf: Buffer
     private var bufOffs: Int
-    private var compressCount: Long
+    private var compressCount: Int
+    private var compressCountMultiplier: Int
 
     /**
      * Creates a new [Digest] for the specified parameters.
@@ -62,7 +63,8 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
         this.buf = Buffer.initialize(algorithm, blockSize, digestLength)
         this.digestLength = digestLength
         this.bufOffs = 0
-        this.compressCount = 0L
+        this.compressCount = 0
+        this.compressCountMultiplier = 0
     }
 
     /**
@@ -93,6 +95,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
         this.buf = state.buf()
         this.bufOffs = state.bufOffs
         this.compressCount = state.compressCount
+        this.compressCountMultiplier = state.compressCountMultiplier
     }
 
     /**
@@ -131,7 +134,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
      * */
     public actual final override fun digest(): ByteArray = buf.commonDigest(
         bufOffs = bufOffs,
-        compressCount = compressCount,
+        compressCount = compressions(),
         digest = ::digest,
         reset = ::reset,
     )
@@ -151,6 +154,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
         buf.value.fill(0)
         bufOffs = 0
         compressCount = 0
+        compressCountMultiplier = 0
         resetDigest()
     }
 
@@ -160,6 +164,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
         digestLength = digestLength,
         bufOffs = bufOffs,
         compressCount = compressCount,
+        compressCountMultiplier = compressCountMultiplier,
     ).let { copy(it) }
 
     /**
@@ -167,7 +172,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
      * is updated **after** completion of each [compress] invocation, and then
      * subsequently set to `0` upon [reset] invocation.
      * */
-    protected actual fun compressions(): Long = compressCount
+    protected actual fun compressions(): Long = compressCount.commonCalculateCompressions(compressCountMultiplier)
 
     /**
      * Called by the public [copy] function which produces the
@@ -205,7 +210,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
             doCompression = { buf, offset ->
                 compress(buf, offset)
                 bufOffs = 0
-                compressCount++
+                compressCountIncrement()
             },
         )
     }
@@ -223,11 +228,18 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
             bufOffs = bufOffs,
             bufOffsSet = { bufOffs = it },
             compress = ::compress,
-            compressCountIncrement = { compressCount++ },
+            compressCountIncrement = ::compressCountIncrement,
         )
     }
 
     protected actual abstract fun resetDigest()
+
+    private fun compressCountIncrement() {
+        if (++compressCount != Int.MIN_VALUE) return
+        // Int.MAX_VALUE reached and went negative
+        compressCount = 1
+        compressCountMultiplier++
+    }
 
     // MessageDigest
     /** @suppress */

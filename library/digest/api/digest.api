@@ -34,6 +34,6 @@ public abstract class org/kotlincrypto/core/digest/Digest : java/security/Messag
 }
 
 public abstract class org/kotlincrypto/core/digest/internal/DigestState {
-	public synthetic fun <init> (Ljava/lang/String;IIJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 

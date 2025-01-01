@@ -33,5 +33,5 @@ abstract class org.kotlincrypto.core.digest/Digest : org.kotlincrypto.core/Algor
 }
 
 sealed class org.kotlincrypto.core.digest.internal/DigestState { // org.kotlincrypto.core.digest.internal/DigestState|null[0]
-    constructor <init>(kotlin/String, kotlin/Int, kotlin/Int, kotlin/Long) // org.kotlincrypto.core.digest.internal/DigestState.<init>|<init>(kotlin.String;kotlin.Int;kotlin.Int;kotlin.Long){}[0]
+    constructor <init>(kotlin/String, kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // org.kotlincrypto.core.digest.internal/DigestState.<init>|<init>(kotlin.String;kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
 }

@@ -16,11 +16,13 @@
 package org.kotlincrypto.core.digest
 
 import org.kotlincrypto.core.digest.internal.DigestState
+import org.kotlincrypto.core.digest.internal.commonCalculateCompressions
 import java.lang.AssertionError
 import java.security.MessageDigest
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
 /**
  * Compares [Digest] functionality to [MessageDigest]
@@ -93,5 +95,25 @@ class JvmDigestUnitTest {
         jvm.update(bytes, 500, 1)
 
         assertContentEquals(jvm.digest(), wrap.digest())
+    }
+
+    // Test live here because functions are internal and the `test-android`
+    // module has symbolic links to commonTest which will cause crying.
+    @Test
+    fun givenCompressCount_whenMultiplier_thenCalculatesCorrectly() {
+        var actual = 0.commonCalculateCompressions(multiplier = 0)
+        assertEquals(0, actual)
+
+        actual = 1.commonCalculateCompressions(multiplier = 0)
+        assertEquals(1, actual)
+
+        actual = 0.commonCalculateCompressions(multiplier = 1)
+        assertEquals(Int.MAX_VALUE.toLong(), actual)
+
+        actual = 1.commonCalculateCompressions(multiplier = 1)
+        assertEquals(Int.MAX_VALUE.toLong() + 1, actual)
+
+        actual = 5.commonCalculateCompressions(multiplier = 10)
+        assertEquals((Int.MAX_VALUE.toLong() * 10) + 5, actual)
     }
 }

@@ -17,6 +17,7 @@
 
 package org.kotlincrypto.core.digest.internal
 
+import kotlin.concurrent.Volatile
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmSynthetic
 
@@ -27,12 +28,14 @@ internal value class Buffer private constructor(internal val value: ByteArray) {
         algorithm: String,
         digestLength: Int,
         bufOffs: Int,
-        compressCount: Long,
+        compressCount: Int,
+        compressCountMultiplier: Int,
     ): DigestState = State(
         algorithm,
         digestLength,
         bufOffs,
         compressCount,
+        compressCountMultiplier,
         this,
     )
 
@@ -40,13 +43,15 @@ internal value class Buffer private constructor(internal val value: ByteArray) {
         algorithm: String,
         digestLength: Int,
         bufOffs: Int,
-        compressCount: Long,
+        compressCount: Int,
+        compressCountMultiplier: Int,
         buf: Buffer,
     ): DigestState(
         algorithm,
         digestLength,
         bufOffs,
         compressCount,
+        compressCountMultiplier,
     ) {
         val buf = Buffer(buf.value.copyOf())
     }
