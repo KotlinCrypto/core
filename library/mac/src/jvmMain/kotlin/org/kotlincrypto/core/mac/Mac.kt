@@ -25,8 +25,9 @@ import java.nio.ByteBuffer
 import java.security.InvalidKeyException
 import java.security.Key
 import java.security.spec.AlgorithmParameterSpec
+import java.security.spec.KeySpec
 import javax.crypto.MacSpi
-import javax.crypto.spec.SecretKeySpec
+import javax.crypto.SecretKey
 
 /**
  * Core abstraction for Message Authentication Code implementations. Extends
@@ -67,7 +68,7 @@ protected actual constructor(
         // Engine.engineInit is overridden as no-op, so this does
         // nothing other than set `javax.crypto.Mac.initialized`
         // to true
-        super.init(SecretKeySpec(INIT_KEY, algorithm))
+        super.init(EmptyKey)
     }
 
     /**
@@ -104,7 +105,6 @@ protected actual constructor(
     protected actual abstract class Engine: MacSpi, Cloneable, Copyable<Engine>, Resettable, Updatable {
 
         private val hashCode: Int = Any().hashCode()
-        private var isInitialized = false
 
         /**
          * Initializes a new [Engine] with the provided [key].
@@ -112,7 +112,9 @@ protected actual constructor(
          * @throws [IllegalArgumentException] if [key] is empty.
          * */
         @Throws(IllegalArgumentException::class)
-        public actual constructor(key: ByteArray): super() { require(key.isNotEmpty()) { "key cannot be empty" } }
+        public actual constructor(key: ByteArray): super() {
+            require(key.isNotEmpty()) { "key cannot be empty" }
+        }
 
         /**
          * Creates a new [Engine] for the copied [State]
@@ -155,20 +157,17 @@ protected actual constructor(
         // javax.crypto.Mac.initialized to true).
         /** @suppress */
         protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) {
-            if (isInitialized) {
+            if (p0 is EmptyKey) return
 
-                // Throw an exception b/c if caller is trying to re-init the javax.crypto.Mac with a new key,
-                // the normal behavior is to blank the MacSpi state. If caller does not know this is an issue,
-                // any further output would not be correct b/c implementations do not re-init. KotlinCrypto users
-                // already know it's initialized because the API is designed to require the key upon instantiation
-                // so init is never needed to be called, nor is init function available from commonMain source set.
-                throw InvalidKeyException(
-                    "org.kotlincrypto.core.mac.Mac does not support re-initialization " +
-                    "(it's already initialized). A new instance is required to be created."
-                )
-            }
-
-            isInitialized = true
+            // Throw an exception b/c if caller is trying to re-init the javax.crypto.Mac with a new key,
+            // the normal behavior is to blank the MacSpi state. If caller does not know this is an issue,
+            // any further output would not be correct b/c implementations do not re-init. KotlinCrypto users
+            // already know it's initialized because the API is designed to require the key upon instantiation
+            // so init is never needed to be called, nor is init function available from commonMain source set.
+            throw InvalidKeyException(
+                "org.kotlincrypto.core.mac.Mac does not support re-initialization " +
+                "(it's already initialized). A new instance is required to be created."
+            )
         }
         /** @suppress */
         protected final override fun engineDoFinal(): ByteArray {
@@ -193,7 +192,10 @@ protected actual constructor(
         protected actual abstract inner class State
     }
 
-    private companion object {
-        private val INIT_KEY = ByteArray(1)
+    private data object EmptyKey: KeySpec, SecretKey {
+        override fun getAlgorithm(): String = "org.kotlincrypto.core.mac.Mac.EmptyKey"
+        override fun getEncoded(): ByteArray? = null
+        override fun getFormat(): String = "RAW"
+        private fun readResolve(): Any = EmptyKey
     }
 }
