@@ -94,14 +94,13 @@ internal inline fun Buffer.commonUpdate(
     bufOffs: Int,
     bufOffsSet: (value: Int) -> Unit,
     compress: (buf: ByteArray, offset: Int) -> Unit,
-    compressCountAdd: (value: Int) -> Unit,
+    compressCountIncrement: () -> Unit,
 ) {
     val buf = value
     val blockSize = buf.size
     var offsInput = offset
     val limit = offsInput + len
     var offsBuf = bufOffs
-    var compressions = 0
 
     if (offsBuf > 0) {
         // Need to use buffered data (if possible)
@@ -119,7 +118,7 @@ internal inline fun Buffer.commonUpdate(
         compress(buf, 0)
         offsBuf = 0
         offsInput += needed
-        compressions++
+        compressCountIncrement()
     }
 
     // Chunk blocks (if possible)
@@ -134,13 +133,12 @@ internal inline fun Buffer.commonUpdate(
         }
 
         compress(input, offsInput)
-        compressions++
         offsInput = offsNext
+        compressCountIncrement()
     }
 
     // Update globals
     bufOffsSet(offsBuf)
-    compressCountAdd(compressions)
 }
 
 @Suppress("NOTHING_TO_INLINE")

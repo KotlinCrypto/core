@@ -149,7 +149,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public actual final override fun reset() {
         buf.value.fill(0)
         bufOffs = 0
-        compressCount = 0
+        compressCount = 0L
         resetDigest()
     }
 
@@ -160,6 +160,13 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         bufOffs = bufOffs,
         compressCount = compressCount,
     ).let { copy(it) }
+
+    /**
+     * The number of compressions this [Digest] has completed. Backing
+     * variable is updated **after** each [compress] invocation, and
+     * subsequently set to `0` upon [reset] invocation.
+     * */
+    protected actual fun compressions(): Long = compressCount
 
     /**
      * Called by the public [copy] function which produces the
@@ -215,7 +222,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
             bufOffs = bufOffs,
             bufOffsSet = { bufOffs = it },
             compress = ::compress,
-            compressCountAdd = { compressCount += it },
+            compressCountIncrement = { compressCount++ },
         )
     }
 
