@@ -20,8 +20,11 @@ import org.kotlincrypto.core.digest.internal.DigestState
 class TestDigest: Digest {
 
     private val compress: (input: ByteArray, offset: Int) -> Unit
-    private val finalize: (Long, Int, ByteArray) -> ByteArray
+    private val finalize: (buffer: ByteArray, offset: Int) -> ByteArray
     private val reset: () -> Unit
+
+    var compressions: Int = 0
+        private set
 
     constructor(algorithm: String): this(algorithm, 64)
 
@@ -30,7 +33,7 @@ class TestDigest: Digest {
         blockSize: Int = 64,
         digestLength: Int = 32,
         compress: (input: ByteArray, offset: Int) -> Unit = { _, _ -> },
-        digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray = { _, _, _ -> ByteArray(blockSize) },
+        digest: (buffer: ByteArray, offset: Int) -> ByteArray = { _, _ -> ByteArray(blockSize) },
         reset: () -> Unit = {},
     ): super(algorithm, blockSize, digestLength) {
         this.compress = compress
@@ -41,7 +44,7 @@ class TestDigest: Digest {
     private constructor(
         state: DigestState,
         compress: (input: ByteArray, offset: Int) -> Unit,
-        digest: (bitLength: Long, bufferOffset: Int, buffer: ByteArray) -> ByteArray,
+        digest: (buffer: ByteArray, offset: Int) -> ByteArray,
         reset: () -> Unit,
     ): super(state) {
         this.compress = compress
@@ -49,21 +52,23 @@ class TestDigest: Digest {
         this.reset = reset
     }
 
-    fun compressCount(): Long = compressions()
-
-    override fun compress(input: ByteArray, offset: Int) {
+    override fun compressProtected(input: ByteArray, offset: Int) {
         compress.invoke(input, offset)
+        compressions++
     }
 
-    override fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray {
-        return finalize.invoke(bitLength, bufferOffset, buffer)
+    override fun digestProtected(buffer: ByteArray, offset: Int): ByteArray {
+        return finalize.invoke(buffer, offset)
     }
 
-    override fun resetDigest() {
+    override fun resetProtected() {
         reset.invoke()
+        compressions = 0
     }
 
-    override fun copy(state: DigestState): Digest {
-        return TestDigest(state, compress, finalize, reset)
+    override fun copyProtected(state: DigestState): Digest {
+        val d = TestDigest(state, compress, finalize, reset)
+        d.compressions = compressions
+        return d
     }
 }

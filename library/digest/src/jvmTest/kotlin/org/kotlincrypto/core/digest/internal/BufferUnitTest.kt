@@ -24,7 +24,7 @@ class BufferUnitTest {
     @Test
     fun givenBufferDigestState_whenAlreadyConsumed_thenFails() {
         val buf = Buffer.initialize("test", 8, 0)
-        val state = buf.toState("test", 0, 0, 0, 0)
+        val state = buf.toState("test", 0, 0)
         state.buf()
         assertFailsWith<IllegalStateException> { state.buf() }
     }

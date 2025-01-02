@@ -26,6 +26,4 @@ public sealed class DigestState(
     internal val algorithm: String,
     internal val digestLength: Int,
     internal val bufOffs: Int,
-    internal val compressCount: Int,
-    internal val compressCountMultiplier: Int,
 )

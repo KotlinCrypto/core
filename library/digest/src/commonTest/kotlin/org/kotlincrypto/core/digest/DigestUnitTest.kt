@@ -55,7 +55,7 @@ class DigestUnitTest: TestDigestException() {
         var resetCount = 0
 
         val digest = TestDigest(
-            digest = { _, _, _ -> expected },
+            digest = { _, _ -> expected },
             reset = { resetCount++ }
         )
 
@@ -69,33 +69,33 @@ class DigestUnitTest: TestDigestException() {
     fun givenDigest_whenUpdated_thenChunksProperly() {
         val digest = TestDigest(
             // Return byte array sized to the offset
-            digest = { _, offset, _ -> ByteArray(offset) }
+            digest = { _, offset -> ByteArray(offset) }
         )
 
         digest.update(ByteArray(digest.blockSize() - 1))
-        assertEquals(0, digest.compressCount())
+        assertEquals(0, digest.compressions)
 
         digest.update(ByteArray(digest.blockSize() + 1))
-        assertEquals(2, digest.compressCount())
+        assertEquals(2, digest.compressions)
 
         digest.update(ByteArray(digest.blockSize() - 1))
-        assertEquals(2, digest.compressCount())
+        assertEquals(2, digest.compressions)
 
         digest.update(4)
-        assertEquals(3, digest.compressCount())
+        assertEquals(3, digest.compressions)
 
         digest.update(ByteArray(digest.blockSize()))
-        assertEquals(4, digest.compressCount())
+        assertEquals(4, digest.compressions)
 
         // Check the internal bufferOffset was 0 after all that
         assertEquals(0, digest.digest().size)
-        assertEquals(0, digest.compressCount())
+        assertEquals(0, digest.compressions)
     }
 
     @Test
     fun givenDigest_whenCopied_thenIsNewInstance() {
         val digest = TestDigest(
-            digest = { _, _, b ->
+            digest = { b, _ ->
                 assertEquals(1, b[0])
                 assertEquals(0, b[1])
                 b

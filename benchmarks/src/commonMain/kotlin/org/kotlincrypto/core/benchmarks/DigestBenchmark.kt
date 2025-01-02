@@ -30,10 +30,10 @@ open class DigestBenchmark {
     private class TestDigest: Digest {
         constructor(): super("Benchmark", 32, 32)
         private constructor(state: DigestState): super(state)
-        override fun resetDigest() {}
-        override fun copy(state: DigestState): Digest = TestDigest(state)
-        override fun compress(input: ByteArray, offset: Int) {}
-        override fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray = ByteArray(0)
+        override fun resetProtected() {}
+        override fun copyProtected(state: DigestState): Digest = TestDigest(state)
+        override fun compressProtected(input: ByteArray, offset: Int) {}
+        override fun digestProtected(buffer: ByteArray, offset: Int): ByteArray = ByteArray(0)
     }
 
     private val digest = TestDigest()

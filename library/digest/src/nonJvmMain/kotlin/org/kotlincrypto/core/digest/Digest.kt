@@ -40,8 +40,6 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     private val digestLength: Int
     private val buf: Buffer
     private var bufOffs: Int
-    private var compressCount: Int
-    private var compressCountMultiplier: Int
 
     /**
      * Creates a new [Digest] for the specified parameters.
@@ -61,8 +59,6 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         this.algorithm = algorithm
         this.digestLength = digestLength
         this.bufOffs = 0
-        this.compressCount = 0
-        this.compressCountMultiplier = 0
     }
 
     /**
@@ -70,7 +66,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * instance.
      *
      * Implementors of [Digest] should have a private secondary constructor
-     * that is utilized by its [copy] implementation.
+     * that is utilized by its [copyProtected] implementation.
      *
      * e.g.
      *
@@ -82,7 +78,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      *         private constructor(thiz: SHA256, state: DigestState): super(state) {
      *             // Copy implementation details...
      *         }
-     *         protected override fun copy(state: DigestState): Digest = SHA256(this, state)
+     *         protected override fun copyProtected(state: DigestState): Digest = SHA256(this, state)
      *         // ...
      *     }
      *
@@ -95,8 +91,6 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         this.digestLength = state.digestLength
         this.buf = state.buf()
         this.bufOffs = state.bufOffs
-        this.compressCount = state.compressCount
-        this.compressCountMultiplier = state.compressCountMultiplier
     }
 
     /**
@@ -108,7 +102,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public actual fun blockSize(): Int = buf.value.size
 
     /**
-     * The number of bytes the implementation returns when [digest] is called.
+     * The number of bytes the implementation returns when [digestProtected] is called.
      * */
     public actual fun digestLength(): Int = digestLength
 
@@ -116,29 +110,28 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public actual final override fun algorithm(): String = algorithm
 
     // See Updatable interface documentation
-    public actual override fun update(input: Byte) {
-        updateDigest(input)
+    public actual final override fun update(input: Byte) {
+        updateProtected(input)
     }
     // See Updatable interface documentation
     public actual final override fun update(input: ByteArray) {
-        updateDigest(input, 0, input.size)
+        updateProtected(input, 0, input.size)
     }
     // See Updatable interface documentation
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
         input.commonCheckArgs(offset, len)
-        updateDigest(input, offset, len)
+        updateProtected(input, offset, len)
     }
 
     /**
      * Completes the computation, performing final operations and returning
      * the resultant array of bytes. The [Digest] is [reset] afterward.
      * */
-    public actual fun digest(): ByteArray = buf.commonDigest(
-        bufOffs = bufOffs,
-        compressCount = compressions(),
-        digest = ::digest,
-        reset = ::reset,
-    )
+    public actual fun digest(): ByteArray {
+        val final = digestProtected(buf.value, bufOffs)
+        reset()
+        return final
+    }
 
     /**
      * Updates the instance with provided [input], then completes the computation,
@@ -146,7 +139,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * [Digest] is [reset] afterward.
      * */
     public actual fun digest(input: ByteArray): ByteArray {
-        updateDigest(input, 0, input.size)
+        updateProtected(input, 0, input.size)
         return digest()
     }
 
@@ -154,9 +147,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public actual final override fun reset() {
         buf.value.fill(0)
         bufOffs = 0
-        compressCount = 0
-        compressCountMultiplier = 0
-        resetDigest()
+        resetProtected()
     }
 
     // See Copyable interface documentation
@@ -164,59 +155,44 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         algorithm = algorithm,
         digestLength = digestLength,
         bufOffs = bufOffs,
-        compressCount = compressCount,
-        compressCountMultiplier = compressCountMultiplier,
-    ).let { copy(it) }
+    ).let { copyProtected(it) }
 
     /**
-     * The number of compressions this [Digest] has completed. Backing
-     * variable is updated **after** each [compress] invocation, and
-     * subsequently set to `0` upon [reset] invocation.
-     * */
-    protected actual fun compressions(): Long = compressCount.commonCalculateCompressions(compressCountMultiplier)
-
-    /**
-     * Called by the public [copy] function which produces the [DigestState]
-     * needed to create a wholly new instance.
+     * Called by the [copy] function which produces the [DigestState] needed
+     * to create a wholly new instance.
      *
      * **NOTE:** [DigestState] can only be consumed once and should **NOT**
      * be held on to. Attempting to instantiate multiple [Digest] instances
      * with a single [DigestState] will raise an [IllegalStateException].
      * */
-    protected actual abstract fun copy(state: DigestState): Digest
+    protected actual abstract fun copyProtected(state: DigestState): Digest
 
     /**
      * Called whenever a full [blockSize] worth of bytes are available for processing,
      * starting at index [offset] for the provided [input]. Implementations **must not**
      * alter [input].
      * */
-    protected actual abstract fun compress(input: ByteArray, offset: Int)
+    protected actual abstract fun compressProtected(input: ByteArray, offset: Int)
 
     /**
      * Called to complete the computation, providing any input that may be
      * buffered awaiting processing.
      *
-     * @param [bitLength] The number of bits that have been processed, including
-     *   those remaining in the [buffer]
-     * @param [bufferOffset] The index at which the next input would be placed in
-     *   the [buffer]
      * @param [buffer] Unprocessed input
+     * @param [offset] The index at which the next input would be placed in the [buffer]
      * */
-    protected actual abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
+    protected actual abstract fun digestProtected(buffer: ByteArray, offset: Int): ByteArray
 
     /**
      * Optional override for implementations to intercept cleansed input before
      * being processed by the [Digest] abstraction.
      * */
-    protected actual open fun updateDigest(input: Byte) {
+    protected actual open fun updateProtected(input: Byte) {
         buf.commonUpdate(
             input = input,
             bufOffsPlusPlus = bufOffs++,
-            doCompression = { buf, offset ->
-                compress(buf, offset)
-                bufOffs = 0
-                compressCountIncrement()
-            },
+            bufOffsSet = { bufOffs = it },
+            compressProtected = ::compressProtected,
         )
     }
 
@@ -225,26 +201,18 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * being processed by the [Digest] abstraction. Parameters passed to this
      * function are always valid and have been checked for appropriateness.
      * */
-    protected actual open fun updateDigest(input: ByteArray, offset: Int, len: Int) {
+    protected actual open fun updateProtected(input: ByteArray, offset: Int, len: Int) {
         buf.commonUpdate(
             input = input,
             offset = offset,
             len = len,
             bufOffs = bufOffs,
             bufOffsSet = { bufOffs = it },
-            compress = ::compress,
-            compressCountIncrement = ::compressCountIncrement,
+            compressProtected = ::compressProtected,
         )
     }
 
-    protected actual abstract fun resetDigest()
-
-    private fun compressCountIncrement() {
-        if (++compressCount != Int.MIN_VALUE) return
-        // Int.MAX_VALUE reached and went negative
-        compressCount = 1
-        compressCountMultiplier++
-    }
+    protected actual abstract fun resetProtected()
 
     /** @suppress */
     public actual final override fun equals(other: Any?): Boolean = other is Digest && other.buf == buf
