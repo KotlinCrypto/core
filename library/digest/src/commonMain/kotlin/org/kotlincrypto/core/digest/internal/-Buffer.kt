@@ -17,51 +17,15 @@
 
 package org.kotlincrypto.core.digest.internal
 
-import kotlin.concurrent.Volatile
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmSynthetic
 
 @JvmInline
 internal value class Buffer private constructor(internal val value: ByteArray) {
 
-    internal fun toState(
-        algorithm: String,
-        digestLength: Int,
-        bufOffs: Int,
-    ): DigestState = State(
-        algorithm,
-        digestLength,
-        bufOffs,
-        this,
-    )
-
-    private class State(
-        algorithm: String,
-        digestLength: Int,
-        bufOffs: Int,
-        buf: Buffer,
-    ): DigestState(
-        algorithm,
-        digestLength,
-        bufOffs,
-    ) {
-        @Volatile
-        var buf: Buffer? = Buffer(buf.value.copyOf())
-    }
+    internal fun copy(): Buffer = Buffer(value.copyOf())
 
     internal companion object {
-
-        @JvmSynthetic
-        @Throws(IllegalStateException::class)
-        internal fun DigestState.buf(): Buffer {
-            val state = this as State
-            val buf = state.buf
-            state.buf = null
-            check(buf != null) {
-                "DigestState cannot be consumed more than once. Call copy again."
-            }
-            return buf
-        }
 
         @JvmSynthetic
         @Throws(IllegalArgumentException::class)

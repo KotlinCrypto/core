@@ -19,7 +19,6 @@ package org.kotlincrypto.core.digest
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.digest.internal.*
-import org.kotlincrypto.core.digest.internal.Buffer.Companion.buf
 import org.kotlincrypto.core.digest.internal.commonCheckArgs
 import org.kotlincrypto.core.digest.internal.commonToString
 import java.nio.ByteBuffer
@@ -77,20 +76,20 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
      *         public constructor(): super("SHA-256", 64, 32) {
      *             // Initialize...
      *         }
-     *         private constructor(thiz: SHA256, state: DigestState): super(state) {
+     *         private constructor(thiz: SHA256, state: State): super(state) {
      *             // Copy implementation details...
      *         }
-     *         protected override fun copyProtected(state: DigestState): Digest = SHA256(this, state)
+     *         protected override fun copyProtected(state: State): Digest = SHA256(this, state)
      *         // ...
      *     }
      *
-     * @see [DigestState]
-     * @throws [IllegalStateException] If [DigestState] has already been used to instantiate
+     * @see [State]
+     * @throws [IllegalStateException] If [State] has already been used to instantiate
      *   another instance of [Digest]
      * */
-    protected actual constructor(state: DigestState): super(state.algorithm) {
+    protected actual constructor(state: State): super((state as RealState).algorithm) {
         this.digestLength = state.digestLength
-        this.buf = state.buf()
+        this.buf = state.buf.copy()
         this.bufOffs = state.bufOffs
     }
 
@@ -152,21 +151,18 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     }
 
     // See Copyable interface documentation
-    public actual final override fun copy(): Digest = buf.toState(
-        algorithm = algorithm,
-        digestLength = digestLength,
-        bufOffs = bufOffs,
-    ).let { copyProtected(it) }
+    public actual final override fun copy(): Digest = copyProtected(RealState())
 
     /**
-     * Called by the public [copyProtected] function which produces the [DigestState]
-     * needed to create a wholly new instance.
-     *
-     * **NOTE:** [DigestState] can only be consumed once and should **NOT**
-     * be held on to. Attempting to instantiate multiple [Digest] instances
-     * with a single [DigestState] will raise an [IllegalStateException].
+     * Used as a holder for copying digest internals.
      * */
-    protected actual abstract fun copyProtected(state: DigestState): Digest
+    protected actual sealed class State
+
+    /**
+     * Called by the public [copyProtected] function which produces the [State]
+     * needed to create a wholly new instance.
+     * */
+    protected actual abstract fun copyProtected(state: State): Digest
 
     /**
      * Called whenever a full [blockSize] worth of bytes are available for processing,
@@ -248,4 +244,11 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     public actual final override fun hashCode(): Int = buf.hashCode()
     /** @suppress */
     public actual final override fun toString(): String = commonToString()
+
+    private inner class RealState: State() {
+        val algorithm: String = this@Digest.algorithm()
+        val digestLength: Int = this@Digest.digestLength()
+        val bufOffs: Int = this@Digest.bufOffs
+        val buf: Buffer = this@Digest.buf
+    }
 }

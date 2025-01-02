@@ -15,18 +15,16 @@
  **/
 package org.kotlincrypto.core.digest
 
-import org.kotlincrypto.core.digest.internal.DigestState
-
 class TestDigest: Digest {
 
     private val compress: (input: ByteArray, offset: Int) -> Unit
     private val finalize: (buffer: ByteArray, offset: Int) -> ByteArray
     private val reset: () -> Unit
 
+    constructor(algorithm: String): this(algorithm, 64)
+
     var compressions: Int = 0
         private set
-
-    constructor(algorithm: String): this(algorithm, 64)
 
     constructor(
         algorithm: String = "TEST",
@@ -42,7 +40,7 @@ class TestDigest: Digest {
     }
 
     private constructor(
-        state: DigestState,
+        state: State,
         compress: (input: ByteArray, offset: Int) -> Unit,
         digest: (buffer: ByteArray, offset: Int) -> ByteArray,
         reset: () -> Unit,
@@ -66,7 +64,7 @@ class TestDigest: Digest {
         compressions = 0
     }
 
-    override fun copyProtected(state: DigestState): Digest {
+    override fun copyProtected(state: State): Digest {
         val d = TestDigest(state, compress, finalize, reset)
         d.compressions = compressions
         return d

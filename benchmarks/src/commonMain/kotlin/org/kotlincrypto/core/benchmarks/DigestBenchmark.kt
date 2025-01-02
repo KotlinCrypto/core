@@ -17,7 +17,6 @@ package org.kotlincrypto.core.benchmarks
 
 import kotlinx.benchmark.*
 import org.kotlincrypto.core.digest.Digest
-import org.kotlincrypto.core.digest.internal.DigestState
 import kotlin.random.Random
 
 @State(Scope.Benchmark)
@@ -29,9 +28,9 @@ open class DigestBenchmark {
 
     private class TestDigest: Digest {
         constructor(): super("Benchmark", 32, 32)
-        private constructor(state: DigestState): super(state)
+        private constructor(state: State): super(state)
         override fun resetProtected() {}
-        override fun copyProtected(state: DigestState): Digest = TestDigest(state)
+        override fun copyProtected(state: State): Digest = TestDigest(state)
         override fun compressProtected(input: ByteArray, offset: Int) {}
         override fun digestProtected(buffer: ByteArray, offset: Int): ByteArray = ByteArray(0)
     }

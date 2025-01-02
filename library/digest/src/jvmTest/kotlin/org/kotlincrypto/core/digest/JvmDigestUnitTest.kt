@@ -15,7 +15,6 @@
  **/
 package org.kotlincrypto.core.digest
 
-import org.kotlincrypto.core.digest.internal.DigestState
 import java.lang.AssertionError
 import java.security.MessageDigest
 import kotlin.random.Random
@@ -34,11 +33,11 @@ class JvmDigestUnitTest {
         constructor(digest: MessageDigest, blockSize: Int): super(digest.algorithm, blockSize, digest.digestLength) {
             delegate = digest.clone() as MessageDigest
         }
-        private constructor(state: DigestState, digest: MessageDigestWrap): super(state) {
+        private constructor(state: State, digest: MessageDigestWrap): super(state) {
             delegate = digest.delegate.clone() as MessageDigest
         }
 
-        override fun copyProtected(state: DigestState): Digest = MessageDigestWrap(state, this)
+        override fun copyProtected(state: State): Digest = MessageDigestWrap(state, this)
 
         override fun compressProtected(input: ByteArray, offset: Int) {
             delegate.update(input, offset, blockSize())
