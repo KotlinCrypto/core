@@ -18,6 +18,7 @@ package org.kotlincrypto.core
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotEquals
 
 class CounterUnitTest {
 
@@ -123,17 +124,23 @@ class CounterUnitTest {
     fun givenBit32_whenCopy_thenCopiesValues() {
         val expected = Counter.Bit32(8, 8, 8)
         val copy = expected.copy()
+        assertNotEquals(expected, copy)
         assertEquals(expected.incrementBy, copy.incrementBy)
         assertEquals(expected.lo, copy.lo)
         assertEquals(expected.hi, copy.hi)
+        copy.increment()
+        assertNotEquals(expected.lo, copy.lo)
     }
 
     @Test
     fun givenBit64_whenCopy_thenCopiesValues() {
         val expected = Counter.Bit64(8, 8, 8)
         val copy = expected.copy()
+        assertNotEquals(expected, copy)
         assertEquals(expected.incrementBy, copy.incrementBy)
         assertEquals(expected.lo, copy.lo)
         assertEquals(expected.hi, copy.hi)
+        copy.increment()
+        assertNotEquals(expected.lo, copy.lo)
     }
 }
