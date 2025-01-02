@@ -34,18 +34,43 @@ import org.kotlincrypto.core.*
  * https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#mac-algorithms
  *
  * @see [Engine]
- * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
-public expect abstract class Mac
-@Throws(IllegalArgumentException::class)
-protected constructor(
-    algorithm: String,
-    engine: Engine,
-) : Algorithm,
-    Copyable<Mac>,
-    Resettable,
-    Updatable
-{
+public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatable {
+
+    /**
+     * Creates a new [Mac] for the specified parameters.
+     *
+     * @param [algorithm] See [Algorithm.algorithm]
+     * @param [engine] See [Engine]
+     * @throws [IllegalArgumentException] when:
+     *  - [algorithm] is blank
+     * */
+    @Throws(IllegalArgumentException::class)
+    protected constructor(algorithm: String, engine: Engine)
+
+    /**
+     * Creates a new [Mac] from [other], copying its [Engine] and state.
+     *
+     * Implementors of [Mac] should have a private secondary constructor
+     * that is utilized by its [copy] implementation.
+     *
+     * e.g.
+     *
+     *     public class HmacSHA256: Mac {
+     *
+     *         // ...
+     *
+     *         private constructor(other: HmacSHA256): super(other) {
+     *             // Copy implementation details...
+     *         }
+     *
+     *         // Notice the updated return type
+     *         public override fun copy(): HmacSHA256 = HmacSHA256(this)
+     *
+     *         // ...
+     *     }
+     * */
+    protected constructor(other: Mac)
 
     /**
      * The number of bytes the implementation returns when [doFinal] is called.
@@ -78,15 +103,6 @@ protected constructor(
     // See Resettable interface documentation
     public final override fun reset()
 
-    // See Copyable interface documentation
-    public final override fun copy(): Mac
-
-    /**
-     * Called by the public [copy] function which produces the
-     * [Engine] copy needed to create a wholly new instance.
-     * */
-    protected abstract fun copy(engineCopy: Engine): Mac
-
     /** @suppress */
     public final override fun equals(other: Any?): Boolean
     /** @suppress */
@@ -111,9 +127,9 @@ protected constructor(
         public constructor(key: ByteArray)
 
         /**
-         * Creates a new [Engine] for the copied [State]
+         * Creates a new [Engine] from [other], copying its state.
          * */
-        protected constructor(state: State)
+        protected constructor(other: Engine)
 
         /**
          * The number of bytes the implementation returns when [doFinal] is called.
@@ -133,8 +149,5 @@ protected constructor(
         final override fun equals(other: Any?): Boolean
         /** @suppress */
         final override fun hashCode(): Int
-
-        // Unfortunate API design for the copy functionality...
-        protected abstract inner class State()
     }
 }

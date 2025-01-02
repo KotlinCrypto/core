@@ -38,18 +38,49 @@ import org.kotlincrypto.core.mac.internal.commonToString
  * @see [Engine]
  * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
-public actual abstract class Mac
-@Throws(IllegalArgumentException::class)
-protected actual constructor(
-    private val algorithm: String,
-    private val engine: Engine,
-) : Algorithm,
-    Copyable<Mac>,
-    Resettable,
-    Updatable
-{
+public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatable {
 
-    init { commonInit(algorithm) }
+    private val algorithm: String
+    private val engine: Engine
+
+    /**
+     * Creates a new [Mac] for the specified parameters.
+     *
+     * @param [algorithm] See [Algorithm.algorithm]
+     * @param [engine] See [Engine]
+     * @throws [IllegalArgumentException] when:
+     *  - [algorithm] is blank
+     * */
+    @Throws(IllegalArgumentException::class)
+    protected actual constructor(algorithm: String, engine: Engine) {
+        commonInit(algorithm)
+        this.algorithm = algorithm
+        this.engine = engine
+    }
+
+    /**
+     * Creates a new [Mac] from [other], copying its [Engine] and state.
+     *
+     * Implementors of [Mac] should have a private secondary constructor
+     * that is utilized by its [copy] implementation.
+     *
+     * e.g.
+     *
+     *     public class HmacSHA256: Mac {
+     *
+     *         // ...
+     *
+     *         private constructor(other: HmacSHA256): super(other) {
+     *             // Copy implementation details...
+     *         }
+     *
+     *         // Notice the updated return type
+     *         public override fun copy(): HmacSHA256 = HmacSHA256(this)
+     *
+     *         // ...
+     *     }
+     * */
+    protected actual constructor(other: Mac): this(other.algorithm, other.engine.copy())
 
     /**
      * The number of bytes the implementation returns when [doFinal] is called.
@@ -98,15 +129,6 @@ protected actual constructor(
         engine.reset()
     }
 
-    // See Copyable interface documentation
-    public actual final override fun copy(): Mac = copy(engine.copy())
-
-    /**
-     * Called by the public [copy] function which produces the
-     * [Engine] copy needed to create a wholly new instance.
-     * */
-    protected actual abstract fun copy(engineCopy: Engine): Mac
-
     /** @suppress */
     public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
     /** @suppress */
@@ -122,8 +144,6 @@ protected actual constructor(
      * */
     protected actual abstract class Engine: Copyable<Engine>, Resettable, Updatable {
 
-        private val hashCode: Int = Any().hashCode()
-
         /**
          * Initializes a new [Engine] with the provided [key].
          *
@@ -135,9 +155,9 @@ protected actual constructor(
         }
 
         /**
-         * Creates a new [Engine] for the copied [State]
+         * Creates a new [Engine] from [other], copying its state.
          * */
-        protected actual constructor(state: State)
+        protected actual constructor(other: Engine)
 
         /**
          * The number of bytes the implementation returns when [doFinal] is called.
@@ -153,12 +173,11 @@ protected actual constructor(
         // See Updatable interface documentation
         public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
 
-        /** @suppress */
-        public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode == hashCode
-        /** @suppress */
-        public actual final override fun hashCode(): Int = hashCode
+        private val code = Any()
 
-        // Unfortunate API design for the copy functionality...
-        protected actual abstract inner class State
+        /** @suppress */
+        public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode() == hashCode()
+        /** @suppress */
+        public actual final override fun hashCode(): Int = code.hashCode()
     }
 }

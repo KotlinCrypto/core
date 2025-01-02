@@ -47,23 +47,26 @@ import javax.crypto.SecretKey
  * @see [Engine]
  * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
-public actual abstract class Mac
-@Throws(IllegalArgumentException::class)
-protected actual constructor(
-    algorithm: String,
-    private val engine: Engine,
-) : javax.crypto.Mac(
-    /* macSpi    */ engine,
-    /* provider  */ AndroidApi21to23MacSpiProvider.createOrNull(engine, algorithm),
-    /* algorithm */ algorithm
-),  Algorithm,
-    Copyable<Mac>,
-    Resettable,
-    Updatable
-{
+public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Resettable, Updatable {
 
-    init {
+    private val engine: Engine
+
+    /**
+     * Creates a new [Mac] for the specified parameters.
+     *
+     * @param [algorithm] See [Algorithm.algorithm]
+     * @param [engine] See [Engine]
+     * @throws [IllegalArgumentException] when:
+     *  - [algorithm] is blank
+     * */
+    @Throws(IllegalArgumentException::class)
+    protected actual constructor(algorithm: String, engine: Engine): super(
+        /* macSpi    */ engine,
+        /* provider  */ AndroidApi21to23MacSpiProvider.createOrNull(engine, algorithm),
+        /* algorithm */ algorithm
+    ) {
         commonInit(algorithm)
+        this.engine = engine
 
         // Engine.engineInit is overridden as no-op, so this does
         // nothing other than set `javax.crypto.Mac.initialized`
@@ -72,21 +75,36 @@ protected actual constructor(
     }
 
     /**
+     * Creates a new [Mac] from [other], copying its [Engine] and state.
+     *
+     * Implementors of [Mac] should have a private secondary constructor
+     * that is utilized by its [copy] implementation.
+     *
+     * e.g.
+     *
+     *     public class HmacSHA256: Mac {
+     *
+     *         // ...
+     *
+     *         private constructor(other: HmacSHA256): super(other) {
+     *             // Copy implementation details...
+     *         }
+     *
+     *         // Notice the updated return type
+     *         public override fun copy(): HmacSHA256 = HmacSHA256(this)
+     *
+     *         // ...
+     *     }
+     * */
+    protected actual constructor(other: Mac): this(other.algorithm, other.engine.copy())
+
+    /**
      * The number of bytes the implementation returns when [doFinal] is called.
      * */
     public actual fun macLength(): Int = macLength
 
     // See Algorithm interface documentation
     public actual final override fun algorithm(): String = algorithm
-
-    // See Copyable interface documentation
-    public actual final override fun copy(): Mac = copy(engine.copy())
-
-    /**
-     * Called by the public [copy] function which produces the
-     * [Engine] copy needed to create a wholly new instance.
-     * */
-    protected actual abstract fun copy(engineCopy: Engine): Mac
 
     /** @suppress */
     public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
@@ -104,22 +122,20 @@ protected actual constructor(
      * */
     protected actual abstract class Engine: MacSpi, Cloneable, Copyable<Engine>, Resettable, Updatable {
 
-        private val hashCode: Int = Any().hashCode()
-
         /**
          * Initializes a new [Engine] with the provided [key].
          *
          * @throws [IllegalArgumentException] if [key] is empty.
          * */
         @Throws(IllegalArgumentException::class)
-        public actual constructor(key: ByteArray): super() {
+        public actual constructor(key: ByteArray) {
             require(key.isNotEmpty()) { "key cannot be empty" }
         }
 
         /**
-         * Creates a new [Engine] for the copied [State]
+         * Creates a new [Engine] from [other], copying its state.
          * */
-        protected actual constructor(state: State): super()
+        protected actual constructor(other: Engine)
 
         /**
          * The number of bytes the implementation returns when [doFinal] is called.
@@ -175,21 +191,19 @@ protected actual constructor(
 
             // Android API 23 and below javax.crypto.Mac does not call engineReset()
             @OptIn(InternalKotlinCryptoApi::class)
-            KC_ANDROID_SDK_INT?.let { sdkInt -> if (sdkInt <= 23) reset() }
+            KC_ANDROID_SDK_INT?.let { if (it <= 23) reset() }
 
             return b
         }
 
+        private val code = Any()
+
         /** @suppress */
         public final override fun clone(): Any = copy()
-
         /** @suppress */
-        public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode == hashCode
+        public actual final override fun equals(other: Any?): Boolean = other is Engine && other.hashCode() == hashCode()
         /** @suppress */
-        public actual final override fun hashCode(): Int = hashCode
-
-        // Unfortunate API design for the copy functionality...
-        protected actual abstract inner class State
+        public actual final override fun hashCode(): Int = 17 * 31 + code.hashCode()
     }
 
     private data object EmptyKey: KeySpec, SecretKey {

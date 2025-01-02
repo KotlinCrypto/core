@@ -8,10 +8,9 @@
 // Library unique name: <org.kotlincrypto.core:mac>
 abstract class org.kotlincrypto.core.mac/Mac : org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Copyable<org.kotlincrypto.core.mac/Mac>, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.mac/Mac|null[0]
     constructor <init>(kotlin/String, org.kotlincrypto.core.mac/Mac.Engine) // org.kotlincrypto.core.mac/Mac.<init>|<init>(kotlin.String;org.kotlincrypto.core.mac.Mac.Engine){}[0]
+    constructor <init>(org.kotlincrypto.core.mac/Mac) // org.kotlincrypto.core.mac/Mac.<init>|<init>(org.kotlincrypto.core.mac.Mac){}[0]
 
-    abstract fun copy(org.kotlincrypto.core.mac/Mac.Engine): org.kotlincrypto.core.mac/Mac // org.kotlincrypto.core.mac/Mac.copy|copy(org.kotlincrypto.core.mac.Mac.Engine){}[0]
     final fun algorithm(): kotlin/String // org.kotlincrypto.core.mac/Mac.algorithm|algorithm(){}[0]
-    final fun copy(): org.kotlincrypto.core.mac/Mac // org.kotlincrypto.core.mac/Mac.copy|copy(){}[0]
     final fun doFinal(): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.doFinal|doFinal(){}[0]
     final fun doFinal(kotlin/ByteArray): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.doFinal|doFinal(kotlin.ByteArray){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core.mac/Mac.equals|equals(kotlin.Any?){}[0]
@@ -25,16 +24,12 @@ abstract class org.kotlincrypto.core.mac/Mac : org.kotlincrypto.core/Algorithm, 
 
     abstract class Engine : org.kotlincrypto.core/Copyable<org.kotlincrypto.core.mac/Mac.Engine>, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.mac/Mac.Engine|null[0]
         constructor <init>(kotlin/ByteArray) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(kotlin.ByteArray){}[0]
-        constructor <init>(org.kotlincrypto.core.mac/Mac.Engine.State) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(org.kotlincrypto.core.mac.Mac.Engine.State){}[0]
+        constructor <init>(org.kotlincrypto.core.mac/Mac.Engine) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(org.kotlincrypto.core.mac.Mac.Engine){}[0]
 
         abstract fun doFinal(): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.Engine.doFinal|doFinal(){}[0]
         abstract fun macLength(): kotlin/Int // org.kotlincrypto.core.mac/Mac.Engine.macLength|macLength(){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core.mac/Mac.Engine.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // org.kotlincrypto.core.mac/Mac.Engine.hashCode|hashCode(){}[0]
         open fun update(kotlin/ByteArray) // org.kotlincrypto.core.mac/Mac.Engine.update|update(kotlin.ByteArray){}[0]
-
-        abstract inner class State { // org.kotlincrypto.core.mac/Mac.Engine.State|null[0]
-            constructor <init>() // org.kotlincrypto.core.mac/Mac.Engine.State.<init>|<init>(){}[0]
-        }
     }
 }
