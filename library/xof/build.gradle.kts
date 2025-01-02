@@ -22,7 +22,6 @@ kmpConfiguration {
         common {
             sourceSetMain {
                 dependencies {
-                    implementation(libs.kotlincrypto.endians.endians)
                     api(project(":library:core"))
                 }
             }
