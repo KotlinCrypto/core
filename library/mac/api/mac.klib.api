@@ -17,6 +17,7 @@ abstract class org.kotlincrypto.core.mac/Mac : org.kotlincrypto.core/Algorithm, 
     final fun hashCode(): kotlin/Int // org.kotlincrypto.core.mac/Mac.hashCode|hashCode(){}[0]
     final fun macLength(): kotlin/Int // org.kotlincrypto.core.mac/Mac.macLength|macLength(){}[0]
     final fun reset() // org.kotlincrypto.core.mac/Mac.reset|reset(){}[0]
+    final fun reset(kotlin/ByteArray) // org.kotlincrypto.core.mac/Mac.reset|reset(kotlin.ByteArray){}[0]
     final fun toString(): kotlin/String // org.kotlincrypto.core.mac/Mac.toString|toString(){}[0]
     final fun update(kotlin/Byte) // org.kotlincrypto.core.mac/Mac.update|update(kotlin.Byte){}[0]
     final fun update(kotlin/ByteArray) // org.kotlincrypto.core.mac/Mac.update|update(kotlin.ByteArray){}[0]
@@ -28,6 +29,7 @@ abstract class org.kotlincrypto.core.mac/Mac : org.kotlincrypto.core/Algorithm, 
 
         abstract fun doFinal(): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.Engine.doFinal|doFinal(){}[0]
         abstract fun macLength(): kotlin/Int // org.kotlincrypto.core.mac/Mac.Engine.macLength|macLength(){}[0]
+        abstract fun reset(kotlin/ByteArray) // org.kotlincrypto.core.mac/Mac.Engine.reset|reset(kotlin.ByteArray){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core.mac/Mac.Engine.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // org.kotlincrypto.core.mac/Mac.Engine.hashCode|hashCode(){}[0]
         open fun update(kotlin/ByteArray) // org.kotlincrypto.core.mac/Mac.Engine.update|update(kotlin.ByteArray){}[0]

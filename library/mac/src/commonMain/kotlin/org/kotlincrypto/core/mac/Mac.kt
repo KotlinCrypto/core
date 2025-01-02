@@ -103,12 +103,14 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
     // See Resettable interface documentation
     public final override fun reset()
 
-    /** @suppress */
-    public final override fun equals(other: Any?): Boolean
-    /** @suppress */
-    public final override fun hashCode(): Int
-    /** @suppress */
-    public final override fun toString(): String
+    /**
+     * Resets the [Mac] and will reinitialize it with the provided key.
+     *
+     * This is useful if wanting to clear the key before de-referencing.
+     *
+     * @throws [IllegalArgumentException] if [newKey] is empty.
+     * */
+    public fun reset(newKey: ByteArray)
 
     /**
      * Core abstraction for powering a [Mac] implementation.
@@ -145,9 +147,18 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
         // See Updatable interface documentation
         public override fun update(input: ByteArray)
 
+        public abstract fun reset(newKey: ByteArray)
+
         /** @suppress */
         final override fun equals(other: Any?): Boolean
         /** @suppress */
         final override fun hashCode(): Int
     }
+
+    /** @suppress */
+    public final override fun equals(other: Any?): Boolean
+    /** @suppress */
+    public final override fun hashCode(): Int
+    /** @suppress */
+    public final override fun toString(): String
 }

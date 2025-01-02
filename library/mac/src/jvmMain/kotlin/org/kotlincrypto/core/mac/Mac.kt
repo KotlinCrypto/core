@@ -106,12 +106,17 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
     // See Algorithm interface documentation
     public actual final override fun algorithm(): String = algorithm
 
-    /** @suppress */
-    public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
-    /** @suppress */
-    public actual final override fun hashCode(): Int = engine.hashCode()
-    /** @suppress */
-    public actual final override fun toString(): String = commonToString()
+    /**
+     * Resets the [Mac] and will reinitialize it with the provided key.
+     *
+     * This is useful if wanting to clear the key before de-referencing.
+     *
+     * @throws [IllegalArgumentException] if [newKey] is empty.
+     * */
+    public actual fun reset(newKey: ByteArray) {
+        require(newKey.isNotEmpty()) { "newKey cannot be empty" }
+        engine.reset(newKey)
+    }
 
     /**
      * Core abstraction for powering a [Mac] implementation. Extends
@@ -151,6 +156,11 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         // See Updatable interface documentation
         public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
 
+        /**
+         * Resets the [Engine] and will reinitialize it with the newly provided key.
+         * */
+        public actual abstract fun reset(newKey: ByteArray)
+
         // MacSpi
         /** @suppress */
         protected final override fun engineUpdate(p0: Byte) { update(p0) }
@@ -175,15 +185,13 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) {
             if (p0 is EmptyKey) return
 
-            // Throw an exception b/c if caller is trying to re-init the javax.crypto.Mac with a new key,
-            // the normal behavior is to blank the MacSpi state. If caller does not know this is an issue,
-            // any further output would not be correct b/c implementations do not re-init. KotlinCrypto users
-            // already know it's initialized because the API is designed to require the key upon instantiation
-            // so init is never needed to be called, nor is init function available from commonMain source set.
-            throw InvalidKeyException(
-                "org.kotlincrypto.core.mac.Mac does not support re-initialization " +
-                "(it's already initialized). A new instance is required to be created."
-            )
+            val newKey = p0?.encoded
+
+            if (newKey == null || newKey.isEmpty()) {
+                throw InvalidKeyException("Key cannot be null or empty")
+            }
+
+            reset(newKey)
         }
         /** @suppress */
         protected final override fun engineDoFinal(): ByteArray {
@@ -212,4 +220,11 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         override fun getFormat(): String = "RAW"
         private fun readResolve(): Any = EmptyKey
     }
+
+    /** @suppress */
+    public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
+    /** @suppress */
+    public actual final override fun hashCode(): Int = engine.hashCode()
+    /** @suppress */
+    public actual final override fun toString(): String = commonToString()
 }

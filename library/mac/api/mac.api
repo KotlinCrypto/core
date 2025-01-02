@@ -5,6 +5,7 @@ public abstract class org/kotlincrypto/core/mac/Mac : javax/crypto/Mac, org/kotl
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
 	public final fun macLength ()I
+	public final fun reset ([B)V
 	public final fun toString ()Ljava/lang/String;
 }
 
@@ -23,6 +24,7 @@ protected abstract class org/kotlincrypto/core/mac/Mac$Engine : javax/crypto/Mac
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
 	public abstract fun macLength ()I
+	public abstract fun reset ([B)V
 	public fun update ([B)V
 }
 

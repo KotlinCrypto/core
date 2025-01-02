@@ -129,12 +129,17 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
         engine.reset()
     }
 
-    /** @suppress */
-    public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
-    /** @suppress */
-    public actual final override fun hashCode(): Int = engine.hashCode()
-    /** @suppress */
-    public actual final override fun toString(): String = commonToString()
+    /**
+     * Resets the [Mac] and will reinitialize it with the provided key.
+     *
+     * This is useful if wanting to clear the key before de-referencing.
+     *
+     * @throws [IllegalArgumentException] if [newKey] is empty.
+     * */
+    public actual fun reset(newKey: ByteArray) {
+        require(newKey.isNotEmpty()) { "newKey cannot be empty" }
+        engine.reset(newKey)
+    }
 
     /**
      * Core abstraction for powering a [Mac] implementation.
@@ -173,6 +178,11 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
         // See Updatable interface documentation
         public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
 
+        /**
+         * Resets the [Engine] and will reinitialize it with the newly provided key.
+         * */
+        public actual abstract fun reset(newKey: ByteArray)
+
         private val code = Any()
 
         /** @suppress */
@@ -180,4 +190,11 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
         /** @suppress */
         public actual final override fun hashCode(): Int = code.hashCode()
     }
+
+    /** @suppress */
+    public actual final override fun equals(other: Any?): Boolean = other is Mac && other.engine == engine
+    /** @suppress */
+    public actual final override fun hashCode(): Int = engine.hashCode()
+    /** @suppress */
+    public actual final override fun toString(): String = commonToString()
 }

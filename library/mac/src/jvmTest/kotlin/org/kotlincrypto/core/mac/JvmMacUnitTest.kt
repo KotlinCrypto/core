@@ -18,9 +18,7 @@ package org.kotlincrypto.core.mac
 import junit.framework.TestCase.assertEquals
 import java.security.InvalidKeyException
 import javax.crypto.spec.SecretKeySpec
-import kotlin.test.Test
-import kotlin.test.assertNull
-import kotlin.test.fail
+import kotlin.test.*
 
 class JvmMacUnitTest {
 
@@ -34,22 +32,14 @@ class JvmMacUnitTest {
     }
 
     @Test
-    fun givenJvm_whenJavaxCryptoMacInitInvoked_thenThrowsException() {
-        val mac = TestMac(key, "My Algorithm")
-        val keySpec = SecretKeySpec(key, mac.algorithm())
+    fun givenJvm_whenJavaxCryptoMacInitInvoked_thenResetsWithNewKey() {
+        val oldKey = key
+        val newKey = oldKey.copyOf(oldKey.size - 4)
+        var rekey: ByteArray? = null
+        val mac = TestMac(key, "My Algorithm", rekey = { rekey = it })
 
-        try {
-            mac.init(keySpec)
-            fail()
-        } catch (_: InvalidKeyException) {
-            // pass
-        }
-
-        try {
-            mac.copy().init(keySpec)
-            fail()
-        } catch (_: InvalidKeyException) {
-            // pass
-        }
+        mac.init(SecretKeySpec(newKey, mac.algorithm()))
+        assertNotNull(rekey)
+        assertContentEquals(newKey, rekey)
     }
 }

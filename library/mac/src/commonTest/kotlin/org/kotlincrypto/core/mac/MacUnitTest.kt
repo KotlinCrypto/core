@@ -15,40 +15,40 @@
  **/
 package org.kotlincrypto.core.mac
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.fail
+import kotlin.test.*
 
 class MacUnitTest {
 
     @Test
     fun givenMac_whenEmptyKey_thenThrowsException() {
-        try {
+        assertFailsWith<IllegalArgumentException> {
             TestMac(ByteArray(0), "not empty")
-            fail()
-        } catch (_: IllegalArgumentException) {
-            // pass
         }
     }
 
     @Test
     fun givenMac_whenBlankAlgorithm_thenThrowsException() {
-        try {
+        assertFailsWith<IllegalArgumentException> {
             TestMac(ByteArray(5), "  ")
-            fail()
-        } catch (_: IllegalArgumentException) {
-            // pass
+        }
+    }
+
+    @Test
+    fun givenMac_whenResetWithEmptyKey_thenThrowsException() {
+        val mac = TestMac(ByteArray(5), "my algorithm")
+        assertFailsWith<IllegalArgumentException> {
+            mac.reset(ByteArray(0))
         }
     }
 
     @Test
     fun givenMac_whenInstantiated_thenInitializes() {
-        try {
-            TestMac(ByteArray(5), "not blank").update(5)
-            fail()
-        } catch (_: ConcurrentModificationException) {
-            // pass
+        val mac = TestMac(ByteArray(5), "not blank")
+        assertFailsWith<ConcurrentModificationException> {
+            // test mac throws ConcurrentModificationException
+            // on update for single byte input for verifying
+            // instantiation is in working  order.
+            mac.update(5)
         }
     }
 
@@ -56,7 +56,6 @@ class MacUnitTest {
     fun givenMac_whenCopied_thenIsNewInstance() {
         val mac = TestMac(ByteArray(5), "not blank")
         val copy = mac.copy()
-
         assertNotEquals(mac, copy)
     }
 
