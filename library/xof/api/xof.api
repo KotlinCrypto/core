@@ -17,7 +17,7 @@ public abstract class org/kotlincrypto/core/xof/Xof$Reader {
 	public final fun isClosed ()Z
 	public final fun read ([B)I
 	public final fun read ([BII)I
-	protected abstract fun readProtected ([BIIJ)V
+	protected abstract fun readProtected ([BII)I
 	public final fun toString ()Ljava/lang/String;
 	public final fun use (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
