@@ -165,14 +165,14 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
             if (len == 0) return 0
             if (offset < 0 || len < 0 || offset > out.size - len) throw IndexOutOfBoundsException()
 
-            readProtected(out, offset, len, bytesRead)
+            val read = readProtected(out, offset, len)
 
             // Update read counter
             val lt0 = lo < 0
-            lo += len
+            lo += read
             if (lt0 && lo >= 0) hi++
 
-            return len
+            return read
         }
 
         /**
@@ -188,7 +188,7 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
             isClosed = true
         }
 
-        protected abstract fun readProtected(out: ByteArray, offset: Int, len: Int, bytesRead: Long)
+        protected abstract fun readProtected(out: ByteArray, offset: Int, len: Int): Int
         protected abstract fun closeProtected()
 
         /** @suppress */
