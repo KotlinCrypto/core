@@ -17,59 +17,15 @@
 
 package org.kotlincrypto.core.digest.internal
 
-import kotlin.concurrent.Volatile
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmSynthetic
 
 @JvmInline
 internal value class Buffer private constructor(internal val value: ByteArray) {
 
-    internal fun toState(
-        algorithm: String,
-        digestLength: Int,
-        bufOffs: Int,
-        compressCount: Int,
-        compressCountMultiplier: Int,
-    ): DigestState = State(
-        algorithm,
-        digestLength,
-        bufOffs,
-        compressCount,
-        compressCountMultiplier,
-        this,
-    )
-
-    private class State(
-        algorithm: String,
-        digestLength: Int,
-        bufOffs: Int,
-        compressCount: Int,
-        compressCountMultiplier: Int,
-        buf: Buffer,
-    ): DigestState(
-        algorithm,
-        digestLength,
-        bufOffs,
-        compressCount,
-        compressCountMultiplier,
-    ) {
-        @Volatile
-        var buf: Buffer? = Buffer(buf.value.copyOf())
-    }
+    internal fun copy(): Buffer = Buffer(value.copyOf())
 
     internal companion object {
-
-        @JvmSynthetic
-        @Throws(IllegalStateException::class)
-        internal fun DigestState.buf(): Buffer {
-            val state = this as State
-            val buf = state.buf
-            state.buf = null
-            check(buf != null) {
-                "DigestState cannot be consumed more than once. Call copy again."
-            }
-            return buf
-        }
 
         @JvmSynthetic
         @Throws(IllegalArgumentException::class)
@@ -91,14 +47,16 @@ internal value class Buffer private constructor(internal val value: ByteArray) {
 internal inline fun Buffer.commonUpdate(
     input: Byte,
     bufOffsPlusPlus: Int,
-    doCompression: (buf: ByteArray, offset: Int) -> Unit,
+    bufOffsSet: (zero: Int) -> Unit,
+    compressProtected: (buf: ByteArray, offset: Int) -> Unit,
 ) {
     val buf = value
     buf[bufOffsPlusPlus] = input
 
     // buf.size == blockSize
     if ((bufOffsPlusPlus + 1) != buf.size) return
-    doCompression(buf, 0)
+    compressProtected(buf, 0)
+    bufOffsSet(0)
 }
 
 @Suppress("NOTHING_TO_INLINE")
@@ -108,8 +66,7 @@ internal inline fun Buffer.commonUpdate(
     len: Int,
     bufOffs: Int,
     bufOffsSet: (value: Int) -> Unit,
-    compress: (buf: ByteArray, offset: Int) -> Unit,
-    compressCountIncrement: () -> Unit,
+    compressProtected: (buf: ByteArray, offset: Int) -> Unit,
 ) {
     val buf = value
     val blockSize = buf.size
@@ -130,10 +87,9 @@ internal inline fun Buffer.commonUpdate(
         // Add enough input to do a compression
         val needed = blockSize - offsBuf
         input.copyInto(buf, offsBuf, offsInput, offsInput + needed)
-        compress(buf, 0)
+        compressProtected(buf, 0)
         offsBuf = 0
         offsInput += needed
-        compressCountIncrement()
     }
 
     // Chunk blocks (if possible)
@@ -147,24 +103,10 @@ internal inline fun Buffer.commonUpdate(
             break
         }
 
-        compress(input, offsInput)
+        compressProtected(input, offsInput)
         offsInput = offsNext
-        compressCountIncrement()
     }
 
     // Update globals
     bufOffsSet(offsBuf)
-}
-
-@Suppress("NOTHING_TO_INLINE")
-internal inline fun Buffer.commonDigest(
-    bufOffs: Int,
-    compressCount: Long,
-    digest: (bitLength: Long, offs: Int, buf: ByteArray) -> ByteArray,
-    reset: () -> Unit,
-): ByteArray {
-    val bitLength = ((compressCount * value.size) + bufOffs) * 8
-    val final = digest(bitLength, bufOffs, value)
-    reset()
-    return final
 }

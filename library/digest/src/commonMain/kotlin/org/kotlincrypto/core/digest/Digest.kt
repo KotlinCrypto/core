@@ -18,7 +18,6 @@
 package org.kotlincrypto.core.digest
 
 import org.kotlincrypto.core.*
-import org.kotlincrypto.core.digest.internal.DigestState
 
 /**
  * Core abstraction for Message Digest implementations.
@@ -53,7 +52,7 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * instance.
      *
      * Implementors of [Digest] should have a private secondary constructor
-     * that is utilized by its [copy] implementation.
+     * that is utilized by its [copyProtected] implementation.
      *
      * e.g.
      *
@@ -62,18 +61,14 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      *         public constructor(): super("SHA-256", 64, 32) {
      *             // Initialize...
      *         }
-     *         private constructor(thiz: SHA256, state: DigestState): super(state) {
+     *         private constructor(thiz: SHA256, state: State): super(state) {
      *             // Copy implementation details...
      *         }
-     *         protected override fun copy(state: DigestState): Digest = SHA256(this, state)
+     *         protected override fun copyProtected(state: State): Digest = SHA256(this, state)
      *         // ...
      *     }
-     *
-     * @see [DigestState]
-     * @throws [IllegalStateException] If [DigestState] has already been used to instantiate
-     *   another instance of [Digest]
      * */
-    protected constructor(state: DigestState)
+    protected constructor(state: State)
 
     /**
      * The number of byte blocks (in factors of 8) that the implementation
@@ -118,55 +113,46 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public final override fun copy(): Digest
 
     /**
-     * The number of compressions this [Digest] has completed. Backing
-     * variable is updated **after** each [compress] invocation, and
-     * subsequently set to `0` upon [reset] invocation.
+     * Used as a holder for copying digest internals.
      * */
-    protected fun compressions(): Long
+    protected sealed class State
 
     /**
-     * Called by the public [copy] function which produces the [DigestState]
+     * Called by the public [copy] function which produces the [State]
      * needed to create a wholly new instance.
-     *
-     * **NOTE:** [DigestState] can only be consumed once and should **NOT**
-     * be held on to. Attempting to instantiate multiple [Digest] instances
-     * with a single [DigestState] will raise an [IllegalStateException].
      * */
-    protected abstract fun copy(state: DigestState): Digest
+    protected abstract fun copyProtected(state: State): Digest
 
     /**
      * Called whenever a full [blockSize] worth of bytes are available for processing,
      * starting at index [offset] for the provided [input]. Implementations **must not**
      * alter [input].
      * */
-    protected abstract fun compress(input: ByteArray, offset: Int)
+    protected abstract fun compressProtected(input: ByteArray, offset: Int)
 
     /**
      * Called to complete the computation, providing any input that may be
      * buffered awaiting processing.
      *
-     * @param [bitLength] The number of bits that have been processed, including
-     *   those remaining in the [buffer]
-     * @param [bufferOffset] The index at which the next input would be placed in
-     *   the [buffer]
      * @param [buffer] Unprocessed input
+     * @param [offset] The index at which the next input would be placed in the [buffer]
      * */
-    protected abstract fun digest(bitLength: Long, bufferOffset: Int, buffer: ByteArray): ByteArray
+    protected abstract fun digestProtected(buffer: ByteArray, offset: Int): ByteArray
 
     /**
      * Optional override for implementations to intercept cleansed input before
      * being processed by the [Digest] abstraction.
      * */
-    protected open fun updateDigest(input: Byte)
+    protected open fun updateProtected(input: Byte)
 
     /**
      * Optional override for implementations to intercept cleansed input before
      * being processed by the [Digest] abstraction. Parameters passed to this
      * function are always valid and have been checked for appropriateness.
      * */
-    protected open fun updateDigest(input: ByteArray, offset: Int, len: Int)
+    protected open fun updateProtected(input: ByteArray, offset: Int, len: Int)
 
-    protected abstract fun resetDigest()
+    protected abstract fun resetProtected()
 
     /** @suppress */
     public final override fun equals(other: Any?): Boolean

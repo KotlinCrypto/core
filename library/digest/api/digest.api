@@ -1,19 +1,18 @@
 public abstract class org/kotlincrypto/core/digest/Digest : java/security/MessageDigest, java/lang/Cloneable, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
 	protected fun <init> (Ljava/lang/String;II)V
-	protected fun <init> (Lorg/kotlincrypto/core/digest/internal/DigestState;)V
+	protected fun <init> (Lorg/kotlincrypto/core/digest/Digest$State;)V
 	public final fun algorithm ()Ljava/lang/String;
 	public final fun blockSize ()I
 	public final fun clone ()Ljava/lang/Object;
-	protected abstract fun compress ([BI)V
-	protected final fun compressions ()J
+	protected abstract fun compressProtected ([BI)V
 	public synthetic fun copy ()Ljava/lang/Object;
 	public final fun copy ()Lorg/kotlincrypto/core/digest/Digest;
-	protected abstract fun copy (Lorg/kotlincrypto/core/digest/internal/DigestState;)Lorg/kotlincrypto/core/digest/Digest;
+	protected abstract fun copyProtected (Lorg/kotlincrypto/core/digest/Digest$State;)Lorg/kotlincrypto/core/digest/Digest;
 	public final fun digest ()[B
-	protected abstract fun digest (JI[B)[B
 	public final fun digest ([B)[B
 	public final fun digest ([BII)I
 	public final fun digestLength ()I
+	protected abstract fun digestProtected ([BI)[B
 	protected final fun engineDigest ()[B
 	protected final fun engineDigest ([BII)I
 	protected final fun engineGetDigestLength ()I
@@ -24,16 +23,18 @@ public abstract class org/kotlincrypto/core/digest/Digest : java/security/Messag
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
 	public final fun reset ()V
-	protected abstract fun resetDigest ()V
+	protected abstract fun resetProtected ()V
 	public final fun toString ()Ljava/lang/String;
 	public final fun update (B)V
 	public final fun update ([B)V
 	public final fun update ([BII)V
-	protected fun updateDigest (B)V
-	protected fun updateDigest ([BII)V
+	protected fun updateProtected (B)V
+	protected fun updateProtected ([BII)V
+}
+
+protected abstract class org/kotlincrypto/core/digest/Digest$State {
 }
 
 public abstract class org/kotlincrypto/core/digest/internal/DigestState {
-	public synthetic fun <init> (Ljava/lang/String;IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 

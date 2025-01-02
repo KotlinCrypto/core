@@ -15,17 +15,5 @@
  **/
 package org.kotlincrypto.core.digest.internal
 
-/**
- * Used as a holder for copying/cloning of digests.
- *
- * **NOTE:** Can only be consumed once to instantiate a new Digest. This
- * instance should **not** be held onto and should only be utilized by
- * the `copy` function's implementation.
- * */
-public sealed class DigestState(
-    internal val algorithm: String,
-    internal val digestLength: Int,
-    internal val bufOffs: Int,
-    internal val compressCount: Int,
-    internal val compressCountMultiplier: Int,
-)
+@Deprecated("Replaced by Digest.State since 1.0.0")
+public sealed class DigestState
