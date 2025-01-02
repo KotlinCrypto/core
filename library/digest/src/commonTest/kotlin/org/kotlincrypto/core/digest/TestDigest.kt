@@ -39,15 +39,11 @@ class TestDigest: Digest {
         this.reset = reset
     }
 
-    private constructor(
-        state: State,
-        compress: (input: ByteArray, offset: Int) -> Unit,
-        digest: (buffer: ByteArray, offset: Int) -> ByteArray,
-        reset: () -> Unit,
-    ): super(state) {
-        this.compress = compress
-        this.finalize = digest
-        this.reset = reset
+    private constructor(other: TestDigest): super(other) {
+        this.compress = other.compress
+        this.finalize = other.finalize
+        this.reset = other.reset
+        this.compressions = other.compressions
     }
 
     override fun compressProtected(input: ByteArray, offset: Int) {
@@ -64,9 +60,5 @@ class TestDigest: Digest {
         compressions = 0
     }
 
-    override fun copyProtected(state: State): Digest {
-        val d = TestDigest(state, compress, finalize, reset)
-        d.compressions = compressions
-        return d
-    }
+    override fun copy(): TestDigest = TestDigest(this)
 }

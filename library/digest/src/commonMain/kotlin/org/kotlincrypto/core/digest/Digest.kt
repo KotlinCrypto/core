@@ -48,27 +48,28 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     protected constructor(algorithm: String, blockSize: Int, digestLength: Int)
 
     /**
-     * Creates a new [Digest] for the copied [state] of another [Digest]
-     * instance.
+     * Creates a new [Digest] from [other], copying its state.
      *
      * Implementors of [Digest] should have a private secondary constructor
-     * that is utilized by its [copyProtected] implementation.
+     * that is utilized by its [copy] implementation.
      *
      * e.g.
      *
      *     public class SHA256: Digest {
      *
-     *         public constructor(): super("SHA-256", 64, 32) {
-     *             // Initialize...
-     *         }
-     *         private constructor(thiz: SHA256, state: State): super(state) {
+     *         // ...
+     *
+     *         private constructor(other: SHA256): super(other) {
      *             // Copy implementation details...
      *         }
-     *         protected override fun copyProtected(state: State): Digest = SHA256(this, state)
+     *
+     *         // Notice the updated return type
+     *         public override fun copy(): SHA256 = SHA256(this)
+     *
      *         // ...
      *     }
      * */
-    protected constructor(state: State)
+    protected constructor(other: Digest)
 
     /**
      * The number of byte blocks (in factors of 8) that the implementation
@@ -108,20 +109,6 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
 
     // See Resettable interface documentation
     public final override fun reset()
-
-    // See Copyable interface documentation
-    public final override fun copy(): Digest
-
-    /**
-     * Used as a holder for copying digest internals.
-     * */
-    protected sealed class State
-
-    /**
-     * Called by the public [copy] function which produces the [State]
-     * needed to create a wholly new instance.
-     * */
-    protected abstract fun copyProtected(state: State): Digest
 
     /**
      * Called whenever a full [blockSize] worth of bytes are available for processing,

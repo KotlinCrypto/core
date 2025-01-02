@@ -28,9 +28,9 @@ open class DigestBenchmark {
 
     private class TestDigest: Digest {
         constructor(): super("Benchmark", 32, 32)
-        private constructor(state: State): super(state)
+        private constructor(other: TestDigest): super(other)
         override fun resetProtected() {}
-        override fun copyProtected(state: State): Digest = TestDigest(state)
+        override fun copy(): TestDigest = TestDigest(this)
         override fun compressProtected(input: ByteArray, offset: Int) {}
         override fun digestProtected(buffer: ByteArray, offset: Int): ByteArray = ByteArray(0)
     }
@@ -40,9 +40,6 @@ open class DigestBenchmark {
 
     @Setup
     fun setup() { digest.update(bytes, 0, digest.blockSize()) }
-
-    @Benchmark
-    fun copy() = digest.copy()
 
     @Benchmark
     fun update() { digest.update(bytes) }

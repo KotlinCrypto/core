@@ -21,30 +21,36 @@ class TestMac : Mac {
         key: ByteArray,
         algorithm: String,
         reset: () -> Unit = {},
+        rekey: (new: ByteArray) -> Unit = {},
         doFinal: () -> ByteArray = { ByteArray(0) },
-    ): super(algorithm, TestEngine(key, reset, doFinal))
+    ): super(algorithm, TestEngine(key, reset, rekey, doFinal))
 
     private constructor(algorithm: String, engine: TestEngine): super(algorithm, engine)
+    private constructor(other: TestMac): super(other)
 
-    override fun copy(engineCopy: Engine): Mac = TestMac(algorithm(), engineCopy as TestEngine)
+    override fun copy(): Mac = TestMac(this)
 
     private class TestEngine: Engine {
 
         private val reset: () -> Unit
+        private val rekey: (new: ByteArray) -> Unit
         private val doFinal: () -> ByteArray
 
         constructor(
             key: ByteArray,
             reset: () -> Unit,
+            rekey: (new: ByteArray) -> Unit,
             doFinal: () -> ByteArray,
         ): super(key) {
             this.reset = reset
+            this.rekey = rekey
             this.doFinal = doFinal
         }
 
-        private constructor(state: State, engine: TestEngine): super(state) {
-            this.reset = engine.reset
-            this.doFinal = engine.doFinal
+        private constructor(other: TestEngine): super(other) {
+            this.reset = other.reset
+            this.rekey = other.rekey
+            this.doFinal = other.doFinal
         }
 
         // To ensure that Java implementation initializes javax.crypto.Mac
@@ -53,11 +59,12 @@ class TestMac : Mac {
         override fun update(input: Byte) { throw ConcurrentModificationException() }
 
         override fun reset() { reset.invoke() }
+        override fun reset(newKey: ByteArray) { rekey.invoke(newKey) }
         override fun update(input: ByteArray) {}
         override fun update(input: ByteArray, offset: Int, len: Int) {}
         override fun macLength(): Int = 0
         override fun doFinal(): ByteArray = doFinal.invoke()
 
-        override fun copy(): Engine = TestEngine(object : State() {}, this)
+        override fun copy(): Engine = TestEngine(this)
     }
 }

@@ -1,13 +1,10 @@
 public abstract class org/kotlincrypto/core/digest/Digest : java/security/MessageDigest, java/lang/Cloneable, org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
 	protected fun <init> (Ljava/lang/String;II)V
-	protected fun <init> (Lorg/kotlincrypto/core/digest/Digest$State;)V
+	protected fun <init> (Lorg/kotlincrypto/core/digest/Digest;)V
 	public final fun algorithm ()Ljava/lang/String;
 	public final fun blockSize ()I
 	public final fun clone ()Ljava/lang/Object;
 	protected abstract fun compressProtected ([BI)V
-	public synthetic fun copy ()Ljava/lang/Object;
-	public final fun copy ()Lorg/kotlincrypto/core/digest/Digest;
-	protected abstract fun copyProtected (Lorg/kotlincrypto/core/digest/Digest$State;)Lorg/kotlincrypto/core/digest/Digest;
 	public final fun digest ()[B
 	public final fun digest ([B)[B
 	public final fun digest ([BII)I
@@ -30,9 +27,6 @@ public abstract class org/kotlincrypto/core/digest/Digest : java/security/Messag
 	public final fun update ([BII)V
 	protected fun updateProtected (B)V
 	protected fun updateProtected ([BII)V
-}
-
-protected abstract class org/kotlincrypto/core/digest/Digest$State {
 }
 
 public abstract class org/kotlincrypto/core/digest/internal/DigestState {

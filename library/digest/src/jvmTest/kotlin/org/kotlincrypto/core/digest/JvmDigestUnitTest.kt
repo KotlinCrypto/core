@@ -33,11 +33,11 @@ class JvmDigestUnitTest {
         constructor(digest: MessageDigest, blockSize: Int): super(digest.algorithm, blockSize, digest.digestLength) {
             delegate = digest.clone() as MessageDigest
         }
-        private constructor(state: State, digest: MessageDigestWrap): super(state) {
-            delegate = digest.delegate.clone() as MessageDigest
+        private constructor(other: MessageDigestWrap): super(other) {
+            delegate = other.delegate.clone() as MessageDigest
         }
 
-        override fun copyProtected(state: State): Digest = MessageDigestWrap(state, this)
+        override fun copy(): MessageDigestWrap = MessageDigestWrap(this)
 
         override fun compressProtected(input: ByteArray, offset: Int) {
             delegate.update(input, offset, blockSize())
