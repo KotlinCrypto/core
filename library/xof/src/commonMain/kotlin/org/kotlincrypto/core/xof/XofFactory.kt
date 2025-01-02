@@ -55,7 +55,7 @@ public abstract class XofFactory<A: XofAlgorithm> public constructor() {
     protected abstract inner class XofDelegate
     @Throws(ClassCastException::class, IllegalArgumentException::class)
     protected constructor(
-        protected val delegate: A
+        protected val delegate: A,
     ) : Xof<A>(),
         Algorithm by delegate,
         Resettable by delegate as Resettable,
@@ -78,9 +78,11 @@ public abstract class XofFactory<A: XofAlgorithm> public constructor() {
          * */
         protected abstract fun newReader(delegateCopy: A): Reader
 
+        /** @suppress */
         public final override fun equals(other: Any?): Boolean {
             return other is XofFactory<*>.XofDelegate && other.delegate == delegate
         }
+        /** @suppress */
         public final override fun hashCode(): Int = delegate.hashCode()
     }
 }

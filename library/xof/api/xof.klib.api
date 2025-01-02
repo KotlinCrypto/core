@@ -40,8 +40,9 @@ sealed class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.
     abstract inner class Reader { // org.kotlincrypto.core.xof/Xof.Reader|null[0]
         constructor <init>() // org.kotlincrypto.core.xof/Xof.Reader.<init>|<init>(){}[0]
 
-        final var bytesRead // org.kotlincrypto.core.xof/Xof.Reader.bytesRead|{}bytesRead[0]
+        final val bytesRead // org.kotlincrypto.core.xof/Xof.Reader.bytesRead|{}bytesRead[0]
             final fun <get-bytesRead>(): kotlin/Long // org.kotlincrypto.core.xof/Xof.Reader.bytesRead.<get-bytesRead>|<get-bytesRead>(){}[0]
+
         final var isClosed // org.kotlincrypto.core.xof/Xof.Reader.isClosed|{}isClosed[0]
             final fun <get-isClosed>(): kotlin/Boolean // org.kotlincrypto.core.xof/Xof.Reader.isClosed.<get-isClosed>|<get-isClosed>(){}[0]
 

@@ -100,12 +100,18 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
      * */
     public abstract inner class Reader {
 
+        private var lo: Int = 0
+        private var hi: Int = 0
+
         /**
          * The total amount of bytes read for this [Reader] instance
          * */
         @get:JvmName("bytesRead")
-        public var bytesRead: Long = 0
-            private set
+        public val bytesRead: Long get() {
+            val lo = lo
+            val hi = hi
+            return ((hi.toLong() and 0xffffffff) shl 32) or (lo.toLong() and 0xffffffff)
+        }
 
         /**
          * If the reader is closed or not
@@ -160,7 +166,12 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
             if (offset < 0 || len < 0 || offset > out.size - len) throw IndexOutOfBoundsException()
 
             readProtected(out, offset, len, bytesRead)
-            bytesRead += len
+
+            // Update read counter
+            val lt0 = lo < 0
+            lo += len
+            if (lt0 && lo >= 0) hi++
+
             return len
         }
 
@@ -177,16 +188,14 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
             isClosed = true
         }
 
-        protected abstract fun closeProtected()
         protected abstract fun readProtected(out: ByteArray, offset: Int, len: Int, bytesRead: Long)
+        protected abstract fun closeProtected()
 
+        /** @suppress */
         public final override fun toString(): String = "${this@Xof}.Reader@${hashCode()}"
     }
 
-    protected abstract fun newReader(): Reader
-
-    public final override fun toString(): String = "Xof[${algorithm()}]@${hashCode()}"
-
+    /** @suppress */
     @InternalKotlinCryptoApi
     public object Utils {
 
@@ -236,4 +245,10 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
             return b
         }
     }
+
+    protected abstract fun newReader(): Reader
+
+    /** @suppress */
+    public final override fun toString(): String = "Xof[${algorithm()}]@${hashCode()}"
+
 }
