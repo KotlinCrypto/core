@@ -23,16 +23,39 @@ import kotlin.test.assertContentEquals
 class XofUtilsUnitTest {
 
     @Test
+    fun givenValue_whenEncoded_thenIsAsExpected() {
+        listOf(
+                   777711L to byteArrayOf(3, 11, -35, -17),
+                  -777711L to byteArrayOf(8, -1, -1, -1, -1, -1, -12, 34, 17),
+                      555L to byteArrayOf(2, 2, 43),
+            Long.MIN_VALUE to byteArrayOf(8, -128, 0, 0, 0, 0, 0, 0, 0),
+            Long.MAX_VALUE to byteArrayOf(8, 127, -1, -1, -1, -1, -1, -1, -1),
+        ).forEach { (value, expected) ->
+            assertContentEquals(expected, Xof.Utils.leftEncode(value))
+
+            // Shift expected for right encoding
+            var i = 0
+            while (i < expected.lastIndex) {
+                val old = expected[i]
+                val new = expected[i + 1]
+                expected[i] = new
+                expected[i + 1] = old
+                i++
+            }
+
+            assertContentEquals(expected, Xof.Utils.rightEncode(value))
+        }
+    }
+
+    @Test
     fun givenLeftEncoding_whenValueZero_thenResultIsAsExpected() {
         val expected = ByteArray(2).apply { this[0] = 1 }
-        val actual = Xof.Utils.leftEncode(0L)
-        assertContentEquals(expected, actual)
+        assertContentEquals(expected, Xof.Utils.leftEncode(0L))
     }
 
     @Test
     fun givenRightEncoding_whenValueZero_thenResultIsAsExpected() {
         val expected = ByteArray(2).apply { this[1] = 1 }
-        val actual = Xof.Utils.rightEncode(0L)
-        assertContentEquals(expected, actual)
+        assertContentEquals(expected, Xof.Utils.rightEncode(0L))
     }
 }
