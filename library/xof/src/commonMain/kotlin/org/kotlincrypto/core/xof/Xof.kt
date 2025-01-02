@@ -104,12 +104,16 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
         private var hi: Int = 0
 
         /**
-         * The total amount of bytes read for this [Reader] instance
+         * The total amount of bytes read for this [Reader] instance.
+         *
+         * **NOTE:** Only tracks up to a maximum of 2^64 bytes. Actual
+         * output can potentially be larger than that.
          * */
         @get:JvmName("bytesRead")
         public val bytesRead: Long get() {
             val lo = lo
             val hi = hi
+            if (hi == 0) return lo.toLong()
             return ((hi.toLong() and 0xffffffff) shl 32) or (lo.toLong() and 0xffffffff)
         }
 
