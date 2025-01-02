@@ -6,41 +6,42 @@ public abstract interface class org/kotlincrypto/core/Copyable {
 	public abstract fun copy ()Ljava/lang/Object;
 }
 
-public abstract class org/kotlincrypto/core/Counter {
+public abstract class org/kotlincrypto/core/Counter : org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable {
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
-	protected abstract fun increment ()V
-	protected abstract fun reset ()V
+	public abstract fun increment ()V
 	public final fun toString ()Ljava/lang/String;
 }
 
-public abstract class org/kotlincrypto/core/Counter$Bit32 : org/kotlincrypto/core/Counter {
+public final class org/kotlincrypto/core/Counter$Bit32 : org/kotlincrypto/core/Counter {
 	public static final field Companion Lorg/kotlincrypto/core/Counter$Bit32$Companion;
 	public static final field MAX_INCREMENT I
 	public final field incrementBy I
 	public fun <init> (I)V
 	public fun <init> (III)V
-	public fun <init> (Lorg/kotlincrypto/core/Counter$Bit32;)V
+	public synthetic fun copy ()Ljava/lang/Object;
+	public fun copy ()Lorg/kotlincrypto/core/Counter$Bit32;
 	public final fun hi ()I
-	protected fun increment ()V
+	public fun increment ()V
 	public final fun lo ()I
-	protected fun reset ()V
+	public fun reset ()V
 }
 
 public final class org/kotlincrypto/core/Counter$Bit32$Companion {
 }
 
-public abstract class org/kotlincrypto/core/Counter$Bit64 : org/kotlincrypto/core/Counter {
+public final class org/kotlincrypto/core/Counter$Bit64 : org/kotlincrypto/core/Counter {
 	public static final field Companion Lorg/kotlincrypto/core/Counter$Bit64$Companion;
 	public static final field MAX_INCREMENT J
 	public final field incrementBy J
 	public fun <init> (J)V
 	public fun <init> (JJJ)V
-	public fun <init> (Lorg/kotlincrypto/core/Counter$Bit64;)V
+	public synthetic fun copy ()Ljava/lang/Object;
+	public fun copy ()Lorg/kotlincrypto/core/Counter$Bit64;
 	public final fun hi ()J
-	protected fun increment ()V
+	public fun increment ()V
 	public final fun lo ()J
-	protected fun reset ()V
+	public fun reset ()V
 }
 
 public final class org/kotlincrypto/core/Counter$Bit64$Companion {

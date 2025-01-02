@@ -23,21 +23,28 @@ import kotlin.jvm.JvmName
 /**
  * Utility for counting things.
  * */
-public sealed class Counter private constructor() {
+public sealed class Counter private constructor(): Resettable, Copyable<Counter> {
+
+    /**
+     * Increments the counter
+     * */
+    public abstract fun increment()
 
     /**
      * A counter that utilizes 32-bit numbers providing a maximum count of 2^64.
+     *
+     * @see [Bit64]
      * */
-    public abstract class Bit32: Counter {
+    public class Bit32: Counter {
 
         public companion object {
 
             /**
              * The maximum value for which [Bit32.incrementBy] can be set to.
              *
-             * 1024 * 1024 >> 1048576
+             * 1024^2 >> 1048576
              * */
-            public const val MAX_INCREMENT: Int = 1024 * 1024 // Never decrease, only increase.
+            public const val MAX_INCREMENT: Int = 1048576 // Never decrease, only increase.
         }
 
         /**
@@ -90,39 +97,40 @@ public sealed class Counter private constructor() {
          * */
         public constructor(incrementBy: Int): this(0, 0, incrementBy)
 
-        /**
-         * Creates a clone of [other]
-         * */
-        public constructor(other: Bit32): super() {
-            this.incrementBy = other.incrementBy
-            this.lo = other.lo
-            this.hi = other.hi
-        }
+        public override fun copy(): Bit32 = Bit32(this)
 
-        protected override fun increment() {
+        public override fun increment() {
             lo += incrementBy
             if (lo == 0) hi++
         }
 
-        protected override fun reset() {
+        public override fun reset() {
             lo = 0
             hi = 0
+        }
+
+        private constructor(other: Bit32): super() {
+            this.incrementBy = other.incrementBy
+            this.lo = other.lo
+            this.hi = other.hi
         }
     }
 
     /**
      * A counter that utilizes 64-bit numbers providing a maximum count of 2^128.
+     *
+     * @see [Bit32]
      * */
-    public abstract class Bit64: Counter {
+    public class Bit64: Counter {
 
         public companion object {
 
             /**
              * The maximum value for which [Bit64.incrementBy] can be set to.
              *
-             * @see [Bit32.MAX_INCREMENT]
+             * 1024^4 >> 1099511627776
              * */
-            public const val MAX_INCREMENT: Long = Bit32.MAX_INCREMENT.toLong()
+            public const val MAX_INCREMENT: Long = 1099511627776L // Never decrease, only increase.
         }
 
         /**
@@ -175,28 +183,24 @@ public sealed class Counter private constructor() {
          * */
         public constructor(incrementBy: Long): this(0, 0, incrementBy)
 
-        /**
-         * Creates a clone of [other]
-         * */
-        public constructor(other: Bit64): super() {
-            this.incrementBy = other.incrementBy
-            this.lo = other.lo
-            this.hi = other.hi
-        }
+        public override fun copy(): Bit64 = Bit64(this)
 
-        protected override fun increment() {
+        public override fun increment() {
             lo += incrementBy
             if (lo == 0L) hi++
         }
 
-        protected override fun reset() {
+        public override fun reset() {
             lo = 0L
             hi = 0L
         }
-    }
 
-    protected abstract fun increment()
-    protected abstract fun reset()
+        private constructor(other: Bit64): super() {
+            this.incrementBy = other.incrementBy
+            this.lo = other.lo
+            this.hi = other.hi
+        }
+    }
 
     private val code = Any()
 
