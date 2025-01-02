@@ -15,8 +15,5 @@
  **/
 package org.kotlincrypto.core.digest.internal
 
-/**
- * Used as a holder for copying/cloning of digests.
- * */
-@Deprecated("Replaced Digest.State since 1.0.0")
+@Deprecated("Replaced by Digest.State since 1.0.0")
 public sealed class DigestState

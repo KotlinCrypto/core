@@ -78,10 +78,6 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      *         protected override fun copyProtected(state: State): Digest = SHA256(this, state)
      *         // ...
      *     }
-     *
-     * @see [State]
-     * @throws [IllegalStateException] If [State] has already been used to instantiate
-     *   another instance of [Digest]
      * */
     protected actual constructor(state: State) {
         this.algorithm = (state as RealState).algorithm
@@ -99,7 +95,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public actual fun blockSize(): Int = buf.value.size
 
     /**
-     * The number of bytes the implementation returns when [digestProtected] is called.
+     * The number of bytes the implementation returns when [digest] is called.
      * */
     public actual fun digestLength(): Int = digestLength
 
@@ -157,10 +153,6 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     /**
      * Called by the [copy] function which produces the [State] needed
      * to create a wholly new instance.
-     *
-     * **NOTE:** [State] can only be consumed once and should **NOT**
-     * be held on to. Attempting to instantiate multiple [Digest] instances
-     * with a single [State] will raise an [IllegalStateException].
      * */
     protected actual abstract fun copyProtected(state: State): Digest
 

@@ -82,10 +82,6 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
      *         protected override fun copyProtected(state: State): Digest = SHA256(this, state)
      *         // ...
      *     }
-     *
-     * @see [State]
-     * @throws [IllegalStateException] If [State] has already been used to instantiate
-     *   another instance of [Digest]
      * */
     protected actual constructor(state: State): super((state as RealState).algorithm) {
         this.digestLength = state.digestLength
@@ -102,7 +98,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     public actual fun blockSize(): Int = buf.value.size
 
     /**
-     * The number of bytes the implementation returns when [digestProtected] is called.
+     * The number of bytes the implementation returns when [digest] is called.
      * */
     public actual fun digestLength(): Int = digestLength
 
@@ -159,7 +155,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     protected actual sealed class State
 
     /**
-     * Called by the public [copyProtected] function which produces the [State]
+     * Called by the public [copy] function which produces the [State]
      * needed to create a wholly new instance.
      * */
     protected actual abstract fun copyProtected(state: State): Digest
@@ -222,7 +218,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     /** @suppress */
     protected final override fun engineGetDigestLength(): Int = digestLength
     /** @suppress */
-    protected final override fun engineUpdate(p0: Byte) { update(p0) }
+    protected final override fun engineUpdate(p0: Byte) { updateProtected(p0) }
     /** @suppress */
     protected final override fun engineUpdate(input: ByteBuffer) { super.engineUpdate(input) }
     /** @suppress */

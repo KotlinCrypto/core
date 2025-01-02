@@ -67,10 +67,6 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      *         protected override fun copyProtected(state: State): Digest = SHA256(this, state)
      *         // ...
      *     }
-     *
-     * @see [State]
-     * @throws [IllegalStateException] If [State] has already been used to instantiate
-     *   another instance of [Digest]
      * */
     protected constructor(state: State)
 
@@ -83,7 +79,7 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public fun blockSize(): Int
 
     /**
-     * The number of bytes the implementation returns when [digestProtected] is called.
+     * The number of bytes the implementation returns when [digest] is called.
      * */
     public fun digestLength(): Int
 
@@ -122,7 +118,7 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     protected sealed class State
 
     /**
-     * Called by the public [copyProtected] function which produces the [State]
+     * Called by the public [copy] function which produces the [State]
      * needed to create a wholly new instance.
      * */
     protected abstract fun copyProtected(state: State): Digest
