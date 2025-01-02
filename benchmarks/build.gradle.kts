@@ -54,7 +54,9 @@ kmpConfiguration {
             sourceSetMain {
                 dependencies {
                     implementation(libs.benchmark.runtime)
+                    implementation(libs.kotlincrypto.endians.endians)
                     implementation(project(":library:digest"))
+                    implementation(project(":library:xof"))
                 }
             }
         }
