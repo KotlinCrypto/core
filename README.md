@@ -3,7 +3,6 @@
 [![badge-latest-release]][url-latest-release]
 
 [![badge-kotlin]][url-kotlin]
-[![badge-endians]][url-endians]
 
 ![badge-platform-android]
 ![badge-platform-jvm]
@@ -242,7 +241,6 @@ dependencies {
 
 <!-- TAG_DEPENDENCIES -->
 [badge-kotlin]: https://img.shields.io/badge/kotlin-1.9.24-blue.svg?logo=kotlin
-[badge-endians]: https://img.shields.io/badge/kotlincrypto.endians-0.3.1-blue.svg
 
 <!-- TAG_PLATFORMS -->
 [badge-platform-android]: http://img.shields.io/badge/-android-6EDB8D.svg?style=flat
@@ -266,7 +264,6 @@ dependencies {
 [url-license]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [url-kotlin]: https://kotlinlang.org
 [url-kotlin-crypto]: https://github.com/KotlinCrypto
-[url-endians]: https://github.com/KotlinCrypto/endians
 [url-hash]: https://github.com/KotlinCrypto/hash
 [url-macs]: https://github.com/KotlinCrypto/MACs
 [url-version-catalog]: https://github.com/KotlinCrypto/version-catalog

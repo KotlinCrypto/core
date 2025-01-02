@@ -56,7 +56,11 @@ sealed class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.
     }
 
     final object Utils { // org.kotlincrypto.core.xof/Xof.Utils|null[0]
+        final fun leftEncode(kotlin/Int): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.leftEncode|leftEncode(kotlin.Int){}[0]
+        final fun leftEncode(kotlin/Int, kotlin/Int): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.leftEncode|leftEncode(kotlin.Int;kotlin.Int){}[0]
         final fun leftEncode(kotlin/Long): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.leftEncode|leftEncode(kotlin.Long){}[0]
+        final fun rightEncode(kotlin/Int): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.rightEncode|rightEncode(kotlin.Int){}[0]
+        final fun rightEncode(kotlin/Int, kotlin/Int): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.rightEncode|rightEncode(kotlin.Int;kotlin.Int){}[0]
         final fun rightEncode(kotlin/Long): kotlin/ByteArray // org.kotlincrypto.core.xof/Xof.Utils.rightEncode|rightEncode(kotlin.Long){}[0]
     }
 }

@@ -55,6 +55,7 @@ kmpConfiguration {
                 dependencies {
                     implementation(libs.benchmark.runtime)
                     implementation(project(":library:digest"))
+                    implementation(project(":library:xof"))
                 }
             }
         }
