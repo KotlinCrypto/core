@@ -24,7 +24,11 @@ public abstract class org/kotlincrypto/core/xof/Xof$Reader {
 
 public final class org/kotlincrypto/core/xof/Xof$Utils {
 	public static final field INSTANCE Lorg/kotlincrypto/core/xof/Xof$Utils;
+	public static final fun leftEncode (I)[B
+	public static final fun leftEncode (II)[B
 	public static final fun leftEncode (J)[B
+	public static final fun rightEncode (I)[B
+	public static final fun rightEncode (II)[B
 	public static final fun rightEncode (J)[B
 }
 

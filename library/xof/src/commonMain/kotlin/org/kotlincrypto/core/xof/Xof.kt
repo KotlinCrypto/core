@@ -16,7 +16,6 @@
 package org.kotlincrypto.core.xof
 
 import org.kotlincrypto.core.*
-import org.kotlincrypto.endians.BigEndian.Companion.toBigEndian
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
@@ -204,50 +203,82 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
     public object Utils {
 
         @JvmStatic
+        public fun leftEncode(value: Int): ByteArray {
+            return encode(lo = value, hi = 0, left = true)
+        }
+
+        @JvmStatic
         public fun leftEncode(value: Long): ByteArray {
-            // If it's zero, return early with [1, 0]
-            if (value == 0L) return ByteArray(2).apply { this[0] = 1 }
+            val lo = value.toInt()
+            val hi = value.rotateLeft(32).toInt()
+            return encode(lo = lo, hi = hi, left = true)
+        }
 
-            val be = value.toBigEndian()
+        @JvmStatic
+        public fun leftEncode(lo: Int, hi: Int): ByteArray {
+            return encode(lo = lo, hi = hi, left = true)
+        }
 
-            // Find index of first non-zero byte
-            var i = 0
-            while (i < be.size && be[i] == 0.toByte()) {
-                i++
-            }
-
-            val b = ByteArray(be.size - i + 1)
-
-            // Prepend with number of non-zero bytes
-            b[0] = (be.size - i).toByte()
-
-            be.copyInto(b, 1, i)
-
-            return b
+        @JvmStatic
+        public fun rightEncode(value: Int): ByteArray {
+            return encode(lo = value, hi = 0, left = false)
         }
 
         @JvmStatic
         public fun rightEncode(value: Long): ByteArray {
-            // If it's zero, return early with [0, 1]
-            if (value == 0L) return ByteArray(2).apply { this[1] = 1 }
+            val lo = value.toInt()
+            val hi = value.rotateLeft(32).toInt()
+            return encode(lo = lo, hi = hi, left = false)
+        }
 
-            val be = value.toBigEndian()
+        @JvmStatic
+        public fun rightEncode(lo: Int, hi: Int): ByteArray {
+            return encode(lo = lo, hi = hi, left = false)
+        }
+
+        @JvmStatic
+        private fun encode(lo: Int, hi: Int, left: Boolean): ByteArray {
+            if (lo == 0 && hi == 0) {
+                // If it's zero, return early
+                return if (left) byteArrayOf(1, 0) else byteArrayOf(0, 1)
+            }
+
+            val a = byteArrayOf(
+                (hi ushr 24).toByte(),
+                (hi ushr 16).toByte(),
+                (hi ushr  8).toByte(),
+                (hi        ).toByte(),
+                (lo ushr 24).toByte(),
+                (lo ushr 16).toByte(),
+                (lo ushr  8).toByte(),
+                (lo        ).toByte(),
+            )
 
             // Find index of first non-zero byte
             var i = 0
-            while (i < be.size && be[i] == 0.toByte()) {
+            while (i < a.size && a[i] == ZERO) {
                 i++
             }
 
-            val b = ByteArray(be.size - i + 1)
+            val b = ByteArray(a.size - i + 1)
+            val num = (a.size - i).toByte()
 
-            // Append with number of non-zero bytes
-            b[b.lastIndex] = (be.size - i).toByte()
+            val offset = if (left) {
+                // Prepend with number of non-zero bytes
+                b[0] = num
+                1
+            } else {
+                // Append with number of non-zero bytes
+                b[b.lastIndex] = num
+                0
+            }
 
-            be.copyInto(b, 0, i)
+            a.copyInto(b, offset, i)
 
             return b
         }
+
+        private const val ZERO: Byte = 0
     }
 
     protected abstract fun newReader(): Reader

@@ -22,16 +22,36 @@ import kotlin.test.assertContentEquals
 @OptIn(InternalKotlinCryptoApi::class)
 class XofUtilsUnitTest {
 
+    private sealed class Data private constructor() {
+        class L(val value: Long): Data() {
+            override fun leftEncode(): ByteArray = Xof.Utils.leftEncode(value)
+            override fun rightEncode(): ByteArray = Xof.Utils.rightEncode(value)
+        }
+        class I(val value: Int): Data() {
+            override fun leftEncode(): ByteArray = Xof.Utils.leftEncode(value)
+            override fun rightEncode(): ByteArray = Xof.Utils.rightEncode(value)
+        }
+        class LoHi(val lo: Int, val hi: Int): Data() {
+            override fun leftEncode(): ByteArray = Xof.Utils.leftEncode(lo = lo, hi = hi)
+            override fun rightEncode(): ByteArray = Xof.Utils.rightEncode(lo = lo, hi = hi)
+        }
+
+        abstract fun leftEncode(): ByteArray
+        abstract fun rightEncode(): ByteArray
+    }
+
     @Test
     fun givenValue_whenEncoded_thenIsAsExpected() {
         listOf(
-                   777711L to byteArrayOf(3, 11, -35, -17),
-                  -777711L to byteArrayOf(8, -1, -1, -1, -1, -1, -12, 34, 17),
-                      555L to byteArrayOf(2, 2, 43),
-            Long.MIN_VALUE to byteArrayOf(8, -128, 0, 0, 0, 0, 0, 0, 0),
-            Long.MAX_VALUE to byteArrayOf(8, 127, -1, -1, -1, -1, -1, -1, -1),
-        ).forEach { (value, expected) ->
-            assertContentEquals(expected, Xof.Utils.leftEncode(value))
+            Data.L(777711L) to byteArrayOf(3, 11, -35, -17),
+            Data.L(-777711L) to byteArrayOf(8, -1, -1, -1, -1, -1, -12, 34, 17),
+            Data.LoHi(-777711, -1) to byteArrayOf(8, -1, -1, -1, -1, -1, -12, 34, 17),
+            Data.L(555L) to byteArrayOf(2, 2, 43),
+            Data.I(555) to byteArrayOf(2, 2, 43),
+            Data.L(Long.MIN_VALUE) to byteArrayOf(8, -128, 0, 0, 0, 0, 0, 0, 0),
+            Data.L(Long.MAX_VALUE) to byteArrayOf(8, 127, -1, -1, -1, -1, -1, -1, -1),
+        ).forEach { (data, expected) ->
+            assertContentEquals(expected, data.leftEncode())
 
             // Shift expected for right encoding
             var i = 0
@@ -43,7 +63,7 @@ class XofUtilsUnitTest {
                 i++
             }
 
-            assertContentEquals(expected, Xof.Utils.rightEncode(value))
+            assertContentEquals(expected, data.rightEncode())
         }
     }
 
