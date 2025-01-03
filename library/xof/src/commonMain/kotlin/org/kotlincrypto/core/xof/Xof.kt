@@ -238,21 +238,30 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
 
         @JvmStatic
         private fun encode(lo: Int, hi: Int, left: Boolean): ByteArray {
-            if (lo == 0 && hi == 0) {
-                // If it's zero, return early
-                return if (left) byteArrayOf(1, 0) else byteArrayOf(0, 1)
-            }
+            val a = if (hi == 0) {
+                if (lo == 0) {
+                    // If it's zero, return early
+                    return if (left) byteArrayOf(1, 0) else byteArrayOf(0, 1)
+                }
 
-            val a = byteArrayOf(
-                (hi ushr 24).toByte(),
-                (hi ushr 16).toByte(),
-                (hi ushr  8).toByte(),
-                (hi        ).toByte(),
-                (lo ushr 24).toByte(),
-                (lo ushr 16).toByte(),
-                (lo ushr  8).toByte(),
-                (lo        ).toByte(),
-            )
+                byteArrayOf(
+                    (lo ushr 24).toByte(),
+                    (lo ushr 16).toByte(),
+                    (lo ushr  8).toByte(),
+                    (lo        ).toByte(),
+                )
+            } else {
+                byteArrayOf(
+                    (hi ushr 24).toByte(),
+                    (hi ushr 16).toByte(),
+                    (hi ushr  8).toByte(),
+                    (hi        ).toByte(),
+                    (lo ushr 24).toByte(),
+                    (lo ushr 16).toByte(),
+                    (lo ushr  8).toByte(),
+                    (lo        ).toByte(),
+                )
+            }
 
             // Find index of first non-zero byte
             var i = 0
