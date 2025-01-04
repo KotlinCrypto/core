@@ -110,3 +110,26 @@ internal inline fun Buffer.commonUpdate(
     // Update globals
     bufPosSet(posBuf)
 }
+
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun Buffer.commonDigest(
+    bufPos: Int,
+    digestProtected: (buf: ByteArray, bufPos: Int) -> ByteArray,
+    reset: () -> Unit,
+): ByteArray {
+    // Zeroize any stale input that may be left in the buffer
+    value.fill(0, bufPos)
+    val final = digestProtected(value, bufPos)
+    reset()
+    return final
+}
+
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun Buffer.commonReset(
+    resetProtected: () -> Unit,
+    bufPosSet: (zero: Int) -> Unit,
+) {
+    value.fill(0)
+    bufPosSet(0)
+    resetProtected()
+}

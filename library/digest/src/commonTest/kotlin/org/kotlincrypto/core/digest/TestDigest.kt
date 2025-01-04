@@ -18,7 +18,7 @@ package org.kotlincrypto.core.digest
 class TestDigest: Digest {
 
     private val compress: (input: ByteArray, offset: Int) -> Unit
-    private val finalize: (buffer: ByteArray, offset: Int) -> ByteArray
+    private val finalize: (buf: ByteArray, bufPos: Int) -> ByteArray
     private val reset: () -> Unit
 
     constructor(algorithm: String): this(algorithm, 64)
@@ -31,7 +31,7 @@ class TestDigest: Digest {
         blockSize: Int = 64,
         digestLength: Int = 32,
         compress: (input: ByteArray, offset: Int) -> Unit = { _, _ -> },
-        digest: (buffer: ByteArray, offset: Int) -> ByteArray = { _, _ -> ByteArray(blockSize) },
+        digest: (buf: ByteArray, bufPos: Int) -> ByteArray = { _, _ -> ByteArray(blockSize) },
         reset: () -> Unit = {},
     ): super(algorithm, blockSize, digestLength) {
         this.compress = compress
