@@ -123,3 +123,13 @@ internal inline fun Buffer.commonDigest(
     reset()
     return final
 }
+
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun Buffer.commonReset(
+    resetProtected: () -> Unit,
+    bufPosSet: (zero: Int) -> Unit,
+) {
+    value.fill(0)
+    bufPosSet(0)
+    resetProtected()
+}

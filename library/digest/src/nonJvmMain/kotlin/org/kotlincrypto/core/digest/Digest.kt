@@ -139,9 +139,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
 
     // See Resettable interface documentation
     public actual final override fun reset() {
-        buf.value.fill(0)
-        bufPos = 0
-        resetProtected()
+        buf.commonReset(::resetProtected) { bufPos = it }
     }
 
     /**
