@@ -43,8 +43,8 @@ class JvmDigestUnitTest {
             delegate.update(input, offset, blockSize())
         }
 
-        override fun digestProtected(buffer: ByteArray, offset: Int): ByteArray {
-            delegate.update(buffer, 0, offset)
+        override fun digestProtected(buf: ByteArray, bufPos: Int): ByteArray {
+            delegate.update(buf, 0, bufPos)
             return delegate.digest()
         }
 
