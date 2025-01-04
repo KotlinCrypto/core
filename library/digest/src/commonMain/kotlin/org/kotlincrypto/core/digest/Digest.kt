@@ -121,6 +121,9 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * Called to complete the computation, providing any input that may be buffered
      * and awaiting processing.
      *
+     * **NOTE:** The buffer from [bufPos] to the end will always be zeroized to clear
+     * any potentially stale input left over from a previous state.
+     *
      * @param [buf] Unprocessed input
      * @param [bufPos] The index at which the **next** input would be placed into [buf]
      * */

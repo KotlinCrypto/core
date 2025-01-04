@@ -121,11 +121,11 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * Completes the computation, performing final operations and returning
      * the resultant array of bytes. The [Digest] is [reset] afterward.
      * */
-    public actual fun digest(): ByteArray {
-        val final = digestProtected(buf.value, bufPos)
-        reset()
-        return final
-    }
+    public actual fun digest(): ByteArray = buf.commonDigest(
+        bufPos = bufPos,
+        digestProtected = ::digestProtected,
+        reset = ::reset,
+    )
 
     /**
      * Updates the instance with provided [input], then completes the computation,
@@ -154,6 +154,9 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     /**
      * Called to complete the computation, providing any input that may be buffered
      * and awaiting processing.
+     *
+     * **NOTE:** The buffer from [bufPos] to the end will always be zeroized to clear
+     * any potentially stale input left over from a previous state.
      *
      * @param [buf] Unprocessed input
      * @param [bufPos] The index at which the **next** input would be placed into [buf]
