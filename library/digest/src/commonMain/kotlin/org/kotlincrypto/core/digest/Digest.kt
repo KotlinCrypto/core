@@ -118,13 +118,13 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     protected abstract fun compressProtected(input: ByteArray, offset: Int)
 
     /**
-     * Called to complete the computation, providing any input that may be
-     * buffered awaiting processing.
+     * Called to complete the computation, providing any input that may be buffered
+     * and awaiting processing.
      *
-     * @param [buffer] Unprocessed input
-     * @param [offset] The index at which the next input would be placed in the [buffer]
+     * @param [buf] Unprocessed input
+     * @param [bufPos] The index at which the **next** input would be placed into [buf]
      * */
-    protected abstract fun digestProtected(buffer: ByteArray, offset: Int): ByteArray
+    protected abstract fun digestProtected(buf: ByteArray, bufPos: Int): ByteArray
 
     /**
      * Optional override for implementations to intercept cleansed input before

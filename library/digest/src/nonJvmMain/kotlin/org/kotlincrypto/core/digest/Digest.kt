@@ -36,7 +36,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     private val algorithm: String
     private val digestLength: Int
     private val buf: Buffer
-    private var bufOffs: Int
+    private var bufPos: Int
 
     /**
      * Creates a new [Digest] for the specified parameters.
@@ -55,7 +55,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         this.buf = Buffer.initialize(algorithm, blockSize, digestLength)
         this.algorithm = algorithm
         this.digestLength = digestLength
-        this.bufOffs = 0
+        this.bufPos = 0
     }
 
     /**
@@ -84,7 +84,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
         this.algorithm = other.algorithm
         this.digestLength = other.digestLength
         this.buf = other.buf.copy()
-        this.bufOffs = other.bufOffs
+        this.bufPos = other.bufPos
     }
 
     /**
@@ -122,7 +122,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * the resultant array of bytes. The [Digest] is [reset] afterward.
      * */
     public actual fun digest(): ByteArray {
-        val final = digestProtected(buf.value, bufOffs)
+        val final = digestProtected(buf.value, bufPos)
         reset()
         return final
     }
@@ -140,7 +140,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     // See Resettable interface documentation
     public actual final override fun reset() {
         buf.value.fill(0)
-        bufOffs = 0
+        bufPos = 0
         resetProtected()
     }
 
@@ -152,13 +152,13 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     protected actual abstract fun compressProtected(input: ByteArray, offset: Int)
 
     /**
-     * Called to complete the computation, providing any input that may be
-     * buffered awaiting processing.
+     * Called to complete the computation, providing any input that may be buffered
+     * and awaiting processing.
      *
-     * @param [buffer] Unprocessed input
-     * @param [offset] The index at which the next input would be placed in the [buffer]
+     * @param [buf] Unprocessed input
+     * @param [bufPos] The index at which the **next** input would be placed into [buf]
      * */
-    protected actual abstract fun digestProtected(buffer: ByteArray, offset: Int): ByteArray
+    protected actual abstract fun digestProtected(buf: ByteArray, bufPos: Int): ByteArray
 
     /**
      * Optional override for implementations to intercept cleansed input before
@@ -167,8 +167,8 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     protected actual open fun updateProtected(input: Byte) {
         buf.commonUpdate(
             input = input,
-            bufOffsPlusPlus = bufOffs++,
-            bufOffsSet = { bufOffs = it },
+            bufPosPlusPlus = bufPos++,
+            bufPosSet = { bufPos = it },
             compressProtected = ::compressProtected,
         )
     }
@@ -183,8 +183,8 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
             input = input,
             offset = offset,
             len = len,
-            bufOffs = bufOffs,
-            bufOffsSet = { bufOffs = it },
+            bufPos = bufPos,
+            bufPosSet = { bufPos = it },
             compressProtected = ::compressProtected,
         )
     }

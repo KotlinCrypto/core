@@ -46,17 +46,17 @@ internal value class Buffer private constructor(internal val value: ByteArray) {
 @Suppress("NOTHING_TO_INLINE")
 internal inline fun Buffer.commonUpdate(
     input: Byte,
-    bufOffsPlusPlus: Int,
-    bufOffsSet: (zero: Int) -> Unit,
+    bufPosPlusPlus: Int,
+    bufPosSet: (zero: Int) -> Unit,
     compressProtected: (buf: ByteArray, offset: Int) -> Unit,
 ) {
     val buf = value
-    buf[bufOffsPlusPlus] = input
+    buf[bufPosPlusPlus] = input
 
     // buf.size == blockSize
-    if ((bufOffsPlusPlus + 1) != buf.size) return
+    if ((bufPosPlusPlus + 1) != buf.size) return
     compressProtected(buf, 0)
-    bufOffsSet(0)
+    bufPosSet(0)
 }
 
 @Suppress("NOTHING_TO_INLINE")
@@ -64,15 +64,15 @@ internal inline fun Buffer.commonUpdate(
     input: ByteArray,
     offset: Int,
     len: Int,
-    bufOffs: Int,
-    bufOffsSet: (value: Int) -> Unit,
+    bufPos: Int,
+    bufPosSet: (value: Int) -> Unit,
     compressProtected: (buf: ByteArray, offset: Int) -> Unit,
 ) {
     val buf = value
     val blockSize = buf.size
     var offsInput = offset
     val limit = offsInput + len
-    var offsBuf = bufOffs
+    var offsBuf = bufPos
 
     if (offsBuf > 0) {
         // Need to use buffered data (if possible)
@@ -80,7 +80,7 @@ internal inline fun Buffer.commonUpdate(
         if (offsBuf + len < blockSize) {
             // Not enough for a compression. Add it to the buffer.
             input.copyInto(buf, offsBuf, offsInput, limit)
-            bufOffsSet(offsBuf + len)
+            bufPosSet(offsBuf + len)
             return
         }
 
@@ -108,5 +108,5 @@ internal inline fun Buffer.commonUpdate(
     }
 
     // Update globals
-    bufOffsSet(offsBuf)
+    bufPosSet(offsBuf)
 }

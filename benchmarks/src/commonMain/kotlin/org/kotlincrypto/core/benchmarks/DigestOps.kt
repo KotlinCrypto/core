@@ -32,7 +32,7 @@ open class DigestBenchmark {
         override fun resetProtected() {}
         override fun copy(): TestDigest = TestDigest(this)
         override fun compressProtected(input: ByteArray, offset: Int) {}
-        override fun digestProtected(buffer: ByteArray, offset: Int): ByteArray = ByteArray(0)
+        override fun digestProtected(buf: ByteArray, bufPos: Int): ByteArray = ByteArray(0)
     }
 
     private val digest = TestDigest()

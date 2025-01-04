@@ -51,8 +51,8 @@ class TestDigest: Digest {
         compressions++
     }
 
-    override fun digestProtected(buffer: ByteArray, offset: Int): ByteArray {
-        return finalize.invoke(buffer, offset)
+    override fun digestProtected(buf: ByteArray, bufPos: Int): ByteArray {
+        return finalize.invoke(buf, bufPos)
     }
 
     override fun resetProtected() {
