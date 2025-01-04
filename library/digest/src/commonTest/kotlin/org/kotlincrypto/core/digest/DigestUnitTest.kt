@@ -15,10 +15,8 @@
  **/
 package org.kotlincrypto.core.digest
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.fail
+import kotlin.random.Random
+import kotlin.test.*
 
 class DigestUnitTest: TestDigestException() {
 
@@ -116,5 +114,38 @@ class DigestUnitTest: TestDigestException() {
 
         assertNotEquals(copyDigest, digestDigest)
         assertEquals(digestDigest.size, copyDigest.size)
+    }
+
+    @Test
+    fun givenBuffer_whenDigestProtected_thenStaleInputIsZeroized() {
+        var bufCopy: ByteArray? = null
+        var bufCopyPos: Int = -1
+        val digest = TestDigest(digest = { buf, bufPos ->
+            bufCopy = buf.copyOf()
+            bufCopyPos = bufPos
+            buf
+        })
+        digest.update(Random.Default.nextBytes(digest.blockSize() - 1))
+        assertEquals(0, digest.compressions)
+        digest.update(5)
+        assertEquals(1, digest.compressions)
+
+        val expected: Byte = -42
+        digest.update(ByteArray(digest.blockSize() - 10) { expected })
+        assertEquals(1, digest.compressions)
+        digest.digest()
+
+        assertNotNull(bufCopy)
+        assertNotEquals(-1, bufCopyPos)
+        assertNotEquals(0, bufCopyPos)
+        assertNotEquals(digest.blockSize(), bufCopyPos)
+
+        for (i in 0 until bufCopyPos) {
+            assertEquals(expected, bufCopy!![i])
+        }
+
+        for (i in bufCopyPos until digest.blockSize()) {
+            assertEquals(0, bufCopy!![i])
+        }
     }
 }
