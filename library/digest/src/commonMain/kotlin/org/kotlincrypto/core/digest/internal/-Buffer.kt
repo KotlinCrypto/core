@@ -48,7 +48,7 @@ internal inline fun Buffer.commonUpdate(
     input: Byte,
     bufPosPlusPlus: Int,
     bufPosSet: (zero: Int) -> Unit,
-    compressProtected: (buf: ByteArray, offset: Int) -> Unit,
+    compressProtected: (ByteArray, Int) -> Unit,
 ) {
     val buf = value
     buf[bufPosPlusPlus] = input
@@ -66,47 +66,47 @@ internal inline fun Buffer.commonUpdate(
     len: Int,
     bufPos: Int,
     bufPosSet: (value: Int) -> Unit,
-    compressProtected: (buf: ByteArray, offset: Int) -> Unit,
+    compressProtected: (ByteArray, Int) -> Unit,
 ) {
     val buf = value
     val blockSize = buf.size
-    var offsInput = offset
-    val limit = offsInput + len
-    var offsBuf = bufPos
+    val limitInput = offset + len
+    var posInput = offset
+    var posBuf = bufPos
 
-    if (offsBuf > 0) {
+    if (posBuf > 0) {
         // Need to use buffered data (if possible)
 
-        if (offsBuf + len < blockSize) {
+        if (posBuf + len < blockSize) {
             // Not enough for a compression. Add it to the buffer.
-            input.copyInto(buf, offsBuf, offsInput, limit)
-            bufPosSet(offsBuf + len)
+            input.copyInto(buf, posBuf, posInput, limitInput)
+            bufPosSet(posBuf + len)
             return
         }
 
         // Add enough input to do a compression
-        val needed = blockSize - offsBuf
-        input.copyInto(buf, offsBuf, offsInput, offsInput + needed)
+        val needed = blockSize - posBuf
+        input.copyInto(buf, posBuf, posInput, posInput + needed)
         compressProtected(buf, 0)
-        offsBuf = 0
-        offsInput += needed
+        posBuf = 0
+        posInput += needed
     }
 
     // Chunk blocks (if possible)
-    while (offsInput < limit) {
-        val offsNext = offsInput + blockSize
+    while (posInput < limitInput) {
+        val posNext = posInput + blockSize
 
-        if (offsNext > limit) {
+        if (posNext > limitInput) {
             // Not enough for a compression. Add it to the buffer.
-            input.copyInto(buf, 0, offsInput, limit)
-            offsBuf = limit - offsInput
+            input.copyInto(buf, 0, posInput, limitInput)
+            posBuf = limitInput - posInput
             break
         }
 
-        compressProtected(input, offsInput)
-        offsInput = offsNext
+        compressProtected(input, posInput)
+        posInput = posNext
     }
 
     // Update globals
-    bufPosSet(offsBuf)
+    bufPosSet(posBuf)
 }
