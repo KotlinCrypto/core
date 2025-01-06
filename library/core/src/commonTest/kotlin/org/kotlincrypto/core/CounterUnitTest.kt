@@ -143,4 +143,70 @@ class CounterUnitTest {
         copy.increment()
         assertNotEquals(expected.lo, copy.lo)
     }
+
+    @Test
+    fun givenBit32_whenFinal_thenAdditionalValueIsAsExpected() {
+        val counter = Counter.Bit32(-8, 0, 8)
+
+        val (lo1, hi1) = counter.final(additional = 9)
+        assertEquals(1, lo1)
+        assertEquals(1, hi1)
+
+        val (lo2, hi2) = counter.final(additional = 8)
+        assertEquals(0, lo2)
+        assertEquals(1, hi2)
+
+        val (lo3, hi3) = counter.final(additional = 7)
+        assertEquals(-1, lo3)
+        assertEquals(0, hi3)
+    }
+
+    @Test
+    fun givenBit64_whenFinal_thenAdditionalValueIsAsExpected() {
+        val counter = Counter.Bit64(-8, 0, 8)
+
+        val (lo1, hi1) = counter.final(additional = 9)
+        assertEquals(1, lo1)
+        assertEquals(1, hi1)
+
+        val (lo2, hi2) = counter.final(additional = 8)
+        assertEquals(0, lo2)
+        assertEquals(1, hi2)
+
+        val (lo3, hi3) = counter.final(additional = 7)
+        assertEquals(-1, lo3)
+        assertEquals(0, hi3)
+    }
+
+    @Test
+    fun givenBit32Final_whenAsBits_thenConvertsAsExpected() {
+        val number = 5551889119L
+        val final = Counter.Bit32.Final(lo = number.toInt(), hi = number.rotateLeft(32).toInt())
+        val bits = final.asBits()
+        assertNotEquals(final, bits)
+
+        // Should return same instance (already bits)
+        assertEquals(bits, bits.asBits())
+
+        val expected = number * Byte.SIZE_BITS
+        val actual = ((bits.hi.toLong() and 0xffffffff) shl 32) or (bits.lo.toLong() and 0xffffffff)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun givenBit64Final_whenAsBits_thenConvertsAsExpected() {
+        val number = 5551889119L
+        val final = Counter.Bit64.Final(lo = number, hi = 1)
+        val bits = final.asBits()
+        assertNotEquals(final, bits)
+
+        // Should return same instance (already bits)
+        assertEquals(bits, bits.asBits())
+
+        var expected = Long.MAX_VALUE
+        expected += number + 1
+        expected *= Byte.SIZE_BITS
+        val actual = ((bits.hi and 0xffffffff) shl 32) or (bits.lo and 0xffffffff)
+        assertEquals(expected, actual)
+    }
 }
