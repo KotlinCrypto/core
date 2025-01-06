@@ -51,8 +51,23 @@ sealed class org.kotlincrypto.core/Counter : org.kotlincrypto.core/Copyable<org.
             final fun <get-lo>(): kotlin/Int // org.kotlincrypto.core/Counter.Bit32.lo.<get-lo>|<get-lo>(){}[0]
 
         final fun copy(): org.kotlincrypto.core/Counter.Bit32 // org.kotlincrypto.core/Counter.Bit32.copy|copy(){}[0]
+        final fun final(kotlin/Int): org.kotlincrypto.core/Counter.Bit32.Final // org.kotlincrypto.core/Counter.Bit32.final|final(kotlin.Int){}[0]
         final fun increment() // org.kotlincrypto.core/Counter.Bit32.increment|increment(){}[0]
         final fun reset() // org.kotlincrypto.core/Counter.Bit32.reset|reset(){}[0]
+
+        final class Final { // org.kotlincrypto.core/Counter.Bit32.Final|null[0]
+            final val hi // org.kotlincrypto.core/Counter.Bit32.Final.hi|{}hi[0]
+                final fun <get-hi>(): kotlin/Int // org.kotlincrypto.core/Counter.Bit32.Final.hi.<get-hi>|<get-hi>(){}[0]
+            final val lo // org.kotlincrypto.core/Counter.Bit32.Final.lo|{}lo[0]
+                final fun <get-lo>(): kotlin/Int // org.kotlincrypto.core/Counter.Bit32.Final.lo.<get-lo>|<get-lo>(){}[0]
+
+            final fun asBits(): org.kotlincrypto.core/Counter.Bit32.Final // org.kotlincrypto.core/Counter.Bit32.Final.asBits|asBits(){}[0]
+            final fun component1(): kotlin/Int // org.kotlincrypto.core/Counter.Bit32.Final.component1|component1(){}[0]
+            final fun component2(): kotlin/Int // org.kotlincrypto.core/Counter.Bit32.Final.component2|component2(){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core/Counter.Bit32.Final.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // org.kotlincrypto.core/Counter.Bit32.Final.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // org.kotlincrypto.core/Counter.Bit32.Final.toString|toString(){}[0]
+        }
 
         final object Companion { // org.kotlincrypto.core/Counter.Bit32.Companion|null[0]
             final const val MAX_INCREMENT // org.kotlincrypto.core/Counter.Bit32.Companion.MAX_INCREMENT|{}MAX_INCREMENT[0]
@@ -73,8 +88,23 @@ sealed class org.kotlincrypto.core/Counter : org.kotlincrypto.core/Copyable<org.
             final fun <get-lo>(): kotlin/Long // org.kotlincrypto.core/Counter.Bit64.lo.<get-lo>|<get-lo>(){}[0]
 
         final fun copy(): org.kotlincrypto.core/Counter.Bit64 // org.kotlincrypto.core/Counter.Bit64.copy|copy(){}[0]
+        final fun final(kotlin/Int): org.kotlincrypto.core/Counter.Bit64.Final // org.kotlincrypto.core/Counter.Bit64.final|final(kotlin.Int){}[0]
         final fun increment() // org.kotlincrypto.core/Counter.Bit64.increment|increment(){}[0]
         final fun reset() // org.kotlincrypto.core/Counter.Bit64.reset|reset(){}[0]
+
+        final class Final { // org.kotlincrypto.core/Counter.Bit64.Final|null[0]
+            final val hi // org.kotlincrypto.core/Counter.Bit64.Final.hi|{}hi[0]
+                final fun <get-hi>(): kotlin/Long // org.kotlincrypto.core/Counter.Bit64.Final.hi.<get-hi>|<get-hi>(){}[0]
+            final val lo // org.kotlincrypto.core/Counter.Bit64.Final.lo|{}lo[0]
+                final fun <get-lo>(): kotlin/Long // org.kotlincrypto.core/Counter.Bit64.Final.lo.<get-lo>|<get-lo>(){}[0]
+
+            final fun asBits(): org.kotlincrypto.core/Counter.Bit64.Final // org.kotlincrypto.core/Counter.Bit64.Final.asBits|asBits(){}[0]
+            final fun component1(): kotlin/Long // org.kotlincrypto.core/Counter.Bit64.Final.component1|component1(){}[0]
+            final fun component2(): kotlin/Long // org.kotlincrypto.core/Counter.Bit64.Final.component2|component2(){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core/Counter.Bit64.Final.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // org.kotlincrypto.core/Counter.Bit64.Final.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // org.kotlincrypto.core/Counter.Bit64.Final.toString|toString(){}[0]
+        }
 
         final object Companion { // org.kotlincrypto.core/Counter.Bit64.Companion|null[0]
             final const val MAX_INCREMENT // org.kotlincrypto.core/Counter.Bit64.Companion.MAX_INCREMENT|{}MAX_INCREMENT[0]

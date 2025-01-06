@@ -17,6 +17,7 @@ package org.kotlincrypto.core
 
 import org.kotlincrypto.core.Counter.Bit32.Companion.MAX_INCREMENT
 import org.kotlincrypto.core.Counter.Bit64.Companion.MAX_INCREMENT
+import org.kotlincrypto.core.Counter.Bit64.Final
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 
@@ -42,7 +43,7 @@ public sealed class Counter private constructor(): Resettable, Copyable<Counter>
             /**
              * The maximum value for which [Bit32.incrementBy] can be set to.
              *
-             * 1024^2 >> 1048576
+             * 1024^2 = 1048576
              * */
             public const val MAX_INCREMENT: Int = 1048576 // Never decrease, only increase.
         }
@@ -104,9 +105,64 @@ public sealed class Counter private constructor(): Resettable, Copyable<Counter>
             if (lo == 0) hi++
         }
 
+        /**
+         * Produces a final count, including any additional value needed to be
+         * added (such as the size of buffered input).
+         *
+         * **NOTE:** [reset] is not called and the [Counter] is unaltered by
+         * [additional] value.
+         * */
+        public fun final(additional: Int): Final {
+            var lo = lo
+            var hi = hi
+            val lt0 = lo < 0
+            lo += additional
+            if (lt0 && lo >= 0) hi++
+            return Final(lo = lo, hi = hi)
+        }
+
         public override fun reset() {
             lo = 0
             hi = 0
+        }
+
+        /**
+         * Holder of the count produced by [final]
+         * */
+        public class Final private constructor(
+            @JvmField
+            public val lo: Int,
+            @JvmField
+            public val hi: Int,
+            private val isBits: Boolean,
+        ) {
+
+            internal constructor(lo: Int, hi: Int): this(lo, hi, isBits = false)
+
+            public operator fun component1(): Int = lo
+            public operator fun component2(): Int = hi
+
+            /**
+             * Convenience function for converting the final count to bits, assuming
+             * that the counter is tracking bytes of input (its intended purpose).
+             * */
+            public fun asBits(): Final {
+                if (isBits) return this
+                return Final(lo shl 3, (hi shl 3) or (lo ushr 29), isBits = true)
+            }
+
+            /** @suppress */
+            public override fun equals(other: Any?): Boolean = other is Final && other.hashCode() == hashCode()
+            /** @suppress */
+            public override fun hashCode(): Int {
+                var result = 17
+                result = result * 31 + lo.hashCode()
+                result = result * 31 + hi.hashCode()
+                result = result * 31 + isBits.hashCode()
+                return result
+            }
+            /** @suppress */
+            public override fun toString(): String = "Counter.Bit32.Final[lo=$lo, hi=$hi]"
         }
 
         private constructor(other: Bit32): super() {
@@ -128,7 +184,7 @@ public sealed class Counter private constructor(): Resettable, Copyable<Counter>
             /**
              * The maximum value for which [Bit64.incrementBy] can be set to.
              *
-             * 1024^4 >> 1099511627776
+             * 1024^4 = 1099511627776
              * */
             public const val MAX_INCREMENT: Long = 1099511627776L // Never decrease, only increase.
         }
@@ -190,9 +246,64 @@ public sealed class Counter private constructor(): Resettable, Copyable<Counter>
             if (lo == 0L) hi++
         }
 
+        /**
+         * Produces a final count, including any additional value needed to be
+         * added (such as the size of buffered input).
+         *
+         * **NOTE:** [reset] is not called and the [Counter] is unaltered by
+         * [additional] value.
+         * */
+        public fun final(additional: Int): Final {
+            var lo = lo
+            var hi = hi
+            val lt0 = lo < 0
+            lo += additional
+            if (lt0 && lo >= 0) hi++
+            return Final(lo = lo, hi = hi)
+        }
+
         public override fun reset() {
             lo = 0L
             hi = 0L
+        }
+
+        /**
+         * Holder of the count produced by [final]
+         * */
+        public class Final private constructor(
+            @JvmField
+            public val lo: Long,
+            @JvmField
+            public val hi: Long,
+            private val isBits: Boolean,
+        ) {
+
+            internal constructor(lo: Long, hi: Long): this(lo, hi, isBits = false)
+
+            public operator fun component1(): Long = lo
+            public operator fun component2(): Long = hi
+
+            /**
+             * Convenience function for converting the final count to bits, assuming
+             * that the counter is tracking bytes of input (its intended purpose).
+             * */
+            public fun asBits(): Final {
+                if (isBits) return this
+                return Final(lo shl 3, (hi shl 3) or (lo ushr 29), isBits = true)
+            }
+
+            /** @suppress */
+            public override fun equals(other: Any?): Boolean = other is Final && other.hashCode() == hashCode()
+            /** @suppress */
+            public override fun hashCode(): Int {
+                var result = 17
+                result = result * 31 + lo.hashCode()
+                result = result * 31 + hi.hashCode()
+                result = result * 31 + isBits.hashCode()
+                return result
+            }
+            /** @suppress */
+            public override fun toString(): String = "Counter.Bit64.Final[lo=$lo, hi=$hi]"
         }
 
         private constructor(other: Bit64): super() {
