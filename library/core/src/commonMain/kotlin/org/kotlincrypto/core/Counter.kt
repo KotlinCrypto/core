@@ -17,7 +17,6 @@ package org.kotlincrypto.core
 
 import org.kotlincrypto.core.Counter.Bit32.Companion.MAX_INCREMENT
 import org.kotlincrypto.core.Counter.Bit64.Companion.MAX_INCREMENT
-import org.kotlincrypto.core.Counter.Bit64.Final
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 
