@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+@file:Suppress("unused")
+
 package org.kotlincrypto.core.benchmarks
 
 import kotlinx.benchmark.*
 import org.kotlincrypto.core.InternalKotlinCryptoApi
 import org.kotlincrypto.core.xof.Xof
-import kotlin.random.Random
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
@@ -28,18 +29,18 @@ import kotlin.random.Random
 @OptIn(InternalKotlinCryptoApi::class)
 open class XofUtilsBenchmark {
 
-    private val longs: LongArray = LongArray(10) { Random.Default.nextLong() }
-    private val loHi = Array(longs.size) { longs[it].let { l -> l.toInt() to l.rotateLeft(32).toInt() } }
+    @Benchmark
+    fun leftEncodeLong() {
+        Xof.Utils.leftEncode(-99993873488683833L)
+    }
 
     @Benchmark
-    fun leftEncodeLongs() {
-        val longs = longs
-        longs.forEach { long -> Xof.Utils.leftEncode(long) }
+    fun leftEncodeInt() {
+        Xof.Utils.leftEncode( 11978435)
     }
 
     @Benchmark
     fun leftEncodeLoHi() {
-        val loHi = loHi
-        loHi.forEach { Xof.Utils.leftEncode(it.first, it.second) }
+        Xof.Utils.leftEncode(184581845, 11978435)
     }
 }

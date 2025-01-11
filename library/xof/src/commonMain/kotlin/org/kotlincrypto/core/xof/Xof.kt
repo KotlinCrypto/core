@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+@file:Suppress("KotlinRedundantDiagnosticSuppress", "NOTHING_TO_INLINE")
+
 package org.kotlincrypto.core.xof
 
 import org.kotlincrypto.core.*
@@ -209,9 +211,7 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
 
         @JvmStatic
         public fun leftEncode(value: Long): ByteArray {
-            val lo = value.toInt()
-            val hi = value.rotateLeft(32).toInt()
-            return encode(lo = lo, hi = hi, left = true)
+            return encode(lo = value.lo(), hi = value.hi(), left = true)
         }
 
         @JvmStatic
@@ -226,9 +226,7 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
 
         @JvmStatic
         public fun rightEncode(value: Long): ByteArray {
-            val lo = value.toInt()
-            val hi = value.rotateLeft(32).toInt()
-            return encode(lo = lo, hi = hi, left = false)
+            return encode(lo = value.lo(), hi = value.hi(), left = false)
         }
 
         @JvmStatic
@@ -237,7 +235,13 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
         }
 
         @JvmStatic
-        private fun encode(lo: Int, hi: Int, left: Boolean): ByteArray {
+        private inline fun Long.lo(): Int = toInt()
+
+        @JvmStatic
+        private inline fun Long.hi(): Int = rotateLeft(32).toInt()
+
+        @JvmStatic
+        private inline fun encode(lo: Int, hi: Int, left: Boolean): ByteArray {
             val a = if (hi == 0) {
                 if (lo == 0) {
                     // If it's zero, return early
