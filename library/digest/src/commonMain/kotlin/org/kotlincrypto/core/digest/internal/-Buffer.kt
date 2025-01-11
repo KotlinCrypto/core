@@ -13,37 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("KotlinRedundantDiagnosticSuppress")
+@file:Suppress("KotlinRedundantDiagnosticSuppress", "NOTHING_TO_INLINE")
 
 package org.kotlincrypto.core.digest.internal
 
+import org.kotlincrypto.core.digest.Digest
 import kotlin.jvm.JvmInline
-import kotlin.jvm.JvmSynthetic
 
 @JvmInline
-internal value class Buffer private constructor(internal val value: ByteArray) {
+internal value class Buffer internal constructor(internal val value: ByteArray)
 
-    internal fun copy(): Buffer = Buffer(value.copyOf())
-
-    internal companion object {
-
-        @JvmSynthetic
-        @Throws(IllegalArgumentException::class)
-        internal fun initialize(
-            algorithm: String,
-            blockSize: Int,
-            digestLength: Int,
-        ): Buffer {
-            require(algorithm.isNotBlank()) { "algorithm cannot be blank" }
-            require(blockSize > 0) { "blockSize must be greater than 0" }
-            require(blockSize % 8 == 0) { "blockSize must be a factor of 8" }
-            require(digestLength >= 0) { "digestLength cannot be negative" }
-            return Buffer(ByteArray(blockSize))
-        }
-    }
+@Throws(IllegalArgumentException::class)
+@Suppress("UnusedReceiverParameter")
+internal inline fun Digest.initializeBuffer(
+    algorithm: String,
+    blockSize: Int,
+    digestLength: Int,
+): Buffer {
+    require(algorithm.isNotBlank()) { "algorithm cannot be blank" }
+    require(blockSize > 0) { "blockSize must be greater than 0" }
+    require(blockSize % 8 == 0) { "blockSize must be a factor of 8" }
+    require(digestLength >= 0) { "digestLength cannot be negative" }
+    return Buffer(ByteArray(blockSize))
 }
 
-@Suppress("NOTHING_TO_INLINE")
+internal inline fun Buffer.copy(): Buffer = Buffer(value.copyOf())
+
 internal inline fun Buffer.commonUpdate(
     input: Byte,
     bufPosPlusPlus: Int,
@@ -59,7 +54,6 @@ internal inline fun Buffer.commonUpdate(
     bufPosSet(0)
 }
 
-@Suppress("NOTHING_TO_INLINE")
 internal inline fun Buffer.commonUpdate(
     input: ByteArray,
     offset: Int,
@@ -111,20 +105,31 @@ internal inline fun Buffer.commonUpdate(
     bufPosSet(posBuf)
 }
 
-@Suppress("NOTHING_TO_INLINE")
+internal inline fun Buffer.commonDigest(
+    input: ByteArray,
+    updateProtected: (ByteArray, Int, Int) -> Unit,
+    bufPosGet: () -> Int,
+    digestProtected: (buf: ByteArray, bufPos: Int) -> ByteArray,
+    resetProtected: () -> Unit,
+    bufPosSet: (zero: Int) -> Unit,
+): ByteArray {
+    updateProtected(input, 0, input.size)
+    return commonDigest(bufPosGet(), digestProtected, resetProtected, bufPosSet)
+}
+
 internal inline fun Buffer.commonDigest(
     bufPos: Int,
     digestProtected: (buf: ByteArray, bufPos: Int) -> ByteArray,
-    reset: () -> Unit,
+    resetProtected: () -> Unit,
+    bufPosSet: (zero: Int) -> Unit,
 ): ByteArray {
     // Zeroize any stale input that may be left in the buffer
     value.fill(0, bufPos)
-    val final = digestProtected(value, bufPos)
-    reset()
-    return final
+    val digest = digestProtected(value, bufPos)
+    commonReset(resetProtected, bufPosSet)
+    return digest
 }
 
-@Suppress("NOTHING_TO_INLINE")
 internal inline fun Buffer.commonReset(
     resetProtected: () -> Unit,
     bufPosSet: (zero: Int) -> Unit,

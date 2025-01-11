@@ -52,7 +52,7 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * */
     @Throws(IllegalArgumentException::class)
     protected actual constructor(algorithm: String, blockSize: Int, digestLength: Int) {
-        this.buf = Buffer.initialize(algorithm, blockSize, digestLength)
+        this.buf = initializeBuffer(algorithm, blockSize, digestLength)
         this.algorithm = algorithm
         this.digestLength = digestLength
         this.bufPos = 0
@@ -124,7 +124,8 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public actual fun digest(): ByteArray = buf.commonDigest(
         bufPos = bufPos,
         digestProtected = ::digestProtected,
-        reset = ::reset,
+        resetProtected = ::resetProtected,
+        bufPosSet = { bufPos = it },
     )
 
     /**
@@ -132,14 +133,21 @@ public actual abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * performing final operations and returning the resultant array of bytes. The
      * [Digest] is [reset] afterward.
      * */
-    public actual fun digest(input: ByteArray): ByteArray {
-        updateProtected(input, 0, input.size)
-        return digest()
-    }
+    public actual fun digest(input: ByteArray): ByteArray = buf.commonDigest(
+        input = input,
+        updateProtected = ::updateProtected,
+        bufPosGet = ::bufPos,
+        digestProtected = ::digestProtected,
+        resetProtected = ::resetProtected,
+        bufPosSet = { bufPos = it },
+    )
 
     // See Resettable interface documentation
     public actual final override fun reset() {
-        buf.commonReset(::resetProtected) { bufPos = it }
+        buf.commonReset(
+            resetProtected = ::resetProtected,
+            bufPosSet = { bufPos = it },
+        )
     }
 
     /**
