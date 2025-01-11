@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+@file:Suppress("unused")
+
 package org.kotlincrypto.core.benchmarks
 
 import kotlinx.benchmark.*
 import org.kotlincrypto.core.InternalKotlinCryptoApi
 import org.kotlincrypto.core.xof.Xof
-import kotlin.random.Random
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
