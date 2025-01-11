@@ -28,18 +28,18 @@ import kotlin.random.Random
 @OptIn(InternalKotlinCryptoApi::class)
 open class XofUtilsBenchmark {
 
-    private val longs: LongArray = LongArray(10) { Random.Default.nextLong() }
-    private val loHi = Array(longs.size) { longs[it].let { l -> l.toInt() to l.rotateLeft(32).toInt() } }
+    @Benchmark
+    fun leftEncodeLong() {
+        Xof.Utils.leftEncode(-99993873488683833L)
+    }
 
     @Benchmark
-    fun leftEncodeLongs() {
-        val longs = longs
-        longs.forEach { long -> Xof.Utils.leftEncode(long) }
+    fun leftEncodeInt() {
+        Xof.Utils.leftEncode( 11978435)
     }
 
     @Benchmark
     fun leftEncodeLoHi() {
-        val loHi = loHi
-        loHi.forEach { Xof.Utils.leftEncode(it.first, it.second) }
+        Xof.Utils.leftEncode(184581845, 11978435)
     }
 }
