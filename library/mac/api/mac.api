@@ -2,6 +2,7 @@ public abstract class org/kotlincrypto/core/mac/Mac : javax/crypto/Mac, org/kotl
 	protected fun <init> (Ljava/lang/String;Lorg/kotlincrypto/core/mac/Mac$Engine;)V
 	protected fun <init> (Lorg/kotlincrypto/core/mac/Mac;)V
 	public final fun algorithm ()Ljava/lang/String;
+	public final fun clearKey ()V
 	public final fun equals (Ljava/lang/Object;)Z
 	public final fun hashCode ()I
 	public final fun macLength ()I

@@ -106,11 +106,19 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
     /**
      * Resets the [Mac] and will reinitialize it with the provided key.
      *
-     * This is useful if wanting to clear the key before de-referencing.
+     * This is useful if wanting to zero out the key before de-referencing.
      *
-     * @throws [IllegalArgumentException] if [newKey] is empty.
+     * @see [clearKey]
+     * @throws [IllegalArgumentException] if [newKey] is empty, or of a length
+     *   inappropriate for the [Mac] implementation.
      * */
     public fun reset(newKey: ByteArray)
+
+    /**
+     * Helper function that will call [reset] with a blank key in order
+     * to zero it out.
+     * */
+    public fun clearKey()
 
     /**
      * Core abstraction for powering a [Mac] implementation.
@@ -147,6 +155,17 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
         // See Updatable interface documentation
         public override fun update(input: ByteArray)
 
+        /**
+         * Resets the [Engine] and will reinitialize it with the provided key.
+         *
+         * **NOTE:** [newKey] is checked to be non-empty by the [Mac] abstraction
+         * before passing it here. Implementations should ensure any old key material
+         * is zeroed out.
+         *
+         * @throws [IllegalArgumentException] if [newKey] is a length inappropriate
+         *   for the [Mac] implementation.
+         * */
+        @Throws(IllegalArgumentException::class)
         public abstract fun reset(newKey: ByteArray)
 
         /** @suppress */
