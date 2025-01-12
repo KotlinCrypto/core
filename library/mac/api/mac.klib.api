@@ -11,6 +11,7 @@ abstract class org.kotlincrypto.core.mac/Mac : org.kotlincrypto.core/Algorithm, 
     constructor <init>(org.kotlincrypto.core.mac/Mac) // org.kotlincrypto.core.mac/Mac.<init>|<init>(org.kotlincrypto.core.mac.Mac){}[0]
 
     final fun algorithm(): kotlin/String // org.kotlincrypto.core.mac/Mac.algorithm|algorithm(){}[0]
+    final fun clearKey() // org.kotlincrypto.core.mac/Mac.clearKey|clearKey(){}[0]
     final fun doFinal(): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.doFinal|doFinal(){}[0]
     final fun doFinal(kotlin/ByteArray): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.doFinal|doFinal(kotlin.ByteArray){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core.mac/Mac.equals|equals(kotlin.Any?){}[0]

@@ -18,9 +18,7 @@
 package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
-import org.kotlincrypto.core.mac.internal.AndroidApi21to23MacSpiProvider
-import org.kotlincrypto.core.mac.internal.commonInit
-import org.kotlincrypto.core.mac.internal.commonToString
+import org.kotlincrypto.core.mac.internal.*
 import java.nio.ByteBuffer
 import java.security.InvalidKeyException
 import java.security.Key
@@ -109,14 +107,22 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
     /**
      * Resets the [Mac] and will reinitialize it with the provided key.
      *
-     * This is useful if wanting to clear the key before de-referencing.
+     * This is useful if wanting to zero out the key before de-referencing.
      *
-     * @throws [IllegalArgumentException] if [newKey] is empty.
+     * @see [clearKey]
+     * @throws [IllegalArgumentException] if [newKey] is empty, or of a length
+     *   inappropriate for the [Mac] implementation.
      * */
     public actual fun reset(newKey: ByteArray) {
         require(newKey.isNotEmpty()) { "newKey cannot be empty" }
         engine.reset(newKey)
     }
+
+    /**
+     * Helper function that will call [reset] with a blank key in order
+     * to zero it out.
+     * */
+    public actual fun clearKey() { commonClearKey(engine::reset) }
 
     /**
      * Core abstraction for powering a [Mac] implementation. Extends
@@ -157,8 +163,16 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
 
         /**
-         * Resets the [Engine] and will reinitialize it with the newly provided key.
+         * Resets the [Engine] and will reinitialize it with the provided key.
+         *
+         * **NOTE:** [newKey] is checked to be non-empty by the [Mac] abstraction
+         * before passing it here. Implementations should ensure any old key material
+         * is zeroed out.
+         *
+         * @throws [IllegalArgumentException] if [newKey] is a length inappropriate
+         *   for the [Mac] implementation.
          * */
+        @Throws(IllegalArgumentException::class)
         public actual abstract fun reset(newKey: ByteArray)
 
         // MacSpi

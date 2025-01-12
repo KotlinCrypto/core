@@ -80,4 +80,18 @@ class MacUnitTest {
         assertEquals(2, doFinalCount)
         assertEquals(2, resetCount)
     }
+
+    @Test
+    fun givenMac_whenClearKey_thenSingle0ByteKeyPassedToEngine() {
+        var zeroKey: ByteArray? = null
+
+        TestMac(
+            ByteArray(5),
+            "test rekey",
+            rekey = { zeroKey = it }
+        ).clearKey()
+
+        assertNotNull(zeroKey)
+        assertContentEquals(ByteArray(1) { 0 }, zeroKey)
+    }
 }
