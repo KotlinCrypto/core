@@ -22,3 +22,22 @@ import org.kotlincrypto.core.Algorithm
  * which supports Extendable-Output Functions (XOFs).
  * */
 public interface XofAlgorithm: Algorithm
+
+/**
+ * Extended functionality, specifically for a [Xof] who's backing instance
+ * is a [org.kotlincrypto.core.mac.Mac].
+ *
+ *
+ * @see [Xof.Companion.reset]
+ * */
+public interface ReKeyableXofAlgorithm: XofAlgorithm {
+
+    /**
+     * Resets and re-initializes the instance with the provided [newKey]
+     *
+     * This is useful if wanting to clear the key before de-referencing.
+     *
+     * @throws [IllegalArgumentException] if [newKey] is unacceptable.
+     * */
+    public fun reset(newKey: ByteArray)
+}

@@ -1,12 +1,24 @@
+public abstract interface class org/kotlincrypto/core/xof/ReKeyableXofAlgorithm : org/kotlincrypto/core/xof/XofAlgorithm {
+	public abstract fun reset ([B)V
+}
+
 public abstract class org/kotlincrypto/core/xof/Xof : org/kotlincrypto/core/Algorithm, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
+	public static final field Companion Lorg/kotlincrypto/core/xof/Xof$Companion;
+	protected final field delegate Lorg/kotlincrypto/core/xof/XofAlgorithm;
+	public synthetic fun <init> (Lorg/kotlincrypto/core/xof/XofAlgorithm;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	protected abstract fun newReader ()Lorg/kotlincrypto/core/xof/Xof$Reader;
 	public final fun reader ()Lorg/kotlincrypto/core/xof/Xof$Reader;
 	public final fun reader (Z)Lorg/kotlincrypto/core/xof/Xof$Reader;
 	public static synthetic fun reader$default (Lorg/kotlincrypto/core/xof/Xof;ZILjava/lang/Object;)Lorg/kotlincrypto/core/xof/Xof$Reader;
+	public static final fun reset (Lorg/kotlincrypto/core/xof/Xof;[B)V
 	public final fun toString ()Ljava/lang/String;
 	public final fun use (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public final fun use (ZLkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static synthetic fun use$default (Lorg/kotlincrypto/core/xof/Xof;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class org/kotlincrypto/core/xof/Xof$Companion {
+	public final fun reset (Lorg/kotlincrypto/core/xof/Xof;[B)V
 }
 
 public abstract class org/kotlincrypto/core/xof/Xof$Reader {
@@ -43,7 +55,6 @@ protected abstract class org/kotlincrypto/core/xof/XofFactory$XofDelegate : org/
 	protected fun <init> (Lorg/kotlincrypto/core/xof/XofFactory;Lorg/kotlincrypto/core/xof/XofAlgorithm;)V
 	public fun algorithm ()Ljava/lang/String;
 	public final fun equals (Ljava/lang/Object;)Z
-	protected final fun getDelegate ()Lorg/kotlincrypto/core/xof/XofAlgorithm;
 	public final fun hashCode ()I
 	protected final fun newReader ()Lorg/kotlincrypto/core/xof/Xof$Reader;
 	protected abstract fun newReader (Lorg/kotlincrypto/core/xof/XofAlgorithm;)Lorg/kotlincrypto/core/xof/Xof$Reader;

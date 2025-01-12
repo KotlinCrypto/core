@@ -18,6 +18,7 @@
 package org.kotlincrypto.core.xof
 
 import org.kotlincrypto.core.*
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
@@ -52,7 +53,22 @@ import kotlin.jvm.JvmStatic
  * @see [reader]
  * @see [Reader]
  * */
-public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettable, Updatable {
+public sealed class Xof<A: XofAlgorithm>(
+    @JvmField
+    protected val delegate: A,
+): Algorithm, Copyable<Xof<A>>, Resettable, Updatable {
+
+    public companion object {
+
+        /**
+         * Helper to provide access to the instance backing [Xof], if said instance
+         * can be re-keyed (such as a [org.kotlincrypto.core.mac.Mac]).
+         *
+         * @throws [IllegalArgumentException] if [newKey] is unacceptable.
+         * */
+        @JvmStatic
+        public fun <A: ReKeyableXofAlgorithm> Xof<A>.reset(newKey: ByteArray) { delegate.reset(newKey) }
+    }
 
     /**
      * Takes a snapshot of the current [Xof]'s state and produces
@@ -298,5 +314,4 @@ public sealed class Xof<A: XofAlgorithm>: Algorithm, Copyable<Xof<A>>, Resettabl
 
     /** @suppress */
     public final override fun toString(): String = "Xof[${algorithm()}]@${hashCode()}"
-
 }

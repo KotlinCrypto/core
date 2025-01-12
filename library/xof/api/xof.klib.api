@@ -6,6 +6,10 @@
 // - Show declarations: true
 
 // Library unique name: <org.kotlincrypto.core:xof>
+abstract interface org.kotlincrypto.core.xof/ReKeyableXofAlgorithm : org.kotlincrypto.core.xof/XofAlgorithm { // org.kotlincrypto.core.xof/ReKeyableXofAlgorithm|null[0]
+    abstract fun reset(kotlin/ByteArray) // org.kotlincrypto.core.xof/ReKeyableXofAlgorithm.reset|reset(kotlin.ByteArray){}[0]
+}
+
 abstract interface org.kotlincrypto.core.xof/XofAlgorithm : org.kotlincrypto.core/Algorithm // org.kotlincrypto.core.xof/XofAlgorithm|null[0]
 
 abstract class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.xof/XofFactory { // org.kotlincrypto.core.xof/XofFactory|null[0]
@@ -13,9 +17,6 @@ abstract class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.cor
 
     abstract inner class XofDelegate : org.kotlincrypto.core.xof/Xof<#A>, org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.xof/XofFactory.XofDelegate|null[0]
         constructor <init>(#A) // org.kotlincrypto.core.xof/XofFactory.XofDelegate.<init>|<init>(2:0){}[0]
-
-        final val delegate // org.kotlincrypto.core.xof/XofFactory.XofDelegate.delegate|{}delegate[0]
-            final fun <get-delegate>(): #A // org.kotlincrypto.core.xof/XofFactory.XofDelegate.delegate.<get-delegate>|<get-delegate>(){}[0]
 
         abstract fun newReader(#A): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/XofFactory.XofDelegate.newReader|newReader(2:0){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core.xof/XofFactory.XofDelegate.equals|equals(kotlin.Any?){}[0]
@@ -30,7 +31,10 @@ abstract class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.cor
 }
 
 sealed class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.xof/Xof : org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Copyable<org.kotlincrypto.core.xof/Xof<#A>>, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.xof/Xof|null[0]
-    constructor <init>() // org.kotlincrypto.core.xof/Xof.<init>|<init>(){}[0]
+    constructor <init>(#A) // org.kotlincrypto.core.xof/Xof.<init>|<init>(1:0){}[0]
+
+    final val delegate // org.kotlincrypto.core.xof/Xof.delegate|{}delegate[0]
+        final fun <get-delegate>(): #A // org.kotlincrypto.core.xof/Xof.delegate.<get-delegate>|<get-delegate>(){}[0]
 
     abstract fun newReader(): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/Xof.newReader|newReader(){}[0]
     final fun <#A1: kotlin/Any?> use(kotlin/Boolean =..., kotlin/Function1<org.kotlincrypto.core.xof/Xof.Reader<#A>, #A1>): #A1 // org.kotlincrypto.core.xof/Xof.use|use(kotlin.Boolean;kotlin.Function1<org.kotlincrypto.core.xof.Xof.Reader<1:0>,0:0>){0§<kotlin.Any?>}[0]
@@ -53,6 +57,10 @@ sealed class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.
         final fun read(kotlin/ByteArray): kotlin/Int // org.kotlincrypto.core.xof/Xof.Reader.read|read(kotlin.ByteArray){}[0]
         final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // org.kotlincrypto.core.xof/Xof.Reader.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
         final fun toString(): kotlin/String // org.kotlincrypto.core.xof/Xof.Reader.toString|toString(){}[0]
+    }
+
+    final object Companion { // org.kotlincrypto.core.xof/Xof.Companion|null[0]
+        final fun <#A2: org.kotlincrypto.core.xof/ReKeyableXofAlgorithm> (org.kotlincrypto.core.xof/Xof<#A2>).reset(kotlin/ByteArray) // org.kotlincrypto.core.xof/Xof.Companion.reset|reset@org.kotlincrypto.core.xof.Xof<0:0>(kotlin.ByteArray){0§<org.kotlincrypto.core.xof.ReKeyableXofAlgorithm>}[0]
     }
 
     final object Utils { // org.kotlincrypto.core.xof/Xof.Utils|null[0]
