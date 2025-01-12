@@ -54,9 +54,7 @@ public abstract class XofFactory<A: XofAlgorithm> public constructor() {
      * */
     protected abstract inner class XofDelegate
     @Throws(ClassCastException::class, IllegalArgumentException::class)
-    protected constructor(
-        protected val delegate: A,
-    ) : Xof<A>(),
+    protected constructor(delegate: A) : Xof<A>(delegate),
         Algorithm by delegate,
         Resettable by delegate as Resettable,
         Updatable by delegate as Updatable
