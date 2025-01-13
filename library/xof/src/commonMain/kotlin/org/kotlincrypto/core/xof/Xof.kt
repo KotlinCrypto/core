@@ -18,6 +18,9 @@
 package org.kotlincrypto.core.xof
 
 import org.kotlincrypto.core.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
@@ -86,7 +89,16 @@ public sealed class Xof<A: XofAlgorithm>(
      *   initial state after taking the snapshot.
      * */
     @JvmOverloads
-    public fun <T: Any?> use(resetXof: Boolean = true, action: Reader.() -> T): T = reader(resetXof).use(action)
+    @OptIn(ExperimentalContracts::class)
+    public inline fun <T: Any?> use(
+        resetXof: Boolean = true,
+        action: Reader.() -> T,
+    ): T {
+        contract {
+            callsInPlace(action, InvocationKind.EXACTLY_ONCE)
+        }
+        return reader(resetXof).use(action)
+    }
 
     /**
      * Takes a snapshot of the current [Xof]'s state and produces
@@ -145,9 +157,13 @@ public sealed class Xof<A: XofAlgorithm>(
          * Helper function which automatically invokes [close]
          * once action completes.
          * */
-        public fun <T: Any?> use(action: Reader.() -> T): T {
-            return try {
-                action(this)
+        @OptIn(ExperimentalContracts::class)
+        public inline fun <T: Any?> use(action: Reader.() -> T): T {
+            contract {
+                callsInPlace(action, InvocationKind.EXACTLY_ONCE)
+            }
+            try {
+                return action(this)
             } finally {
                 close()
             }
