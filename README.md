@@ -116,6 +116,14 @@ fun main() {
 
     val hash = mac.doFinal()
     val hash2 = copy.doFinal(bytes)
+
+    // Reinitialize Mac instance with a new key
+    // to use for something else.
+    val newKey = SecureRandom().nextBytesOf(100)
+    mac.reset(newKey = newKey)
+
+    // Zero out key material before dereferencing
+    copy.clearKey()
 }
 ```
 
@@ -204,6 +212,27 @@ fun main() {
 }
 ```
 
+```kotlin
+// Using KMAC128 from MACs repo as an example
+import org.kotlincrypto.macs.kmac.KMAC128
+// Using SecureRandom from the secure-random repo as an example
+import org.kotlincrypto.SecureRandom
+
+fun main() {
+    val key = SecureRandom().nextBytesOf(100)
+    val kmacXof: Xof<KMAC128> = KMAC128.xOf(key)
+
+    // If Xof is for a Mac that implements ReKeyableXofAlgorithm,
+    // reinitialize the instance via the `Xof.Companion.reset`
+    // extension function for reuse.
+    val newKey = SecureRandom().nextBytesOf(100)
+    kmacXof.reset(newKey = newKey)
+
+    // Or zero out key material before dereferencing
+    kmacXof.reset(newKey = ByteArray(1))
+}
+```
+
 </details>
 
 ### Get Started
@@ -216,7 +245,7 @@ The best way to keep `KotlinCrypto` dependencies up to date is by using the
 ```kotlin
 // build.gradle.kts
 dependencies {
-    val core = "0.5.5"
+    val core = "0.6.0"
     implementation("org.kotlincrypto.core:digest:$core")
     implementation("org.kotlincrypto.core:mac:$core")
     implementation("org.kotlincrypto.core:xof:$core")
@@ -224,19 +253,7 @@ dependencies {
 ```
 
 <!-- TAG_VERSION -->
-
-```groovy
-// build.gradle
-dependencies {
-    def core = "0.5.5"
-    implementation "org.kotlincrypto.core:digest:$core"
-    implementation "org.kotlincrypto.core:mac:$core"
-    implementation "org.kotlincrypto.core:xof:$core"
-}
-```
-
-<!-- TAG_VERSION -->
-[badge-latest-release]: https://img.shields.io/badge/latest--release-0.5.5-blue.svg?style=flat
+[badge-latest-release]: https://img.shields.io/badge/latest--release-0.6.0-blue.svg?style=flat
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
 <!-- TAG_DEPENDENCIES -->

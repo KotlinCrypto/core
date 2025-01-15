@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## Version 0.6.0 (2025-01-15)
+ - `@Throws` annotation removed from `Updatable.update` (it is documented).
+ - Finalizes `Digest` internal API and removes `InternalKotlinCryptoApi` opt-in requirement from constructors.
+     - Drops usage of `DigestState` in favor of secondary constructor which takes 
+       `Digest` as an argument (for `copy` function implementations).
+     - `Copyable.copy` override is now passed through to implementations so that the proper 
+       return type can be defined (instead of requiring API consumers to cast from `Digest`).
+     - `protected` functions renamed:
+         - `compress` >> `compressProtected`
+         - `digest` >> `digestProtected`
+         - `updateDigest` >> `updateProtected`
+         - `resetDigest` >> `resetProtected`
+     - `digestProtected` (previously `digest`) now only provides the buffered input and position as 
+       arguments; `bitLength` is no longer tracked by `Digest`.
+ - `Digest.digest` now zero's out stale buffered input from `bufPos` to `buf.size` before passing it to 
+   `digestProtected` (previously `digest`) as an argument.
+ - Finalizes `Mac` internal API and removes `InternalKotlinCryptoApi` opt-in requirement from constructors.
+     - Provides secondary constructor which takes `Mac` as an argument (for `copy` function implementations).
+     - `Copyable.copy` override is now passed through to `Mac` implementations so that the proper 
+       return type can be defined (instead of requiring API consumers to cast from `Mac`).
+     - Adds ability to reinitialize `Mac` with a new `key` parameter via `reset(newKey)` (or clear it after use).
+     - Adds `Mac.clearKey` helper function for zeroing out key material before dereferencing the `Mac` (if desired).
+     - Removes `Mac.Engine.State` in favor of secondary constructor which takes `Mac.Engine` as an argument 
+       (for `copy` function implementation).
+     - Adds abstract function `Mac.Engine.reset(newKey)` for reinitialization functionality.
+ - Finalizes `Xof` and `XofFactory` internal API and removes `InternalKotlinCryptoApi` opt-in 
+   requirement from constructors.
+     - `Xof.Reader.readProtected` no longer passes `bytesRead` as an argument.
+ - Adds `ReKeyableXofAlgorithm` interface for `Xof` implementations who's backing delegate is a `Mac`.
+ - Adds `Xof.Companion.reset(newKey)` extension function which allows API consumers the ability to 
+   reinitialize the `Xof` with a new `key` parameter when that `Xof` is backed by an instance of 
+   `ReKeyableXofAlgorithm` (i.e. a `Mac` implementation).
+ - `Xof.use` and `Xof.Reader.use` functions are now inlined.
+ - Removes usage of `KotlinCrypto.endians` library (deprecated) from `Xof.Utils`.
+
 ## Version 0.5.5 (2024-12-20)
  - Fixes optimization issues with `Digest.update` internals [[#70]][70]
 
