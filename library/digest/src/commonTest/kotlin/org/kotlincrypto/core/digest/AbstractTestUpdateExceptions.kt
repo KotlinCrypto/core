@@ -24,7 +24,7 @@ import kotlin.test.fail
  * same for [Digest] as Java's MessageDigest would handle
  * them.
  * */
-abstract class TestDigestException: Updatable {
+abstract class AbstractTestUpdateExceptions: Updatable {
 
     @Test
     fun givenDigest_whenEmptyBytes_thenDoesNotThrow() {

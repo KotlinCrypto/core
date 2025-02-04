@@ -101,11 +101,23 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
     public fun digest(): ByteArray
 
     /**
-     * Updates the instance with provided [input], then completes the computation,
+     * Updates the instance with provided [input] then completes the computation,
      * performing final operations and returning the resultant array of bytes. The
      * [Digest] is [reset] afterward.
      * */
     public fun digest(input: ByteArray): ByteArray
+
+    /**
+     * Completes the computation, performing final operations and placing the
+     * resultant bytes into the provided [dest] array starting at index [destOffset].
+     * The [Digest] is [reset] afterward.
+     *
+     * @return The number of bytes put into [dest] (i.e. the [digestLength])
+     * @throws [IndexOutOfBoundsException] if [destOffset] is inappropriate
+     * @throws [ShortBufferException] if [digestLength] number of bytes are unable
+     *   to fit into [dest] for provided [destOffset]
+     * */
+    public fun digestInto(dest: ByteArray, destOffset: Int): Int
 
     // See Resettable interface documentation
     public final override fun reset()
@@ -121,13 +133,33 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * Called to complete the computation, providing any input that may be buffered
      * and awaiting processing.
      *
-     * **NOTE:** The buffer from [bufPos] to the end will always be zeroized to clear
+     * **NOTE:** The buffer from [bufPos] to the end will always be zeroed out to clear
      * any potentially stale input left over from a previous state.
      *
      * @param [buf] Unprocessed input
      * @param [bufPos] The index at which the **next** input would be placed into [buf]
      * */
     protected abstract fun digestProtected(buf: ByteArray, bufPos: Int): ByteArray
+
+    /**
+     * Called to complete the computation, providing any input that may be buffered
+     * and awaiting processing.
+     *
+     * Implementations should override this addition to the API for performance reasons.
+     * If overridden, `super.digestIntoProtected` should **not** be called.
+     *
+     * **NOTE:** The buffer from [bufPos] to the end will always be zeroed out to clear
+     * any potentially stale input left over from a previous state.
+     *
+     * **NOTE:** The public [digestInto] function always checks [dest] for capacity of
+     * [digestLength], starting at [destOffset], before calling this function.
+     *
+     * @param [dest] The array to place resultant bytes
+     * @param [destOffset] The index to begin placing bytes into [dest]
+     * @param [buf] Unprocessed input
+     * @param [bufPos] The index at which the **next** input would be placed into [buf]
+     * */
+    protected open fun digestIntoProtected(dest: ByteArray, destOffset: Int, buf: ByteArray, bufPos: Int)
 
     /**
      * Optional override for implementations to intercept cleansed input before

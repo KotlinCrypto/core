@@ -17,7 +17,11 @@
 
 package org.kotlincrypto.core.digest.internal
 
+import org.kotlincrypto.core.ShortBufferException
 import org.kotlincrypto.core.digest.Digest
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 
 @JvmInline
@@ -39,12 +43,18 @@ internal inline fun Digest.initializeBuffer(
 
 internal inline fun Buffer.copy(): Buffer = Buffer(value.copyOf())
 
+@OptIn(ExperimentalContracts::class)
 internal inline fun Buffer.commonUpdate(
     input: Byte,
     bufPosPlusPlus: Int,
     bufPosSet: (zero: Int) -> Unit,
     compressProtected: (ByteArray, Int) -> Unit,
 ) {
+    contract {
+        callsInPlace(bufPosSet, InvocationKind.AT_MOST_ONCE)
+        callsInPlace(compressProtected, InvocationKind.AT_MOST_ONCE)
+    }
+
     val buf = value
     buf[bufPosPlusPlus] = input
 
@@ -54,6 +64,7 @@ internal inline fun Buffer.commonUpdate(
     bufPosSet(0)
 }
 
+@OptIn(ExperimentalContracts::class)
 internal inline fun Buffer.commonUpdate(
     input: ByteArray,
     offset: Int,
@@ -62,6 +73,11 @@ internal inline fun Buffer.commonUpdate(
     bufPosSet: (value: Int) -> Unit,
     compressProtected: (ByteArray, Int) -> Unit,
 ) {
+    contract {
+        callsInPlace(bufPosSet, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(compressProtected, InvocationKind.UNKNOWN)
+    }
+
     val buf = value
     val blockSize = buf.size
     val limitInput = offset + len
@@ -105,6 +121,7 @@ internal inline fun Buffer.commonUpdate(
     bufPosSet(posBuf)
 }
 
+@OptIn(ExperimentalContracts::class)
 internal inline fun Buffer.commonDigest(
     input: ByteArray,
     updateProtected: (ByteArray, Int, Int) -> Unit,
@@ -113,27 +130,76 @@ internal inline fun Buffer.commonDigest(
     resetProtected: () -> Unit,
     bufPosSet: (zero: Int) -> Unit,
 ): ByteArray {
+    contract {
+        callsInPlace(updateProtected, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(bufPosGet, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(digestProtected, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(resetProtected, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(bufPosSet, InvocationKind.EXACTLY_ONCE)
+    }
+
     updateProtected(input, 0, input.size)
     return commonDigest(bufPosGet(), digestProtected, resetProtected, bufPosSet)
 }
 
+@OptIn(ExperimentalContracts::class)
 internal inline fun Buffer.commonDigest(
     bufPos: Int,
     digestProtected: (buf: ByteArray, bufPos: Int) -> ByteArray,
     resetProtected: () -> Unit,
     bufPosSet: (zero: Int) -> Unit,
 ): ByteArray {
-    // Zeroize any stale input that may be left in the buffer
+    contract {
+        callsInPlace(digestProtected, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(resetProtected, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(bufPosSet, InvocationKind.EXACTLY_ONCE)
+    }
+
+    // Zero out any stale input that may be left in the buffer
     value.fill(0, bufPos)
     val digest = digestProtected(value, bufPos)
     commonReset(resetProtected, bufPosSet)
     return digest
 }
 
+@OptIn(ExperimentalContracts::class)
+@Throws(ShortBufferException::class)
+internal inline fun Buffer.commonDigestInto(
+    bufPos: Int,
+    dest: ByteArray,
+    destOffset: Int,
+    digestLength: Int,
+    digestIntoProtected: (dest: ByteArray, destOffset: Int, buf: ByteArray, bufPos: Int) -> Unit,
+    resetProtected: () -> Unit,
+    bufPosSet: (zero: Int) -> Unit,
+): Int {
+    contract {
+        callsInPlace(digestIntoProtected, InvocationKind.AT_MOST_ONCE)
+        callsInPlace(resetProtected, InvocationKind.AT_MOST_ONCE)
+        callsInPlace(bufPosSet, InvocationKind.AT_MOST_ONCE)
+    }
+
+    dest.commonCheckArgs(destOffset, digestLength, onShortInput = {
+        ShortBufferException("Not enough room in dest for $digestLength bytes")
+    })
+
+    // Zero out any stale input that may be left in the buffer
+    value.fill(0, bufPos)
+    digestIntoProtected(dest, destOffset, value, bufPos)
+    commonReset(resetProtected, bufPosSet)
+    return digestLength
+}
+
+@OptIn(ExperimentalContracts::class)
 internal inline fun Buffer.commonReset(
     resetProtected: () -> Unit,
     bufPosSet: (zero: Int) -> Unit,
 ) {
+    contract {
+        callsInPlace(resetProtected, InvocationKind.EXACTLY_ONCE)
+        callsInPlace(bufPosSet, InvocationKind.EXACTLY_ONCE)
+    }
+
     value.fill(0)
     bufPosSet(0)
     resetProtected()

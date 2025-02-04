@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING", "DeprecatedCallableAddReplaceWith")
 
 package org.kotlincrypto.core.digest
 
@@ -132,7 +132,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     )
 
     /**
-     * Updates the instance with provided [input], then completes the computation,
+     * Updates the instance with provided [input] then completes the computation,
      * performing final operations and returning the resultant array of bytes. The
      * [Digest] is [reset] afterward.
      * */
@@ -141,6 +141,26 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
         updateProtected = ::updateProtected,
         bufPosGet = ::bufPos,
         digestProtected = ::digestProtected,
+        resetProtected = ::resetProtected,
+        bufPosSet = { bufPos = it },
+    )
+
+    /**
+     * Completes the computation, performing final operations and placing the
+     * resultant bytes into the provided [dest] array starting at index [destOffset].
+     * The [Digest] is [reset] afterward.
+     *
+     * @return The number of bytes put into [dest] (i.e. the [digestLength])
+     * @throws [IndexOutOfBoundsException] if [destOffset] is inappropriate
+     * @throws [ShortBufferException] if [digestLength] number of bytes are unable
+     *   to fit into [dest] for provided [destOffset]
+     * */
+    public actual fun digestInto(dest: ByteArray, destOffset: Int): Int = buf.commonDigestInto(
+        bufPos = bufPos,
+        dest = dest,
+        destOffset = destOffset,
+        digestLength = digestLength,
+        digestIntoProtected = ::digestIntoProtected,
         resetProtected = ::resetProtected,
         bufPosSet = { bufPos = it },
     )
@@ -164,13 +184,38 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
      * Called to complete the computation, providing any input that may be buffered
      * and awaiting processing.
      *
-     * **NOTE:** The buffer from [bufPos] to the end will always be zeroized to clear
+     * **NOTE:** The buffer from [bufPos] to the end will always be zeroed out to clear
      * any potentially stale input left over from a previous state.
      *
      * @param [buf] Unprocessed input
      * @param [bufPos] The index at which the **next** input would be placed into [buf]
      * */
     protected actual abstract fun digestProtected(buf: ByteArray, bufPos: Int): ByteArray
+
+    /**
+     * Called to complete the computation, providing any input that may be buffered
+     * and awaiting processing.
+     *
+     * Implementations should override this addition to the API for performance reasons.
+     * If overridden, `super.digestIntoProtected` should **not** be called.
+     *
+     * **NOTE:** The buffer from [bufPos] to the end will always be zeroed out to clear
+     * any potentially stale input left over from a previous state.
+     *
+     * **NOTE:** The public [digestInto] function always checks [dest] for capacity of
+     * [digestLength], starting at [destOffset], before calling this function.
+     *
+     * @param [dest] The array to place resultant bytes
+     * @param [destOffset] The index to begin placing bytes into [dest]
+     * @param [buf] Unprocessed input
+     * @param [bufPos] The index at which the **next** input would be placed into [buf]
+     * */
+    protected actual open fun digestIntoProtected(dest: ByteArray, destOffset: Int, buf: ByteArray, bufPos: Int) {
+        // Default implementation. Extenders of Digest should override.
+        val result = digestProtected(buf, bufPos)
+        result.copyInto(dest, destOffset)
+        result.fill(0)
+    }
 
     /**
      * Optional override for implementations to intercept cleansed input before
@@ -205,29 +250,48 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
 
     // MessageDigest
     /** @suppress */
-    @Throws(IllegalArgumentException::class, DigestException::class)
-    public final override fun digest(buf: ByteArray, offset: Int, len: Int): Int = super.digest(buf, offset, len)
+    @Throws(DigestException::class)
+    @Deprecated("Use digestInto", ReplaceWith("digestInto(buf, offset)"))
+    public final override fun digest(buf: ByteArray?, offset: Int, len: Int): Int {
+        requireNotNull(buf) { "buf cannot be null" }
+        buf.commonCheckArgs(offset, len, onOutOfBounds = { reason -> DigestException(reason) })
+        @Suppress("DEPRECATION")
+        return engineDigest(buf, offset, len)
+    }
     /** @suppress */
     public final override fun clone(): Any = copy()
 
     // MessageDigestSpi
     /** @suppress */
+    @Deprecated("Do not use. Will be marked as ERROR in a later release")
     protected final override fun engineGetDigestLength(): Int = digestLength
     /** @suppress */
+    @Deprecated("Do not use. Will be marked as ERROR in a later release")
     protected final override fun engineUpdate(p0: Byte) { updateProtected(p0) }
     /** @suppress */
+    @Deprecated("Do not use. Will be marked as ERROR in a later release")
     protected final override fun engineUpdate(input: ByteBuffer) { super.engineUpdate(input) }
     /** @suppress */
-    @Throws(IllegalArgumentException::class, IndexOutOfBoundsException::class)
+    @Deprecated("Do not use. Will be marked as ERROR in a later release")
     protected final override fun engineUpdate(p0: ByteArray, p1: Int, p2: Int) { update(p0, p1, p2) }
     /** @suppress */
+    @Deprecated("Do not use. Will be marked as ERROR in a later release")
     protected final override fun engineDigest(): ByteArray = digest()
     /** @suppress */
     @Throws(DigestException::class)
+    @Deprecated("Do not use. Will be marked as ERROR in a later release")
     protected final override fun engineDigest(buf: ByteArray, offset: Int, len: Int): Int {
-        return super.engineDigest(buf, offset, len)
+        if (len < digestLength) {
+            throw DigestException("partial digests not returned. len[$len] < digestLength[$digestLength]")
+        }
+        if (buf.size - offset < digestLength) {
+            throw DigestException("insufficient space in the output buffer to store the digest.")
+        }
+
+        return digestInto(buf, offset)
     }
     /** @suppress */
+    @Deprecated("Do not use. Will be marked as ERROR in a later release")
     protected final override fun engineReset() { reset() }
 
     /** @suppress */
