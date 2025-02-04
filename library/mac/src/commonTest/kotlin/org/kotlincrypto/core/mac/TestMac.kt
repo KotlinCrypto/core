@@ -20,10 +20,11 @@ class TestMac : Mac {
     constructor(
         key: ByteArray,
         algorithm: String,
+        macLen: Int = 0,
         reset: () -> Unit = {},
         rekey: (new: ByteArray) -> Unit = {},
-        doFinal: () -> ByteArray = { ByteArray(0) },
-    ): super(algorithm, TestEngine(key, reset, rekey, doFinal))
+        doFinal: () -> ByteArray = { ByteArray(macLen) },
+    ): super(algorithm, TestEngine(key, reset, rekey, doFinal, macLen))
 
     private constructor(algorithm: String, engine: TestEngine): super(algorithm, engine)
     private constructor(other: TestMac): super(other)
@@ -35,22 +36,26 @@ class TestMac : Mac {
         private val reset: () -> Unit
         private val rekey: (new: ByteArray) -> Unit
         private val doFinal: () -> ByteArray
+        private val macLen: Int
 
         constructor(
             key: ByteArray,
             reset: () -> Unit,
             rekey: (new: ByteArray) -> Unit,
             doFinal: () -> ByteArray,
+            macLen: Int,
         ): super(key) {
             this.reset = reset
             this.rekey = rekey
             this.doFinal = doFinal
+            this.macLen = macLen
         }
 
         private constructor(other: TestEngine): super(other) {
             this.reset = other.reset
             this.rekey = other.rekey
             this.doFinal = other.doFinal
+            this.macLen = other.macLen
         }
 
         // To ensure that Java implementation initializes javax.crypto.Mac
@@ -62,7 +67,7 @@ class TestMac : Mac {
         override fun reset(newKey: ByteArray) { rekey.invoke(newKey) }
         override fun update(input: ByteArray) {}
         override fun update(input: ByteArray, offset: Int, len: Int) {}
-        override fun macLength(): Int = 0
+        override fun macLength(): Int = macLen
         override fun doFinal(): ByteArray = doFinal.invoke()
 
         override fun copy(): Engine = TestEngine(this)

@@ -15,6 +15,7 @@
  **/
 package org.kotlincrypto.core.mac
 
+import org.kotlincrypto.core.ShortBufferException
 import kotlin.test.*
 
 class MacUnitTest {
@@ -63,22 +64,31 @@ class MacUnitTest {
     fun givenMac_whenDoFinal_thenEngineResetIsCalled() {
         var resetCount = 0
         var doFinalCount = 0
-        val finalExpected = ByteArray(20)
+        val finalExpected = ByteArray(20) { it.toByte() }
 
         val mac = TestMac(
             ByteArray(5),
             "not blank",
+            macLen = finalExpected.size,
             reset = { resetCount++ },
             doFinal = { doFinalCount++; finalExpected },
         )
         mac.update(ByteArray(20))
+
+        // doFinal
         assertEquals(finalExpected, mac.doFinal())
         assertEquals(1, doFinalCount)
         assertEquals(1, resetCount)
 
+        // update & doFinal
         assertEquals(finalExpected, mac.doFinal(ByteArray(20)))
         assertEquals(2, doFinalCount)
         assertEquals(2, resetCount)
+
+        // doFinalInto
+        assertEquals(finalExpected.size, mac.doFinalInto(ByteArray(25), 0))
+        assertEquals(3, doFinalCount)
+        assertEquals(3, resetCount)
     }
 
     @Test
@@ -93,5 +103,49 @@ class MacUnitTest {
 
         assertNotNull(zeroKey)
         assertContentEquals(ByteArray(1) { 0 }, zeroKey)
+    }
+
+    @Test
+    fun givenMac_whenDoFinalInto_thenDefaultImplementationCopiesResultIntoDest() {
+        val expected = ByteArray(10) { 1 }
+        val mac = TestMac(
+            key = ByteArray(5),
+            algorithm = "test doFinalInto",
+            macLen = expected.size,
+            doFinal = { expected.copyOf() }
+        )
+        val actual = ByteArray(expected.size + 2) { 4 }
+        mac.doFinalInto(actual, 1)
+
+        assertEquals(4, actual[0])
+        assertEquals(4, actual[actual.size - 1])
+        for (i in expected.indices) {
+            assertEquals(expected[i], actual[i + 1])
+        }
+    }
+
+    @Test
+    fun givenMac_whenLength0_thenDoFinalIntoDoesNotFail() {
+        val mac = TestMac(
+            key = ByteArray(5),
+            algorithm = "test doFinalInto 0",
+            macLen = 0
+        )
+
+        mac.doFinalInto(ByteArray(0), 0)
+        mac.doFinalInto(ByteArray(2), 1)
+        mac.doFinalInto(ByteArray(2), 2)
+    }
+
+    @Test
+    fun givenMac_whenDoFinalInto_thenThrowsExceptionsAsExpected() {
+        val mac = TestMac(
+            key = ByteArray(5),
+            algorithm = "test doFinalInto Exceptions",
+            macLen = 5,
+        )
+        val mSize = mac.macLength()
+        assertFailsWith<ShortBufferException> { mac.doFinalInto(ByteArray(mSize), 1) }
+        assertFailsWith<IndexOutOfBoundsException> { mac.doFinalInto(ByteArray(mSize), -1) }
     }
 }

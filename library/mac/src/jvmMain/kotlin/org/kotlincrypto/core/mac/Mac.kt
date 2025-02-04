@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING", "DeprecatedCallableAddReplaceWith")
 
 package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.mac.internal.*
 import java.nio.ByteBuffer
-import java.security.InvalidKeyException
 import java.security.Key
 import java.security.spec.AlgorithmParameterSpec
 import java.security.spec.KeySpec
@@ -105,6 +104,23 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
     public actual final override fun algorithm(): String = algorithm
 
     /**
+     * Completes the computation, performing final operations and placing the
+     * resultant bytes into the provided [dest] array starting at index [destOffset].
+     * The [Mac] is [reset] afterward.
+     *
+     * @return The number of bytes put into [dest] (i.e. the [macLength])
+     * @throws [IndexOutOfBoundsException] if [destOffset] is inappropriate
+     * @throws [ShortBufferException] if [macLength] number of bytes are unable
+     *   to fit into [dest] for provided [destOffset]
+     * */
+    public actual fun doFinalInto(dest: ByteArray, destOffset: Int): Int = commonDoFinalInto(
+        dest = dest,
+        destOffset = destOffset,
+        engineDoFinalInto = engine::doFinalInto,
+        engineReset = engine::reset,
+    )
+
+    /**
      * Resets the [Mac] and will reinitialize it with the provided key.
      *
      * This is useful if wanting to zero out the key before de-referencing.
@@ -153,14 +169,35 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
          * */
         public actual abstract fun macLength(): Int
 
+        // See Updatable interface documentation
+        public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
+
         /**
          * Completes the computation, performing final operations and returning
          * the resultant array of bytes. The [Engine] is [reset] afterward.
          * */
         public actual abstract fun doFinal(): ByteArray
 
-        // See Updatable interface documentation
-        public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
+        /**
+         * Called to complete the computation, performing final operations and placing
+         * the resultant bytes into the provided [dest] array starting at index [destOffset].
+         * The [Engine] is [reset] afterward.
+         *
+         * Implementations should override this addition to the API for performance reasons.
+         * If overridden, `super.doFinalInto` should **not** be called.
+         *
+         * **NOTE:** The public [Mac.doFinalInto] function always checks [dest] for capacity
+         * of [macLength], starting at [destOffset], before calling this function.
+         *
+         * @param [dest] The array to place resultant bytes
+         * @param [destOffset] The index to begin placing bytes into [dest]
+         * */
+        public actual open fun doFinalInto(dest: ByteArray, destOffset: Int) {
+            // Default implementation. Extenders of Mac.Engine should override.
+            val result = doFinal()
+            result.copyInto(dest, destOffset)
+            result.fill(0)
+        }
 
         /**
          * Resets the [Engine] and will reinitialize it with the provided key.
@@ -177,25 +214,31 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
 
         // MacSpi
         /** @suppress */
+        @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineUpdate(p0: Byte) { update(p0) }
         /** @suppress */
+        @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineUpdate(input: ByteBuffer?) {
             if (input == null) return
             super.engineUpdate(input)
         }
         /** @suppress */
+        @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineUpdate(p0: ByteArray, p1: Int, p2: Int) {
             // javax.crypto.Mac checks offset and len arguments
             update(p0, p1, p2)
         }
         /** @suppress */
+        @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineReset() { reset() }
         /** @suppress */
+        @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineGetMacLength(): Int = macLength()
 
         // Is called immediately from Mac init block with a blanked key (required in order to set
         // javax.crypto.Mac.initialized to true).
         /** @suppress */
+        @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineInit(p0: Key?, p1: AlgorithmParameterSpec?) {
             if (p0 is EmptyKey) return
 
@@ -205,9 +248,14 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
                 throw InvalidKeyException("Key cannot be null or empty")
             }
 
-            reset(newKey)
+            try {
+                reset(newKey)
+            } catch (e: IllegalArgumentException) {
+                throw InvalidKeyException(e)
+            }
         }
         /** @suppress */
+        @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineDoFinal(): ByteArray {
             val b = doFinal()
 

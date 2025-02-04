@@ -99,7 +99,7 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
     }
     // See Updatable interface documentation
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
-        if (offset < 0 || len < 0 || offset > input.size - len) throw IllegalArgumentException("Bad arguments")
+        input.commonCheckArgs(offset, len, onOutOfBounds = { message -> IllegalArgumentException(message) })
         engine.update(input, offset, len)
     }
 
@@ -114,7 +114,7 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
     }
 
     /**
-     * Updates the instance with provided [input], then completes the computation,
+     * Updates the instance with provided [input] then completes the computation,
      * performing final operations and returning the resultant array of bytes. The
      * [Mac] is [reset] afterward.
      * */
@@ -123,10 +123,25 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
         return doFinal()
     }
 
+    /**
+     * Completes the computation, performing final operations and placing the
+     * resultant bytes into the provided [dest] array starting at index [destOffset].
+     * The [Mac] is [reset] afterward.
+     *
+     * @return The number of bytes put into [dest] (i.e. the [macLength])
+     * @throws [IndexOutOfBoundsException] if [destOffset] is inappropriate
+     * @throws [ShortBufferException] if [macLength] number of bytes are unable
+     *   to fit into [dest] for provided [destOffset]
+     * */
+    public actual fun doFinalInto(dest: ByteArray, destOffset: Int): Int = commonDoFinalInto(
+        dest = dest,
+        destOffset = destOffset,
+        engineDoFinalInto = engine::doFinalInto,
+        engineReset = engine::reset
+    )
+
     // See Resettable interface documentation
-    public actual final override fun reset() {
-        engine.reset()
-    }
+    public actual final override fun reset() { engine.reset() }
 
     /**
      * Resets the [Mac] and will reinitialize it with the provided key.
@@ -176,14 +191,35 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          * */
         public actual abstract fun macLength(): Int
 
+        // See Updatable interface documentation
+        public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
+
         /**
          * Completes the computation, performing final operations and returning
          * the resultant array of bytes. The [Engine] is [reset] afterward.
          * */
         public actual abstract fun doFinal(): ByteArray
 
-        // See Updatable interface documentation
-        public actual override fun update(input: ByteArray) { update(input, 0, input.size) }
+        /**
+         * Called to complete the computation, performing final operations and placing
+         * the resultant bytes into the provided [dest] array starting at index [destOffset].
+         * The [Engine] is [reset] afterward.
+         *
+         * Implementations should override this addition to the API for performance reasons.
+         * If overridden, `super.doFinalInto` should **not** be called.
+         *
+         * **NOTE:** The public [Mac.doFinalInto] function always checks [dest] for capacity
+         * of [macLength], starting at [destOffset], before calling this function.
+         *
+         * @param [dest] The array to place resultant bytes
+         * @param [destOffset] The index to begin placing bytes into [dest]
+         * */
+        public actual open fun doFinalInto(dest: ByteArray, destOffset: Int) {
+            // Default implementation. Extenders of Mac.Engine should override.
+            val result = doFinal()
+            result.copyInto(dest, destOffset)
+            result.fill(0)
+        }
 
         /**
          * Resets the [Engine] and will reinitialize it with the provided key.
