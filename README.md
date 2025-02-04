@@ -25,8 +25,6 @@ Low level core cryptographic components for Kotlin Multiplatform
 NOTE: For Jvm, `Digest` extends `java.security.MessageDigest` and `Mac` extends `javax.crypto.Mac` 
 for interoperability.
 
-Utilized by [KotlinCrypto/hash][url-hash] and [KotlinCrypto/MACs][url-macs]
-
 ### Library Authors
 
 Modules in `core` are intentionally **single purpose** and **small** such that you 
@@ -50,190 +48,9 @@ class FooFeatureA(digest: Digest) {
 
 ### Usage
 
-<details>
-    <summary>Digest</summary>
-
-```kotlin
-// Using SHA256 from hash repo as an example
-import org.kotlincrypto.hash.sha2.SHA256
-
-fun main() {
-    val digest = SHA256()
-    val bytes = Random.Default.nextBytes(615)
-    
-    // Digest implements Algorithm
-    println(digest.algorithm())
-    
-    // Digest implements Updatable
-    digest.update(5.toByte())
-    digest.update(bytes)
-    digest.update(bytes, 10, 88)
-
-    // Digest implements Resettable
-    digest.reset()
-
-    digest.update(bytes)
-
-    // Digest implements Copyable
-    val copy = digest.copy()
-
-    val hash = digest.digest()
-    val hash2 = copy.digest(bytes)
-}
-```
-
-</details>
-
-<details>
-    <summary>Mac</summary>
-
-```kotlin
-// Using SecureRandom from the secure-random repo as an example
-import org.kotlincrypto.SecureRandom
-// Using HmacSHA3_256 from the MACs repo as an example
-import org.kotlincrypto.macs.hmac.sha3.HmacSHA3_256
-
-fun main() {
-    val key = SecureRandom().nextBytesOf(100)
-    val mac = HmacSHA3_256(key)
-    val bytes = Random.Default.nextBytes(615)
-
-    // Mac implements Algorithm
-    println(mac.algorithm())
-
-    // Mac implements Updatable
-    mac.update(5.toByte())
-    mac.update(bytes)
-    mac.update(bytes, 10, 88)
-
-    // Mac implements Resettable
-    mac.reset()
-
-    mac.update(bytes)
-
-    // Mac implements Copyable
-    val copy = mac.copy()
-
-    val hash = mac.doFinal()
-    val hash2 = copy.doFinal(bytes)
-
-    // Reinitialize Mac instance with a new key
-    // to use for something else.
-    val newKey = SecureRandom().nextBytesOf(100)
-    mac.reset(newKey = newKey)
-
-    // Zero out key material before dereferencing
-    copy.clearKey()
-}
-```
-
-</details>
-
-<details>
-    <summary>Xof</summary>
-
-`XOF`s (i.e. [Extendable-Output Functions][url-pub-xof]) were introduced with `SHA3`.
-
-`XOF`s are very similar to `Digest` and `Mac` except that instead of calling `digest()` 
-or `doFinal()`, which returns a fixed size `ByteArray`, their output size can be variable 
-in length.
-
-As such, [KotlinCrypto][url-kotlin-crypto] takes the approach of making them distinctly 
-different from those types, while implementing the same interfaces (`Algorithm`, `Copyable`, 
-`Resettable`, `Updatable`).
-
-Output for an `Xof` is done by reading, instead.
-
-```kotlin
-// Using SHAKE128 from hash repo as an example
-import org.kotlincrypto.hash.sha3.SHAKE128
-
-fun main() {
-    val xof: Xof<SHAKE128> = SHAKE128.xOf()
-    val bytes = Random.Default.nextBytes(615)
-
-    // Xof implements Algorithm
-    println(xof.algorithm())
-
-    // Xof implements Updatable
-    xof.update(5.toByte())
-    xof.update(bytes)
-    xof.update(bytes, 10, 88)
-
-    // Xof implements Resettable
-    xof.reset()
-
-    xof.update(bytes)
-
-    // Xof implements Copyable
-    xof.copy()
-
-    val out1 = ByteArray(100)
-    val out2 = ByteArray(12345)
-
-    // Use produces a Reader which auto-closes when your action finishes.
-    // Reader is using a snapshot of the Xof state (thus the
-    // optional argument to resetXof with a default of true).
-    xof.use(resetXof = false) { read(out1, 0, out1.size); read(out2) }
-
-    val out3 = ByteArray(out1.size)
-    val out4 = ByteArray(out2.size)
-
-    // Can also create a Reader that won't auto-close
-    val reader = xof.reader(resetXof = false)
-    reader.read(out3)
-    reader.read(out4)
-    reader.close()
-
-    try {
-        // The Reader has been closed and will throw
-        // exception when trying to read from again.
-        reader.use { read(out4) }
-    } catch (e: IllegalStateException) {
-        e.printStackTrace()
-    }
-
-    // Contents are the same because Reader uses
-    // a snapshot of Xof, which was not updated
-    // between production of Readers.
-    assertContentEquals(out1 + out2, out3 + out4)
-
-    // Still able to update Xof, independent of the production
-    // and usage of Readers.
-    xof.update(10.toByte())
-    xof.use { read(out3); read(out4) }
-
-    try {
-        assertContentEquals(out1 + out2, out3 + out4)
-        throw IllegalStateException()
-    } catch (_: AssertionError) {
-        // pass
-    }
-}
-```
-
-```kotlin
-// Using KMAC128 from MACs repo as an example
-import org.kotlincrypto.macs.kmac.KMAC128
-// Using SecureRandom from the secure-random repo as an example
-import org.kotlincrypto.SecureRandom
-
-fun main() {
-    val key = SecureRandom().nextBytesOf(100)
-    val kmacXof: Xof<KMAC128> = KMAC128.xOf(key)
-
-    // If Xof is for a Mac that implements ReKeyableXofAlgorithm,
-    // reinitialize the instance via the `Xof.Companion.reset`
-    // extension function for reuse.
-    val newKey = SecureRandom().nextBytesOf(100)
-    kmacXof.reset(newKey = newKey)
-
-    // Or zero out key material before dereferencing
-    kmacXof.reset(newKey = ByteArray(1))
-}
-```
-
-</details>
+ - See module [digest](library/digest/README.md)
+ - See module [mac](library/mac/README.md)
+ - See module [xof](library/xof/README.md)
 
 ### Get Started
 
@@ -280,8 +97,4 @@ dependencies {
 [url-latest-release]: https://github.com/KotlinCrypto/core/releases/latest
 [url-license]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [url-kotlin]: https://kotlinlang.org
-[url-kotlin-crypto]: https://github.com/KotlinCrypto
-[url-hash]: https://github.com/KotlinCrypto/hash
-[url-macs]: https://github.com/KotlinCrypto/MACs
 [url-version-catalog]: https://github.com/KotlinCrypto/version-catalog
-[url-pub-xof]: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
