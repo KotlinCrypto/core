@@ -17,7 +17,11 @@
 
 package org.kotlincrypto.core.mac.internal
 
+import org.kotlincrypto.core.ShortBufferException
 import org.kotlincrypto.core.mac.Mac
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 private val SINGLE_0BYTE_KEY = ByteArray(1) { 0 }
 
@@ -31,7 +35,31 @@ internal inline fun Mac.commonToString(): String {
     return "Mac[${algorithm()}]@${hashCode()}"
 }
 
+@Throws(Exception::class)
+@OptIn(ExperimentalContracts::class)
+internal inline fun ByteArray.commonCheckArgs(
+    offset: Int,
+    len: Int,
+    onShortInput: () -> Exception = { IllegalArgumentException("Input too short") },
+    onOutOfBounds: (message: String) -> Exception = { message -> IndexOutOfBoundsException(message) },
+) {
+    contract {
+        callsInPlace(onShortInput, InvocationKind.AT_MOST_ONCE)
+        callsInPlace(onOutOfBounds, InvocationKind.AT_MOST_ONCE)
+    }
+
+    if (size - offset < len) throw onShortInput()
+    if (offset < 0) throw onOutOfBounds("offset[$offset] < 0")
+    if (len < 0) throw onOutOfBounds("len[$len] < 0")
+    if (offset > size - len) throw onOutOfBounds("offset[$offset] > size[$size] - len[$len]")
+}
+
+@OptIn(ExperimentalContracts::class)
 internal inline fun Mac.commonClearKey(engineReset: (ByteArray) -> Unit) {
+    contract {
+        callsInPlace(engineReset, InvocationKind.AT_LEAST_ONCE)
+    }
+
     try {
         engineReset(SINGLE_0BYTE_KEY)
     } catch (e1: IllegalArgumentException) {
@@ -42,4 +70,26 @@ internal inline fun Mac.commonClearKey(engineReset: (ByteArray) -> Unit) {
             throw e2
         }
     }
+}
+
+@OptIn(ExperimentalContracts::class)
+@Throws(IndexOutOfBoundsException::class, ShortBufferException::class)
+internal inline fun Mac.commonDoFinalInto(
+    dest: ByteArray,
+    destOffset: Int,
+    engineDoFinalInto: (dest: ByteArray, destOffset: Int) -> Unit,
+    engineReset: () -> Unit,
+): Int {
+    contract {
+        callsInPlace(engineDoFinalInto, InvocationKind.AT_MOST_ONCE)
+        callsInPlace(engineReset, InvocationKind.AT_MOST_ONCE)
+    }
+
+    val len = macLength()
+    dest.commonCheckArgs(destOffset, len, onShortInput = {
+        ShortBufferException("Not enough room in dest for $len bytes")
+    })
+    engineDoFinalInto(dest, destOffset)
+    engineReset()
+    return len
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("KotlinRedundantDiagnosticSuppress")
+@file:Suppress("KotlinRedundantDiagnosticSuppress", "NOTHING_TO_INLINE")
 
 package org.kotlincrypto.core.digest.internal
 
@@ -22,19 +22,17 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-@Suppress("NOTHING_TO_INLINE")
 internal inline fun Digest.commonToString(): String {
     return "Digest[${algorithm()}]@${hashCode()}"
 }
 
 @Throws(Exception::class)
-@Suppress("NOTHING_TO_INLINE")
 @OptIn(ExperimentalContracts::class)
 internal inline fun ByteArray.commonCheckArgs(
     offset: Int,
     len: Int,
     onShortInput: () -> Exception = { IllegalArgumentException("Input too short") },
-    onOutOfBounds: (message: String) -> Exception = { IndexOutOfBoundsException(it) },
+    onOutOfBounds: (message: String) -> Exception = { message -> IndexOutOfBoundsException(message) },
 ) {
     contract {
         callsInPlace(onShortInput, InvocationKind.AT_MOST_ONCE)
