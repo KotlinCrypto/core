@@ -15,10 +15,11 @@
  **/
 package org.kotlincrypto.core.digest
 
+import org.kotlincrypto.core.ShortBufferException
 import kotlin.random.Random
 import kotlin.test.*
 
-class DigestUnitTest: TestDigestException() {
+class DigestUnitTest: AbstractTestUpdateExceptions() {
 
     private val digest = TestDigest()
 
@@ -117,7 +118,7 @@ class DigestUnitTest: TestDigestException() {
     }
 
     @Test
-    fun givenBuffer_whenDigestProtected_thenStaleInputIsZeroized() {
+    fun givenBuffer_whenDigestProtected_thenStaleInputIsZeroedOut() {
         var bufCopy: ByteArray? = null
         var bufCopyPos: Int = -1
         val digest = TestDigest(digest = { buf, bufPos ->
@@ -147,5 +148,29 @@ class DigestUnitTest: TestDigestException() {
         for (i in bufCopyPos until digest.blockSize()) {
             assertEquals(0, bufCopy!![i])
         }
+    }
+
+    @Test
+    fun givenDigest_whenDigestInto_thenDefaultImplementationCopiesResultIntoDest() {
+        val expected = ByteArray(10) { 1 }
+        val digest = TestDigest(
+            digestLength = expected.size,
+            digest = { _, _ -> expected.copyOf() }
+        )
+        val actual = ByteArray(expected.size + 2) { 4 }
+        digest.digestInto(actual, 1)
+
+        assertEquals(4, actual[0])
+        assertEquals(4, actual[actual.size - 1])
+        for (i in expected.indices) {
+            assertEquals(expected[i], actual[i + 1])
+        }
+    }
+
+    @Test
+    fun givenDigest_whenDigestInto_thenThrowsExceptionsAsExpected() {
+        val dSize = digest.digestLength()
+        assertFailsWith<ShortBufferException> { digest.digestInto(ByteArray(dSize), 1) }
+        assertFailsWith<IndexOutOfBoundsException> { digest.digestInto(ByteArray(dSize), -1) }
     }
 }

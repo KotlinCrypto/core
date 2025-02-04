@@ -17,6 +17,7 @@ abstract class org.kotlincrypto.core.digest/Digest : org.kotlincrypto.core/Algor
     final fun blockSize(): kotlin/Int // org.kotlincrypto.core.digest/Digest.blockSize|blockSize(){}[0]
     final fun digest(): kotlin/ByteArray // org.kotlincrypto.core.digest/Digest.digest|digest(){}[0]
     final fun digest(kotlin/ByteArray): kotlin/ByteArray // org.kotlincrypto.core.digest/Digest.digest|digest(kotlin.ByteArray){}[0]
+    final fun digestInto(kotlin/ByteArray, kotlin/Int): kotlin/Int // org.kotlincrypto.core.digest/Digest.digestInto|digestInto(kotlin.ByteArray;kotlin.Int){}[0]
     final fun digestLength(): kotlin/Int // org.kotlincrypto.core.digest/Digest.digestLength|digestLength(){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // org.kotlincrypto.core.digest/Digest.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // org.kotlincrypto.core.digest/Digest.hashCode|hashCode(){}[0]
@@ -25,6 +26,7 @@ abstract class org.kotlincrypto.core.digest/Digest : org.kotlincrypto.core/Algor
     final fun update(kotlin/Byte) // org.kotlincrypto.core.digest/Digest.update|update(kotlin.Byte){}[0]
     final fun update(kotlin/ByteArray) // org.kotlincrypto.core.digest/Digest.update|update(kotlin.ByteArray){}[0]
     final fun update(kotlin/ByteArray, kotlin/Int, kotlin/Int) // org.kotlincrypto.core.digest/Digest.update|update(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    open fun digestIntoProtected(kotlin/ByteArray, kotlin/Int, kotlin/ByteArray, kotlin/Int) // org.kotlincrypto.core.digest/Digest.digestIntoProtected|digestIntoProtected(kotlin.ByteArray;kotlin.Int;kotlin.ByteArray;kotlin.Int){}[0]
     open fun updateProtected(kotlin/Byte) // org.kotlincrypto.core.digest/Digest.updateProtected|updateProtected(kotlin.Byte){}[0]
     open fun updateProtected(kotlin/ByteArray, kotlin/Int, kotlin/Int) // org.kotlincrypto.core.digest/Digest.updateProtected|updateProtected(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
 }

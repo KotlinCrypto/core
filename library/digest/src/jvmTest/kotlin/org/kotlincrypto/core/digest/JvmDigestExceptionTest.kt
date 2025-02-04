@@ -17,7 +17,11 @@ package org.kotlincrypto.core.digest
 
 import java.security.MessageDigest
 
-class DigestExceptionUnitTest: TestDigestException() {
+/**
+ * Verifies that [Digest] abstraction produces the same exceptions that
+ * the Jvm's [MessageDigest] does.
+ * */
+class JvmDigestExceptionTest: AbstractTestUpdateExceptions() {
 
     private val digest = MessageDigest.getInstance("MD5")
 

@@ -8,6 +8,8 @@ public abstract class org/kotlincrypto/core/digest/Digest : java/security/Messag
 	public final fun digest ()[B
 	public final fun digest ([B)[B
 	public final fun digest ([BII)I
+	public final fun digestInto ([BI)I
+	protected fun digestIntoProtected ([BI[BI)V
 	public final fun digestLength ()I
 	protected abstract fun digestProtected ([BI)[B
 	protected final fun engineDigest ()[B
