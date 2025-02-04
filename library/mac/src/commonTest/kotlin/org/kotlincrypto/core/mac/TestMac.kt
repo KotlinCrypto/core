@@ -21,10 +21,11 @@ class TestMac : Mac {
         key: ByteArray,
         algorithm: String,
         macLen: Int = 0,
+        resetOnDoFinal: Boolean = true,
         reset: () -> Unit = {},
         rekey: (new: ByteArray) -> Unit = {},
         doFinal: () -> ByteArray = { ByteArray(macLen) },
-    ): super(algorithm, TestEngine(key, reset, rekey, doFinal, macLen))
+    ): super(algorithm, TestEngine(key, reset, rekey, doFinal, macLen, resetOnDoFinal))
 
     private constructor(algorithm: String, engine: TestEngine): super(algorithm, engine)
     private constructor(other: TestMac): super(other)
@@ -44,7 +45,8 @@ class TestMac : Mac {
             rekey: (new: ByteArray) -> Unit,
             doFinal: () -> ByteArray,
             macLen: Int,
-        ): super(key) {
+            resetOnDoFinal: Boolean,
+        ): super(key, resetOnDoFinal) {
             this.reset = reset
             this.rekey = rekey
             this.doFinal = doFinal

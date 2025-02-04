@@ -18,6 +18,7 @@
 package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
+import kotlin.jvm.JvmField
 
 /**
  * Core abstraction for Message Authentication Code implementations.
@@ -141,12 +142,39 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
     protected abstract class Engine: Copyable<Engine>, Resettable, Updatable {
 
         /**
-         * Initializes a new [Engine] with the provided [key].
+         * Most [Mac.Engine] are backed by a `Digest`, whereby calling [reset] after
+         * [doFinal] will cause a double reset (because `Digest.digest` does this inherently).
+         * By setting this value to `false`, [Engine.reset] will **not** be called whenever
+         * [doFinal] gets invoked.
          *
-         * @throws [IllegalArgumentException] if [key] is empty.
+         * **NOTE:** Implementations taking ownership of the automatic reset functionality
+         * by setting this to `false` must ensure that whatever re-initialization steps were
+         * taken in their [Engine.reset] function body are executed before their [doFinal]
+         * and [doFinalInto] implementations return.
+         * */
+        @JvmField
+        public val resetOnDoFinal: Boolean
+
+        /**
+         * Initializes a new [Engine] with the provided [key] with the default [resetOnDoFinal]
+         * value of `true` (i.e. [Engine.reset] will be called automatically after [Engine.doFinal]
+         * or [Engine.doFinalInto] have been invoked).
+         *
+         * @param [key] The key that this [Engine] instance will use to apply its function to
+         * @throws [IllegalArgumentException] if [key] is empty
          * */
         @Throws(IllegalArgumentException::class)
         public constructor(key: ByteArray)
+
+        /**
+         * Initializes a new [Engine] with the provided [key] and [resetOnDoFinal] configuration.
+         *
+         * @param [key] the key that this [Engine] instance will use to apply its function to
+         * @param [resetOnDoFinal] See [Engine.resetOnDoFinal] documentation
+         * @throws [IllegalArgumentException] if [key] is empty
+         * */
+        @Throws(IllegalArgumentException::class)
+        public constructor(key: ByteArray, resetOnDoFinal: Boolean)
 
         /**
          * Creates a new [Engine] from [other], copying its state.

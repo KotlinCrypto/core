@@ -116,6 +116,7 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
     public actual fun doFinalInto(dest: ByteArray, destOffset: Int): Int = commonDoFinalInto(
         dest = dest,
         destOffset = destOffset,
+        engineResetOnDoFinal = engine.resetOnDoFinal,
         engineDoFinalInto = engine::doFinalInto,
         engineReset = engine::reset,
     )
@@ -150,19 +151,49 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
     protected actual abstract class Engine: MacSpi, Cloneable, Copyable<Engine>, Resettable, Updatable {
 
         /**
-         * Initializes a new [Engine] with the provided [key].
+         * Most [Mac.Engine] are backed by a `Digest`, whereby calling [reset] after
+         * [doFinal] will cause a double reset (because `Digest.digest` does this inherently).
+         * By setting this value to `false`, [Engine.reset] will **not** be called whenever
+         * [doFinal] gets invoked.
          *
-         * @throws [IllegalArgumentException] if [key] is empty.
+         * **NOTE:** Implementations taking ownership of the automatic reset functionality
+         * by setting this to `false` must ensure that whatever re-initialization steps were
+         * taken in their [Engine.reset] function body are executed before their [doFinal]
+         * and [doFinalInto] implementations return.
+         * */
+        @JvmField
+        public actual val resetOnDoFinal: Boolean
+
+        /**
+         * Initializes a new [Engine] with the provided [key] with the default [resetOnDoFinal]
+         * value of `true` (i.e. [Engine.reset] will be called automatically after [Engine.doFinal]
+         * or [Engine.doFinalInto] have been invoked).
+         *
+         * @param [key] The key that this [Engine] instance will use to apply its function to
+         * @throws [IllegalArgumentException] if [key] is empty
          * */
         @Throws(IllegalArgumentException::class)
-        public actual constructor(key: ByteArray) {
+        public actual constructor(key: ByteArray): this(key, resetOnDoFinal = true)
+
+        /**
+         * Initializes a new [Engine] with the provided [key] and [resetOnDoFinal] configuration.
+         *
+         * @param [key] the key that this [Engine] instance will use to apply its function to
+         * @param [resetOnDoFinal] See [Engine.resetOnDoFinal] documentation
+         * @throws [IllegalArgumentException] if [key] is empty
+         * */
+        @Throws(IllegalArgumentException::class)
+        public actual constructor(key: ByteArray, resetOnDoFinal: Boolean) {
             require(key.isNotEmpty()) { "key cannot be empty" }
+            this.resetOnDoFinal = resetOnDoFinal
         }
 
         /**
          * Creates a new [Engine] from [other], copying its state.
          * */
-        protected actual constructor(other: Engine)
+        protected actual constructor(other: Engine) {
+            this.resetOnDoFinal = other.resetOnDoFinal
+        }
 
         /**
          * The number of bytes the implementation returns when [doFinal] is called.
@@ -212,6 +243,10 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         @Throws(IllegalArgumentException::class)
         public actual abstract fun reset(newKey: ByteArray)
 
+        // Gets set in engineDoFinal if resetOnDoFinal is set to false. Subsequent
+        // engineReset call will then change it back to false and return early.
+        private var consumeNextEngineReset = false
+
         // MacSpi
         /** @suppress */
         @Deprecated("Do not use. Will be marked as ERROR in a later release")
@@ -230,7 +265,13 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         }
         /** @suppress */
         @Deprecated("Do not use. Will be marked as ERROR in a later release")
-        protected final override fun engineReset() { reset() }
+        protected final override fun engineReset() {
+            if (consumeNextEngineReset) {
+                consumeNextEngineReset = false
+                return
+            }
+            reset()
+        }
         /** @suppress */
         @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineGetMacLength(): Int = macLength()
@@ -257,11 +298,14 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         /** @suppress */
         @Deprecated("Do not use. Will be marked as ERROR in a later release")
         protected final override fun engineDoFinal(): ByteArray {
+            if (!resetOnDoFinal) consumeNextEngineReset = true
+
             val b = doFinal()
 
             // Android API 23 and below javax.crypto.Mac does not call engineReset()
+            @Suppress("DEPRECATION")
             @OptIn(InternalKotlinCryptoApi::class)
-            KC_ANDROID_SDK_INT?.let { if (it <= 23) reset() }
+            if ((KC_ANDROID_SDK_INT ?: 24) < 24) engineReset()
 
             return b
         }

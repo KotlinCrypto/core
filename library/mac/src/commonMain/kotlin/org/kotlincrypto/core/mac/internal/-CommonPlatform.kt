@@ -77,6 +77,7 @@ internal inline fun Mac.commonClearKey(engineReset: (ByteArray) -> Unit) {
 internal inline fun Mac.commonDoFinalInto(
     dest: ByteArray,
     destOffset: Int,
+    engineResetOnDoFinal: Boolean,
     engineDoFinalInto: (dest: ByteArray, destOffset: Int) -> Unit,
     engineReset: () -> Unit,
 ): Int {
@@ -90,6 +91,6 @@ internal inline fun Mac.commonDoFinalInto(
         ShortBufferException("Not enough room in dest for $len bytes")
     })
     engineDoFinalInto(dest, destOffset)
-    engineReset()
+    if (engineResetOnDoFinal) engineReset()
     return len
 }
