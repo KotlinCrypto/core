@@ -12,8 +12,10 @@ public abstract class org/kotlincrypto/core/mac/Mac : javax/crypto/Mac, org/kotl
 }
 
 protected abstract class org/kotlincrypto/core/mac/Mac$Engine : javax/crypto/MacSpi, java/lang/Cloneable, org/kotlincrypto/core/Copyable, org/kotlincrypto/core/Resettable, org/kotlincrypto/core/Updatable {
+	public final field resetOnDoFinal Z
 	protected fun <init> (Lorg/kotlincrypto/core/mac/Mac$Engine;)V
 	public fun <init> ([B)V
+	public fun <init> ([BZ)V
 	public final fun clone ()Ljava/lang/Object;
 	public abstract fun doFinal ()[B
 	public fun doFinalInto ([BI)V

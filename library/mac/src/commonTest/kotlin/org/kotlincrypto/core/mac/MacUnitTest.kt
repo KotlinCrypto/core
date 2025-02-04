@@ -92,6 +92,43 @@ class MacUnitTest {
     }
 
     @Test
+    fun givenMacEngine_whenResetOnDoFinalFalse_thenEngineResetIsNOTCalled() {
+        var resetCount = 0
+        var doFinalCount = 0
+        val finalExpected = ByteArray(15) { (it + 25).toByte() }
+
+        val mac = TestMac(
+            ByteArray(5),
+            algorithm = "test resetOnDoFinal false",
+            macLen = finalExpected.size,
+            resetOnDoFinal = false,
+            reset = { resetCount++ },
+            doFinal = { doFinalCount++; finalExpected },
+        )
+
+        mac.reset()
+        assertEquals(1, resetCount)
+
+        // doFinal
+        mac.doFinal()
+        assertEquals(1, doFinalCount)
+        assertEquals(1, resetCount)
+
+        // update & doFinal
+        mac.doFinal(ByteArray(25))
+        assertEquals(2, doFinalCount)
+        assertEquals(1, resetCount)
+
+        // doFinalInto
+        mac.doFinalInto(ByteArray(finalExpected.size), 0)
+        assertEquals(3, doFinalCount)
+        assertEquals(1, resetCount)
+
+        mac.reset()
+        assertEquals(2, resetCount)
+    }
+
+    @Test
     fun givenMac_whenClearKey_thenSingle0ByteKeyPassedToEngine() {
         var zeroKey: ByteArray? = null
 

@@ -27,7 +27,11 @@ abstract class org.kotlincrypto.core.mac/Mac : org.kotlincrypto.core/Algorithm, 
 
     abstract class Engine : org.kotlincrypto.core/Copyable<org.kotlincrypto.core.mac/Mac.Engine>, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.mac/Mac.Engine|null[0]
         constructor <init>(kotlin/ByteArray) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(kotlin.ByteArray){}[0]
+        constructor <init>(kotlin/ByteArray, kotlin/Boolean) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(kotlin.ByteArray;kotlin.Boolean){}[0]
         constructor <init>(org.kotlincrypto.core.mac/Mac.Engine) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(org.kotlincrypto.core.mac.Mac.Engine){}[0]
+
+        final val resetOnDoFinal // org.kotlincrypto.core.mac/Mac.Engine.resetOnDoFinal|<get-resetOnDoFinal>(){}[0]
+            final fun <get-resetOnDoFinal>(): kotlin/Boolean // org.kotlincrypto.core.mac/Mac.Engine.resetOnDoFinal.<get-resetOnDoFinal>|<get-resetOnDoFinal>(){}[0]
 
         abstract fun doFinal(): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.Engine.doFinal|doFinal(){}[0]
         abstract fun macLength(): kotlin/Int // org.kotlincrypto.core.mac/Mac.Engine.macLength|macLength(){}[0]
