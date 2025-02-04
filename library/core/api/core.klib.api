@@ -31,3 +31,65 @@ abstract interface org.kotlincrypto.core/Updatable { // org.kotlincrypto.core/Up
     abstract fun update(kotlin/ByteArray) // org.kotlincrypto.core/Updatable.update|update(kotlin.ByteArray){}[0]
     abstract fun update(kotlin/ByteArray, kotlin/Int, kotlin/Int) // org.kotlincrypto.core/Updatable.update|update(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
 }
+
+open class org.kotlincrypto.core/BadPaddingException : org.kotlincrypto.core/GeneralSecurityException { // org.kotlincrypto.core/BadPaddingException|null[0]
+    constructor <init>() // org.kotlincrypto.core/BadPaddingException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/BadPaddingException.<init>|<init>(kotlin.String?){}[0]
+}
+
+open class org.kotlincrypto.core/CertificateEncodingException : org.kotlincrypto.core/CertificateException { // org.kotlincrypto.core/CertificateEncodingException|null[0]
+    constructor <init>() // org.kotlincrypto.core/CertificateEncodingException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/CertificateEncodingException.<init>|<init>(kotlin.String?){}[0]
+    constructor <init>(kotlin/String?, kotlin/Throwable?) // org.kotlincrypto.core/CertificateEncodingException.<init>|<init>(kotlin.String?;kotlin.Throwable?){}[0]
+    constructor <init>(kotlin/Throwable?) // org.kotlincrypto.core/CertificateEncodingException.<init>|<init>(kotlin.Throwable?){}[0]
+}
+
+open class org.kotlincrypto.core/CertificateException : org.kotlincrypto.core/GeneralSecurityException { // org.kotlincrypto.core/CertificateException|null[0]
+    constructor <init>() // org.kotlincrypto.core/CertificateException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/CertificateException.<init>|<init>(kotlin.String?){}[0]
+    constructor <init>(kotlin/String?, kotlin/Throwable?) // org.kotlincrypto.core/CertificateException.<init>|<init>(kotlin.String?;kotlin.Throwable?){}[0]
+    constructor <init>(kotlin/Throwable?) // org.kotlincrypto.core/CertificateException.<init>|<init>(kotlin.Throwable?){}[0]
+}
+
+open class org.kotlincrypto.core/CertificateParsingException : org.kotlincrypto.core/CertificateException { // org.kotlincrypto.core/CertificateParsingException|null[0]
+    constructor <init>() // org.kotlincrypto.core/CertificateParsingException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/CertificateParsingException.<init>|<init>(kotlin.String?){}[0]
+    constructor <init>(kotlin/String?, kotlin/Throwable?) // org.kotlincrypto.core/CertificateParsingException.<init>|<init>(kotlin.String?;kotlin.Throwable?){}[0]
+    constructor <init>(kotlin/Throwable?) // org.kotlincrypto.core/CertificateParsingException.<init>|<init>(kotlin.Throwable?){}[0]
+}
+
+open class org.kotlincrypto.core/GeneralSecurityException : kotlin/Exception { // org.kotlincrypto.core/GeneralSecurityException|null[0]
+    constructor <init>() // org.kotlincrypto.core/GeneralSecurityException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/GeneralSecurityException.<init>|<init>(kotlin.String?){}[0]
+    constructor <init>(kotlin/String?, kotlin/Throwable?) // org.kotlincrypto.core/GeneralSecurityException.<init>|<init>(kotlin.String?;kotlin.Throwable?){}[0]
+    constructor <init>(kotlin/Throwable?) // org.kotlincrypto.core/GeneralSecurityException.<init>|<init>(kotlin.Throwable?){}[0]
+}
+
+open class org.kotlincrypto.core/IllegalBlockSizeException : org.kotlincrypto.core/GeneralSecurityException { // org.kotlincrypto.core/IllegalBlockSizeException|null[0]
+    constructor <init>() // org.kotlincrypto.core/IllegalBlockSizeException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/IllegalBlockSizeException.<init>|<init>(kotlin.String?){}[0]
+}
+
+open class org.kotlincrypto.core/InvalidKeyException : org.kotlincrypto.core/KeyException { // org.kotlincrypto.core/InvalidKeyException|null[0]
+    constructor <init>() // org.kotlincrypto.core/InvalidKeyException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/InvalidKeyException.<init>|<init>(kotlin.String?){}[0]
+    constructor <init>(kotlin/String?, kotlin/Throwable?) // org.kotlincrypto.core/InvalidKeyException.<init>|<init>(kotlin.String?;kotlin.Throwable?){}[0]
+    constructor <init>(kotlin/Throwable?) // org.kotlincrypto.core/InvalidKeyException.<init>|<init>(kotlin.Throwable?){}[0]
+}
+
+open class org.kotlincrypto.core/InvalidParameterException : kotlin/IllegalArgumentException { // org.kotlincrypto.core/InvalidParameterException|null[0]
+    constructor <init>() // org.kotlincrypto.core/InvalidParameterException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/InvalidParameterException.<init>|<init>(kotlin.String?){}[0]
+}
+
+open class org.kotlincrypto.core/KeyException : org.kotlincrypto.core/GeneralSecurityException { // org.kotlincrypto.core/KeyException|null[0]
+    constructor <init>() // org.kotlincrypto.core/KeyException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/KeyException.<init>|<init>(kotlin.String?){}[0]
+    constructor <init>(kotlin/String?, kotlin/Throwable?) // org.kotlincrypto.core/KeyException.<init>|<init>(kotlin.String?;kotlin.Throwable?){}[0]
+    constructor <init>(kotlin/Throwable?) // org.kotlincrypto.core/KeyException.<init>|<init>(kotlin.Throwable?){}[0]
+}
+
+open class org.kotlincrypto.core/ShortBufferException : org.kotlincrypto.core/GeneralSecurityException { // org.kotlincrypto.core/ShortBufferException|null[0]
+    constructor <init>() // org.kotlincrypto.core/ShortBufferException.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String?) // org.kotlincrypto.core/ShortBufferException.<init>|<init>(kotlin.String?){}[0]
+}
