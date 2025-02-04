@@ -15,5 +15,6 @@
  **/
 package org.kotlincrypto.core.digest.internal
 
-@Deprecated("Removed from usage in Digest copy implementation in 0.6.0")
+/** @suppress */
+@Deprecated("Removed from usage in Digest.copy implementation in 0.6.0")
 public sealed class DigestState
