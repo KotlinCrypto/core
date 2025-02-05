@@ -17,8 +17,8 @@
 
 package org.kotlincrypto.core.mac.internal
 
-import org.kotlincrypto.core.ShortBufferException
 import org.kotlincrypto.core.mac.Mac
+import org.kotlincrypto.error.ShortBufferException
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract

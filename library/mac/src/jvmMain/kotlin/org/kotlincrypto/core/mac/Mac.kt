@@ -19,6 +19,8 @@ package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.mac.internal.*
+import org.kotlincrypto.error.InvalidKeyException
+import org.kotlincrypto.error.ShortBufferException
 import java.nio.ByteBuffer
 import java.security.Key
 import java.security.spec.AlgorithmParameterSpec

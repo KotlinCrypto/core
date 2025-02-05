@@ -15,7 +15,7 @@
  **/
 package org.kotlincrypto.core.digest
 
-import org.kotlincrypto.core.ShortBufferException
+import org.kotlincrypto.error.ShortBufferException
 import kotlin.random.Random
 import kotlin.test.*
 

@@ -18,6 +18,7 @@
 package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
+import org.kotlincrypto.error.ShortBufferException
 import kotlin.jvm.JvmField
 
 /**

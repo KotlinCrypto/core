@@ -28,6 +28,10 @@ tasks.withType<DokkaTaskPartial>().configureEach {
         includes.from("README.md")
         noStdlibLink = true
 
+        externalDocumentationLink {
+            url = URI("https://error.kotlincrypto.org/").toURL()
+        }
+
         sourceLink {
             localDirectory = rootDir
             remoteUrl = URI("https://github.com/KotlinCrypto/core/tree/master").toURL()

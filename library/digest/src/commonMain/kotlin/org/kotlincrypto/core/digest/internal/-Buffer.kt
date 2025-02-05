@@ -17,8 +17,8 @@
 
 package org.kotlincrypto.core.digest.internal
 
-import org.kotlincrypto.core.ShortBufferException
 import org.kotlincrypto.core.digest.Digest
+import org.kotlincrypto.error.ShortBufferException
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract

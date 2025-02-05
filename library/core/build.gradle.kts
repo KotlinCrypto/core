@@ -18,5 +18,13 @@ plugins {
 }
 
 kmpConfiguration {
-    configureShared(java9ModuleName = "org.kotlincrypto.core", publish = true) {}
+    configureShared(java9ModuleName = "org.kotlincrypto.core", publish = true) {
+        common {
+            sourceSetMain {
+                dependencies {
+                    api(libs.kotlincrypto.error)
+                }
+            }
+        }
+    }
 }
