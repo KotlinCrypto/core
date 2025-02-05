@@ -25,6 +25,17 @@ Low level core cryptographic components for Kotlin Multiplatform
 NOTE: For Jvm, `Digest` extends `java.security.MessageDigest` and `Mac` extends `javax.crypto.Mac` 
 for interoperability.
 
+### Modules
+
+ - [core](library/core/README.md)
+ - [digest](library/digest/README.md)
+ - [mac](library/mac/README.md)
+ - [xof](library/xof/README.md)
+
+### API Docs
+
+ - [https://core.kotlincrypto.org][url-docs]
+
 ### Library Authors
 
 Modules in `core` are intentionally **single purpose** and **small** such that you 
@@ -45,12 +56,6 @@ class FooFeatureA(digest: Digest) {
     // ...
 }
 ```
-
-### Usage
-
- - See module [digest](library/digest/README.md)
- - See module [mac](library/mac/README.md)
- - See module [xof](library/xof/README.md)
 
 ### Get Started
 
@@ -98,3 +103,4 @@ dependencies {
 [url-license]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [url-kotlin]: https://kotlinlang.org
 [url-version-catalog]: https://github.com/KotlinCrypto/version-catalog
+[url-docs]: https://core.kotlincrypto.org
