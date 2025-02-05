@@ -19,8 +19,7 @@ package org.kotlincrypto.core.digest
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.digest.internal.*
-import org.kotlincrypto.core.digest.internal.commonCheckArgs
-import org.kotlincrypto.core.digest.internal.commonToString
+import org.kotlincrypto.error.ShortBufferException
 import java.nio.ByteBuffer
 import java.security.DigestException
 import java.security.MessageDigest

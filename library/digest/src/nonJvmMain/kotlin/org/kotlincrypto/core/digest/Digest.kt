@@ -19,6 +19,7 @@ package org.kotlincrypto.core.digest
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.digest.internal.*
+import org.kotlincrypto.error.ShortBufferException
 
 /**
  * Core abstraction for Message Digest implementations.
