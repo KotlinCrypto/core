@@ -179,9 +179,7 @@ internal inline fun Buffer.commonDigestInto(
         callsInPlace(bufPosSet, InvocationKind.AT_MOST_ONCE)
     }
 
-    dest.commonCheckArgs(destOffset, digestLength, onShortInput = {
-        ShortBufferException("Not enough room in dest for $digestLength bytes")
-    })
+    dest.commonCheckArgs(destOffset, digestLength, onShortInput = ::ShortBufferException)
 
     // Zero out any stale input that may be left in the buffer
     value.fill(0, bufPos)

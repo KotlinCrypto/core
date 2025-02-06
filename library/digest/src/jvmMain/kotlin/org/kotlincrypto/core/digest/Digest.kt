@@ -253,7 +253,7 @@ public actual abstract class Digest: MessageDigest, Algorithm, Cloneable, Copyab
     @Deprecated("Use digestInto", ReplaceWith("digestInto(buf, offset)"))
     public final override fun digest(buf: ByteArray?, offset: Int, len: Int): Int {
         requireNotNull(buf) { "buf cannot be null" }
-        buf.commonCheckArgs(offset, len, onOutOfBounds = { message -> DigestException(message) })
+        buf.commonCheckArgs(offset, len, onOutOfBounds = ::DigestException)
         @Suppress("DEPRECATION")
         return engineDigest(buf, offset, len)
     }

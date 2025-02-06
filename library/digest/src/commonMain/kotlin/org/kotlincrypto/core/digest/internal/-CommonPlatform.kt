@@ -31,15 +31,15 @@ internal inline fun Digest.commonToString(): String {
 internal inline fun ByteArray.commonCheckArgs(
     offset: Int,
     len: Int,
-    onShortInput: () -> Exception = { IllegalArgumentException("Input too short") },
-    onOutOfBounds: (message: String) -> Exception = { message -> IndexOutOfBoundsException(message) },
+    onShortInput: (message: String) -> Exception = ::IllegalArgumentException,
+    onOutOfBounds: (message: String) -> Exception = ::IndexOutOfBoundsException,
 ) {
     contract {
         callsInPlace(onShortInput, InvocationKind.AT_MOST_ONCE)
         callsInPlace(onOutOfBounds, InvocationKind.AT_MOST_ONCE)
     }
 
-    if (size - offset < len) throw onShortInput()
+    if (size - offset < len) throw onShortInput("Too Short. size[$size] - offset[$offset] < len[$len]")
     if (offset < 0) throw onOutOfBounds("offset[$offset] < 0")
     if (len < 0) throw onOutOfBounds("len[$len] < 0")
     if (offset > size - len) throw onOutOfBounds("offset[$offset] > size[$size] - len[$len]")
