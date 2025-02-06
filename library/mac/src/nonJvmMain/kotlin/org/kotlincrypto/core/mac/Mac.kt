@@ -101,7 +101,7 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
     }
     // See Updatable interface documentation
     public actual final override fun update(input: ByteArray, offset: Int, len: Int) {
-        input.commonCheckArgs(offset, len, onOutOfBounds = { message -> IllegalArgumentException(message) })
+        input.commonCheckArgs(offset, len, onOutOfBounds = ::IllegalArgumentException)
         engine.update(input, offset, len)
     }
 
