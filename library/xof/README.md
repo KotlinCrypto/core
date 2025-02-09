@@ -13,7 +13,7 @@ different from those types, while implementing the same interfaces (`Algorithm`,
 Output for an `Xof` is done by reading, instead.
 
 ```kotlin
-// Using SHAKE128 from hash repo as an example
+// Using SHAKE128 from KotlinCrypto/hash repo as an example
 import org.kotlincrypto.hash.sha3.SHAKE128
 
 fun main() {
@@ -82,19 +82,19 @@ fun main() {
 ```
 
 ```kotlin
-// Using KMAC128 from MACs repo as an example
+// Using CryptoRand from KotlinCrypto/random repo as an example
+import org.kotlincrypto.random.CryptoRand
+// Using KMAC128 from KotlinCrypto/MACs repo as an example
 import org.kotlincrypto.macs.kmac.KMAC128
-// Using SecureRandom from the secure-random repo as an example
-import org.kotlincrypto.SecureRandom
 
 fun main() {
-    val key = SecureRandom().nextBytesOf(100)
+    val key = CryptoRand.Default.nextBytes(ByteArray(100))
     val kmacXof: Xof<KMAC128> = KMAC128.xOf(key)
 
     // If Xof is for a Mac that implements ReKeyableXofAlgorithm,
     // reinitialize the instance via the `Xof.Companion.reset`
     // extension function for reuse.
-    val newKey = SecureRandom().nextBytesOf(100)
+    val newKey = CryptoRand.Default.nextBytes(ByteArray(100))
     kmacXof.reset(newKey = newKey)
 
     // Or zero out key material before dereferencing

@@ -5,13 +5,13 @@
 Implementations can be found at [KotlinCrypto/MACs][url-macs]
 
 ```kotlin
-// Using SecureRandom from the secure-random repo as an example
-import org.kotlincrypto.SecureRandom
-// Using HmacSHA3_256 from the MACs repo as an example
+// Using CryptoRand from KotlinCrypto/random repo as an example
+import org.kotlincrypto.random.CryptoRand
+// Using HmacSHA3_256 from KotlinCrypto/MACs repo as an example
 import org.kotlincrypto.macs.hmac.sha3.HmacSHA3_256
 
 fun main() {
-    val key = SecureRandom().nextBytesOf(100)
+    val key = CryptoRand.Default.nextBytes(ByteArray(100))
     val mac = HmacSHA3_256(key)
     val bytes = Random.Default.nextBytes(615)
 
@@ -40,7 +40,7 @@ fun main() {
 
     // Reinitialize Mac instance with a new key
     // to use for something else.
-    val newKey = SecureRandom().nextBytesOf(100)
+    val newKey = CryptoRand.Default.nextBytes(ByteArray(100))
     mac.reset(newKey = newKey)
 
     // Zero out key material before dereferencing

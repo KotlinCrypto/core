@@ -5,7 +5,7 @@
 Implementations can be found at [KotlinCrypto/hash][url-hash]
 
 ```kotlin
-// Using SHA256 from hash repo as an example
+// Using SHA256 from KotlinCrypto/hash repo as an example
 import org.kotlincrypto.hash.sha2.SHA256
 
 fun main() {
