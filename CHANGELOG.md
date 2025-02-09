@@ -3,10 +3,10 @@
 ## Version 0.6.1 (2025-02-09)
  - Adds `Digest.digestInto` API for populating an existing `ByteArray` with output [[#108]][108]
  - Adds `Mac.doFinalInto` API for populating an existing `ByteArray` with output [[#109]][109]
- - Adds `Mac.Engine.resetOnDoFinal` constructor argument for providing implementations the ability
+ - Adds `Mac.Engine.resetOnDoFinal` constructor argument for providing implementations the ability 
    to disable automatic `Engine.reset` call when `doFinal` or `doFinalInto` gets executed [[#111]][111]
      - Mitigates double resets when implementation is backed by a `Digest`.
- - Adds `dokka` documentation at `https://core.kotlincrypto.org`
+ - Adds `dokka` documentation at `https://core.kotlincrypto.org` [[#116]][116]
  - Adds API dependency `org.kotlincrypto.error:error` to module `core` [[#118]][118]
 
 ## Version 0.6.0 (2025-01-15)
@@ -184,4 +184,5 @@
 [108]: https://github.com/KotlinCrypto/core/pull/108
 [109]: https://github.com/KotlinCrypto/core/pull/109
 [111]: https://github.com/KotlinCrypto/core/pull/111
+[116]: https://github.com/KotlinCrypto/core/pull/116
 [118]: https://github.com/KotlinCrypto/core/pull/118
