@@ -7,7 +7,7 @@
    to disable automatic `Engine.reset` call when `doFinal` or `doFinalInto` gets executed [[#111]][111]
      - Mitigates double resets when implementation is backed by a `Digest`.
  - Adds `dokka` documentation at `https://core.kotlincrypto.org` [[#116]][116]
- - Adds API dependency `org.kotlincrypto.error:error` to module `core` [[#118]][118]
+ - Adds API dependency `org.kotlincrypto:error` to module `core` [[#118]][118]
 
 ## Version 0.6.0 (2025-01-15)
  - `@Throws` annotation removed from `Updatable.update` (it is documented).
