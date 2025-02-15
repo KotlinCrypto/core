@@ -31,15 +31,13 @@ abstract class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.cor
 }
 
 sealed class <#A: org.kotlincrypto.core.xof/XofAlgorithm> org.kotlincrypto.core.xof/Xof : org.kotlincrypto.core/Algorithm, org.kotlincrypto.core/Copyable<org.kotlincrypto.core.xof/Xof<#A>>, org.kotlincrypto.core/Resettable, org.kotlincrypto.core/Updatable { // org.kotlincrypto.core.xof/Xof|null[0]
-    constructor <init>(#A) // org.kotlincrypto.core.xof/Xof.<init>|<init>(1:0){}[0]
-
     final val delegate // org.kotlincrypto.core.xof/Xof.delegate|{}delegate[0]
         final fun <get-delegate>(): #A // org.kotlincrypto.core.xof/Xof.delegate.<get-delegate>|<get-delegate>(){}[0]
 
     abstract fun newReader(): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/Xof.newReader|newReader(){}[0]
-    final fun reader(kotlin/Boolean =...): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/Xof.reader|reader(kotlin.Boolean){}[0]
+    final fun reader(kotlin/Boolean = ...): org.kotlincrypto.core.xof/Xof.Reader<#A> // org.kotlincrypto.core.xof/Xof.reader|reader(kotlin.Boolean){}[0]
     final fun toString(): kotlin/String // org.kotlincrypto.core.xof/Xof.toString|toString(){}[0]
-    final inline fun <#A1: kotlin/Any?> use(kotlin/Boolean =..., kotlin/Function1<org.kotlincrypto.core.xof/Xof.Reader<#A>, #A1>): #A1 // org.kotlincrypto.core.xof/Xof.use|use(kotlin.Boolean;kotlin.Function1<org.kotlincrypto.core.xof.Xof.Reader<1:0>,0:0>){0§<kotlin.Any?>}[0]
+    final inline fun <#A1: kotlin/Any?> use(kotlin/Boolean = ..., kotlin/Function1<org.kotlincrypto.core.xof/Xof.Reader<#A>, #A1>): #A1 // org.kotlincrypto.core.xof/Xof.use|use(kotlin.Boolean;kotlin.Function1<org.kotlincrypto.core.xof.Xof.Reader<1:0>,0:0>){0§<kotlin.Any?>}[0]
 
     abstract inner class Reader { // org.kotlincrypto.core.xof/Xof.Reader|null[0]
         constructor <init>() // org.kotlincrypto.core.xof/Xof.Reader.<init>|<init>(){}[0]
