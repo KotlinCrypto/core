@@ -20,6 +20,7 @@ package org.kotlincrypto.core.mac
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.mac.internal.*
 import org.kotlincrypto.error.InvalidKeyException
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 import java.nio.ByteBuffer
 import java.security.Key
@@ -55,10 +56,10 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
      *
      * @param [algorithm] See [Algorithm.algorithm]
      * @param [engine] See [Engine]
-     * @throws [IllegalArgumentException] when:
+     * @throws [InvalidParameterException] when:
      *  - [algorithm] is blank
      * */
-    @Throws(IllegalArgumentException::class)
+    @Throws(InvalidParameterException::class)
     protected actual constructor(algorithm: String, engine: Engine): super(
         /* macSpi    */ engine,
         /* provider  */ AndroidApi21to23MacSpiProvider.createOrNull(engine, algorithm),

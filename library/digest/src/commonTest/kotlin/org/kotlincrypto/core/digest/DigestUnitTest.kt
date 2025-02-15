@@ -15,6 +15,7 @@
  **/
 package org.kotlincrypto.core.digest
 
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 import kotlin.random.Random
 import kotlin.test.*
@@ -39,13 +40,7 @@ class DigestUnitTest: AbstractTestUpdateExceptions() {
     fun givenDigest_whenLengthNegative_thenThrowsException() {
         // accepts 0 length
         TestDigest(digestLength = 0)
-
-        try {
-            TestDigest(digestLength = -1)
-            fail()
-        } catch (_: IllegalArgumentException) {
-            // pass
-        }
+        assertFailsWith<InvalidParameterException> { TestDigest(digestLength = -1) }
     }
 
     @Test

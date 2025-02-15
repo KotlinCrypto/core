@@ -18,7 +18,9 @@
 package org.kotlincrypto.core.mac.internal
 
 import org.kotlincrypto.core.mac.Mac
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
+import org.kotlincrypto.error.requireParam
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -26,9 +28,9 @@ import kotlin.contracts.contract
 private val SINGLE_0BYTE_KEY = ByteArray(1) { 0 }
 
 @Suppress("UnusedReceiverParameter")
-@Throws(IllegalArgumentException::class)
+@Throws(InvalidParameterException::class)
 internal inline fun Mac.commonInit(algorithm: String) {
-    require(algorithm.isNotBlank()) { "algorithm cannot be blank" }
+    requireParam(algorithm.isNotBlank()) { "algorithm cannot be blank" }
 }
 
 internal inline fun Mac.commonToString(): String {

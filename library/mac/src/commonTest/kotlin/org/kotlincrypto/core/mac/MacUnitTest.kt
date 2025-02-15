@@ -15,6 +15,7 @@
  **/
 package org.kotlincrypto.core.mac
 
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 import kotlin.test.*
 
@@ -29,7 +30,7 @@ class MacUnitTest {
 
     @Test
     fun givenMac_whenBlankAlgorithm_thenThrowsException() {
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<InvalidParameterException> {
             TestMac(ByteArray(5), "  ")
         }
     }

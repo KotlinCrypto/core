@@ -19,6 +19,7 @@ package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.mac.internal.*
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 
 /**
@@ -48,10 +49,10 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
      *
      * @param [algorithm] See [Algorithm.algorithm]
      * @param [engine] See [Engine]
-     * @throws [IllegalArgumentException] when:
+     * @throws [InvalidParameterException] when:
      *  - [algorithm] is blank
      * */
-    @Throws(IllegalArgumentException::class)
+    @Throws(InvalidParameterException::class)
     protected actual constructor(algorithm: String, engine: Engine) {
         commonInit(algorithm)
         this.algorithm = algorithm
