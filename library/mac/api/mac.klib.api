@@ -30,7 +30,7 @@ abstract class org.kotlincrypto.core.mac/Mac : org.kotlincrypto.core/Algorithm, 
         constructor <init>(kotlin/ByteArray, kotlin/Boolean) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(kotlin.ByteArray;kotlin.Boolean){}[0]
         constructor <init>(org.kotlincrypto.core.mac/Mac.Engine) // org.kotlincrypto.core.mac/Mac.Engine.<init>|<init>(org.kotlincrypto.core.mac.Mac.Engine){}[0]
 
-        final val resetOnDoFinal // org.kotlincrypto.core.mac/Mac.Engine.resetOnDoFinal|<get-resetOnDoFinal>(){}[0]
+        final val resetOnDoFinal // org.kotlincrypto.core.mac/Mac.Engine.resetOnDoFinal|{}resetOnDoFinal[0]
             final fun <get-resetOnDoFinal>(): kotlin/Boolean // org.kotlincrypto.core.mac/Mac.Engine.resetOnDoFinal.<get-resetOnDoFinal>|<get-resetOnDoFinal>(){}[0]
 
         abstract fun doFinal(): kotlin/ByteArray // org.kotlincrypto.core.mac/Mac.Engine.doFinal|doFinal(){}[0]

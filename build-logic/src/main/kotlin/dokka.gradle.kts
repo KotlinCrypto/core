@@ -21,6 +21,7 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
+// TODO: Update to Dokka 2.0.0 (Issue #121)
 tasks.withType<DokkaTaskPartial>().configureEach {
     suppressInheritedMembers = true
 

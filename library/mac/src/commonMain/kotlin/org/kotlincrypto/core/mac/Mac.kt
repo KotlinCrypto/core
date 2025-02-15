@@ -19,7 +19,6 @@ package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.error.ShortBufferException
-import kotlin.jvm.JvmField
 
 /**
  * Core abstraction for Message Authentication Code implementations.
@@ -153,7 +152,6 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          * taken in their [Engine.reset] function body are executed before their [doFinal]
          * and [doFinalInto] implementations return.
          * */
-        @JvmField
         public val resetOnDoFinal: Boolean
 
         /**

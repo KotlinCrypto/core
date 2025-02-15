@@ -30,7 +30,16 @@ allprojects {
     findProperty("VERSION_NAME")?.let { version = it }
     findProperty("POM_DESCRIPTION")?.let { description = it.toString() }
 
-    repositories { mavenCentral() }
+    repositories {
+        mavenCentral()
+
+        if (version.toString().endsWith("-SNAPSHOT")) {
+            // Only allow snapshot dependencies for non-release versions.
+            // This would cause a build failure if attempting to make a release
+            // while depending on a -SNAPSHOT version (such as core).
+            maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        }
+    }
 }
 
 @Suppress("PropertyName")
@@ -44,8 +53,6 @@ plugins.withType<YarnPlugin> {
 }
 
 apiValidation {
-    // Only enable when selectively enabled targets are not being passed via cli.
-    // See https://github.com/Kotlin/binary-compatibility-validator/issues/269
     @OptIn(kotlinx.validation.ExperimentalBCVApi::class)
     klib.enabled = findProperty("KMP_TARGETS") == null
 
