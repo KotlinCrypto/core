@@ -18,6 +18,7 @@
 package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
+import org.kotlincrypto.error.InvalidKeyException
 import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 
@@ -123,7 +124,7 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
      * This is useful if wanting to zero out the key before de-referencing.
      *
      * @see [clearKey]
-     * @throws [IllegalArgumentException] if [newKey] is empty, or of a length
+     * @throws [InvalidKeyException] if [newKey] is empty, or of a length
      *   inappropriate for the [Mac] implementation.
      * */
     public fun reset(newKey: ByteArray)
@@ -161,9 +162,9 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          * or [Engine.doFinalInto] have been invoked).
          *
          * @param [key] The key that this [Engine] instance will use to apply its function to
-         * @throws [IllegalArgumentException] if [key] is empty
+         * @throws [InvalidKeyException] if [key] is empty
          * */
-        @Throws(IllegalArgumentException::class)
+        @Throws(InvalidKeyException::class)
         public constructor(key: ByteArray)
 
         /**
@@ -171,9 +172,9 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          *
          * @param [key] the key that this [Engine] instance will use to apply its function to
          * @param [resetOnDoFinal] See [Engine.resetOnDoFinal] documentation
-         * @throws [IllegalArgumentException] if [key] is empty
+         * @throws [InvalidKeyException] if [key] is empty
          * */
-        @Throws(IllegalArgumentException::class)
+        @Throws(InvalidKeyException::class)
         public constructor(key: ByteArray, resetOnDoFinal: Boolean)
 
         /**
@@ -218,10 +219,10 @@ public expect abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          * before passing it here. Implementations should ensure any old key material
          * is zeroed out.
          *
-         * @throws [IllegalArgumentException] if [newKey] is a length inappropriate
-         *   for the [Mac] implementation.
+         * @throws [InvalidKeyException] if [newKey] is a length inappropriate
+         *   for the [Engine] implementation.
          * */
-        @Throws(IllegalArgumentException::class)
+        @Throws(InvalidKeyException::class)
         public abstract fun reset(newKey: ByteArray)
 
         /** @suppress */

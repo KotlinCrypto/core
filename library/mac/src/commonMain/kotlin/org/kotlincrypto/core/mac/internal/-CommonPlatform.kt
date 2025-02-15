@@ -64,10 +64,10 @@ internal inline fun Mac.commonClearKey(engineReset: (ByteArray) -> Unit) {
 
     try {
         engineReset(SINGLE_0BYTE_KEY)
-    } catch (e1: IllegalArgumentException) {
+    } catch (e1: Throwable) {
         try {
             engineReset(ByteArray(macLength()))
-        } catch (e2: IllegalArgumentException) {
+        } catch (e2: Throwable) {
             e2.addSuppressed(e1)
             throw e2
         }

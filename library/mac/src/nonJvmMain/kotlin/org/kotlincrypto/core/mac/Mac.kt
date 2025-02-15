@@ -19,6 +19,7 @@ package org.kotlincrypto.core.mac
 
 import org.kotlincrypto.core.*
 import org.kotlincrypto.core.mac.internal.*
+import org.kotlincrypto.error.InvalidKeyException
 import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 
@@ -37,7 +38,6 @@ import org.kotlincrypto.error.ShortBufferException
  * https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#mac-algorithms
  *
  * @see [Engine]
- * @throws [IllegalArgumentException] if [algorithm] is blank
  * */
 public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatable {
 
@@ -152,12 +152,16 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
      * This is useful if wanting to zero out the key before de-referencing.
      *
      * @see [clearKey]
-     * @throws [IllegalArgumentException] if [newKey] is empty, or of a length
+     * @throws [InvalidKeyException] if [newKey] is empty, or of a length
      *   inappropriate for the [Mac] implementation.
      * */
     public actual fun reset(newKey: ByteArray) {
-        require(newKey.isNotEmpty()) { "newKey cannot be empty" }
-        engine.reset(newKey)
+        if (newKey.isEmpty()) throw InvalidKeyException("newKey cannot be empty")
+        try {
+            engine.reset(newKey)
+        } catch (e: IllegalArgumentException) {
+            throw InvalidKeyException(e)
+        }
     }
 
     /**
@@ -193,9 +197,9 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          * or [Engine.doFinalInto] have been invoked).
          *
          * @param [key] The key that this [Engine] instance will use to apply its function to
-         * @throws [IllegalArgumentException] if [key] is empty
+         * @throws [InvalidKeyException] if [key] is empty
          * */
-        @Throws(IllegalArgumentException::class)
+        @Throws(InvalidKeyException::class)
         public actual constructor(key: ByteArray): this(key, resetOnDoFinal = true)
 
         /**
@@ -203,11 +207,11 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          *
          * @param [key] the key that this [Engine] instance will use to apply its function to
          * @param [resetOnDoFinal] See [Engine.resetOnDoFinal] documentation
-         * @throws [IllegalArgumentException] if [key] is empty
+         * @throws [InvalidKeyException] if [key] is empty
          * */
-        @Throws(IllegalArgumentException::class)
+        @Throws(InvalidKeyException::class)
         public actual constructor(key: ByteArray, resetOnDoFinal: Boolean) {
-            require(key.isNotEmpty()) { "key cannot be empty" }
+            if (key.isEmpty()) throw InvalidKeyException("key cannot be empty")
             this.resetOnDoFinal = resetOnDoFinal
         }
 
@@ -260,10 +264,10 @@ public actual abstract class Mac: Algorithm, Copyable<Mac>, Resettable, Updatabl
          * before passing it here. Implementations should ensure any old key material
          * is zeroed out.
          *
-         * @throws [IllegalArgumentException] if [newKey] is a length inappropriate
-         *   for the [Mac] implementation.
+         * @throws [InvalidKeyException] if [newKey] is a length inappropriate
+         *   for the [Engine] implementation.
          * */
-        @Throws(IllegalArgumentException::class)
+        @Throws(InvalidKeyException::class)
         public actual abstract fun reset(newKey: ByteArray)
 
         private val code = Any()
