@@ -15,6 +15,8 @@
  **/
 package org.kotlincrypto.core.mac
 
+import org.kotlincrypto.error.InvalidKeyException
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 import kotlin.test.*
 
@@ -22,14 +24,14 @@ class MacUnitTest {
 
     @Test
     fun givenMac_whenEmptyKey_thenThrowsException() {
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<InvalidKeyException> {
             TestMac(ByteArray(0), "not empty")
         }
     }
 
     @Test
     fun givenMac_whenBlankAlgorithm_thenThrowsException() {
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<InvalidParameterException> {
             TestMac(ByteArray(5), "  ")
         }
     }
@@ -37,7 +39,7 @@ class MacUnitTest {
     @Test
     fun givenMac_whenResetWithEmptyKey_thenThrowsException() {
         val mac = TestMac(ByteArray(5), "my algorithm")
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<InvalidKeyException> {
             mac.reset(ByteArray(0))
         }
     }

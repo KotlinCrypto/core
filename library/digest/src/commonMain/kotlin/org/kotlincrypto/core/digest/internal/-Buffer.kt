@@ -18,7 +18,9 @@
 package org.kotlincrypto.core.digest.internal
 
 import org.kotlincrypto.core.digest.Digest
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
+import org.kotlincrypto.error.requireParam
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -27,17 +29,17 @@ import kotlin.jvm.JvmInline
 @JvmInline
 internal value class Buffer internal constructor(internal val value: ByteArray)
 
-@Throws(IllegalArgumentException::class)
+@Throws(InvalidParameterException::class)
 @Suppress("UnusedReceiverParameter")
 internal inline fun Digest.initializeBuffer(
     algorithm: String,
     blockSize: Int,
     digestLength: Int,
 ): Buffer {
-    require(algorithm.isNotBlank()) { "algorithm cannot be blank" }
-    require(blockSize > 0) { "blockSize must be greater than 0" }
-    require(blockSize % 8 == 0) { "blockSize must be a factor of 8" }
-    require(digestLength >= 0) { "digestLength cannot be negative" }
+    requireParam(algorithm.isNotBlank()) { "algorithm cannot be blank" }
+    requireParam(blockSize > 0) { "blockSize must be greater than 0" }
+    requireParam(blockSize % 8 == 0) { "blockSize must be a factor of 8" }
+    requireParam(digestLength >= 0) { "digestLength cannot be negative" }
     return Buffer(ByteArray(blockSize))
 }
 

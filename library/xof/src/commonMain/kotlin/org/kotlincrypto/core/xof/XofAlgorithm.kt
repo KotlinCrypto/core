@@ -16,6 +16,7 @@
 package org.kotlincrypto.core.xof
 
 import org.kotlincrypto.core.Algorithm
+import org.kotlincrypto.error.InvalidKeyException
 
 /**
  * Denotes a class as a user of a specified cryptographic [algorithm]
@@ -37,7 +38,7 @@ public interface ReKeyableXofAlgorithm: XofAlgorithm {
      *
      * This is useful if wanting to clear the key before de-referencing.
      *
-     * @throws [IllegalArgumentException] if [newKey] is unacceptable.
+     * @throws [InvalidKeyException] if [newKey] is unacceptable.
      * */
     public fun reset(newKey: ByteArray)
 }

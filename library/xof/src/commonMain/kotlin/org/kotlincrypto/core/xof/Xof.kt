@@ -18,6 +18,7 @@
 package org.kotlincrypto.core.xof
 
 import org.kotlincrypto.core.*
+import org.kotlincrypto.error.InvalidKeyException
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -67,7 +68,7 @@ public sealed class Xof<A: XofAlgorithm>(
          * Helper to provide access to the instance backing [Xof], if said instance
          * can be re-keyed (such as a [org.kotlincrypto.core.mac.Mac]).
          *
-         * @throws [IllegalArgumentException] if [newKey] is unacceptable.
+         * @throws [InvalidKeyException] if [newKey] is unacceptable.
          * */
         @JvmStatic
         public fun <A: ReKeyableXofAlgorithm> Xof<A>.reset(newKey: ByteArray) { delegate.reset(newKey) }

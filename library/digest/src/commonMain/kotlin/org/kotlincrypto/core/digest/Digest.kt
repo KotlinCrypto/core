@@ -18,6 +18,7 @@
 package org.kotlincrypto.core.digest
 
 import org.kotlincrypto.core.*
+import org.kotlincrypto.error.InvalidParameterException
 import org.kotlincrypto.error.ShortBufferException
 
 /**
@@ -39,13 +40,13 @@ public expect abstract class Digest: Algorithm, Copyable<Digest>, Resettable, Up
      * @param [algorithm] See [Algorithm.algorithm]
      * @param [blockSize] See [Digest.blockSize]
      * @param [digestLength] See [Digest.digestLength]
-     * @throws [IllegalArgumentException] when:
+     * @throws [InvalidParameterException] when:
      *  - [algorithm] is blank
      *  - [blockSize] is less than or equal to 0
      *  - [blockSize] is not a factor of 8
      *  - [digestLength] is negative
      * */
-    @Throws(IllegalArgumentException::class)
+    @Throws(InvalidParameterException::class)
     protected constructor(algorithm: String, blockSize: Int, digestLength: Int)
 
     /**
