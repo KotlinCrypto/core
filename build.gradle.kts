@@ -26,7 +26,13 @@ plugins {
 }
 
 allprojects {
-    findProperty("GROUP")?.let { group = it }
+    // https://github.com/Kotlin/dokka/issues/4030#issuecomment-2669254887
+    if (this.project == this.rootProject) {
+        group = "root"
+    } else {
+        findProperty("GROUP")?.let { group = it }
+    }
+
     findProperty("VERSION_NAME")?.let { version = it }
     findProperty("POM_DESCRIPTION")?.let { description = it.toString() }
 
