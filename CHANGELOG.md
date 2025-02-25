@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 0.7.0 (2025-02-25)
+ - Updates `kotlin` to `2.1.10` [[#122]][122]
+ - Updates `kotlincrypto.error` to `0.3.0` [[#122]][122]
+ - `Mac` and `Digest` constructors now throw `InvalidParameterException` instead 
+   of `IllegalArgumentException` [[#124]][124]
+ - `Mac.Engine` constructor, `Mac.reset(newKey)`, and `Xof.Companion.reset(newKey)` now 
+   throw `InvalidKeyException` instead of `IllegalArgumentException` [[#124]][124]
+
 ## Version 0.6.1 (2025-02-09)
  - Adds `Digest.digestInto` API for populating an existing `ByteArray` with output [[#108]][108]
  - Adds `Mac.doFinalInto` API for populating an existing `ByteArray` with output [[#109]][109]
@@ -186,3 +194,5 @@
 [111]: https://github.com/KotlinCrypto/core/pull/111
 [116]: https://github.com/KotlinCrypto/core/pull/116
 [118]: https://github.com/KotlinCrypto/core/pull/118
+[122]: https://github.com/KotlinCrypto/core/pull/122
+[124]: https://github.com/KotlinCrypto/core/pull/124
