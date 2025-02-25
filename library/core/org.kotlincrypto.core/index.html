@@ -25,41 +25,80 @@
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
 <link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
 <script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
 <script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
     <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
 <a class="library-name--link" href="../../../index.html">
-                            core
-                    </a>            </div>
-            <div class="library-version">0.6.1
+                    core
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.7.0
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":library:core/commonMain">common</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":library:core/jvmMain">jvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":library:core/commonMain" data-filter=":library:core/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":library:core/jvmMain" data-filter=":library:core/jvmMain">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":library:core:dokkaHtmlPartial/commonMain">common</button>
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":library:core:dokkaHtmlPartial/jvmMain">jvm</button>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
         </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
+    </nav>
         <div id="container">
             <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    core
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="core::org.kotlincrypto.core////PointingToDeclaration//890221002">
+<div class="main-content" data-page-type="package" id="content" pageids="core::org.kotlincrypto.core////PointingToDeclaration//-450823888">
   <div class="breadcrumbs"><a href="../index.html">core</a><span class="delimiter">/</span><span class="current">org.kotlincrypto.core</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -69,92 +108,92 @@
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
         <h2 class="">Types</h2>
-        <div class="table"><a data-name="1171304720%2FClasslikes%2F-623345515" anchor-label="Algorithm" id="1171304720%2FClasslikes%2F-623345515" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:core:dokkaHtmlPartial/commonMain" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain">
+        <div class="table"><a data-name="1171304720%2FClasslikes%2F319166921" anchor-label="Algorithm" id="1171304720%2FClasslikes%2F319166921" data-filterable-set=":library:core/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:core/commonMain" data-filterable-set=":library:core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-algorithm/index.html"><span><span>Algorithm</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1171304720%2FClasslikes%2F-623345515"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1171304720%2FClasslikes%2F319166921"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-algorithm/index.html">Algorithm</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-algorithm/index.html">Algorithm</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1729040236%2FClasslikes%2F-623345515" anchor-label="Copyable" id="-1729040236%2FClasslikes%2F-623345515" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:core:dokkaHtmlPartial/commonMain" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain">
+<a data-name="-1729040236%2FClasslikes%2F319166921" anchor-label="Copyable" id="-1729040236%2FClasslikes%2F319166921" data-filterable-set=":library:core/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:core/commonMain" data-filterable-set=":library:core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-copyable/index.html"><span><span>Copyable</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1729040236%2FClasslikes%2F-623345515"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1729040236%2FClasslikes%2F319166921"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-copyable/index.html">Copyable</a><span class="token operator">&lt;</span><span class="token keyword">out </span><a href="-copyable/index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-copyable/index.html">Copyable</a><span class="token operator">&lt;</span><span class="token keyword">out </span><a href="-copyable/index.html">T</a><span class="token operator"> : </span><span data-unresolved-link="kotlin/Any///PointingToDeclaration/">Any</span><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1610819983%2FClasslikes%2F-623345515" anchor-label="ExperimentalKotlinCryptoApi" id="1610819983%2FClasslikes%2F-623345515" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:core:dokkaHtmlPartial/commonMain" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain">
+<a data-name="1610819983%2FClasslikes%2F319166921" anchor-label="ExperimentalKotlinCryptoApi" id="1610819983%2FClasslikes%2F319166921" data-filterable-set=":library:core/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:core/commonMain" data-filterable-set=":library:core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-experimental-kotlin-crypto-api/index.html"><span>Experimental</span><wbr><span>Kotlin</span><wbr><span>Crypto</span><wbr><span><span>Api</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1610819983%2FClasslikes%2F-623345515"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1610819983%2FClasslikes%2F319166921"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlin.annotation/Target///PointingToDeclaration/"><span class="token annotation builtin">Target</span></span><span class="token punctuation">(</span><span>allowedTargets<span class="token operator"> = </span><span class="token punctuation">[</span><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CLASS///PointingToDeclaration/">AnnotationTarget.CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.ANNOTATION_CLASS///PointingToDeclaration/">AnnotationTarget.ANNOTATION_CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY///PointingToDeclaration/">AnnotationTarget.PROPERTY</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FIELD///PointingToDeclaration/">AnnotationTarget.FIELD</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.LOCAL_VARIABLE///PointingToDeclaration/">AnnotationTarget.LOCAL_VARIABLE</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.VALUE_PARAMETER///PointingToDeclaration/">AnnotationTarget.VALUE_PARAMETER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CONSTRUCTOR///PointingToDeclaration/">AnnotationTarget.CONSTRUCTOR</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FUNCTION///PointingToDeclaration/">AnnotationTarget.FUNCTION</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_GETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_GETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_SETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_SETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.TYPEALIAS///PointingToDeclaration/">AnnotationTarget.TYPEALIAS</span></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">annotation class </span><a href="-experimental-kotlin-crypto-api/index.html">ExperimentalKotlinCryptoApi</a></div><div class="brief "><p class="paragraph">Denotes an api as experimental, such that it may change inadvertently without notice.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlin.annotation/Target///PointingToDeclaration/"><span class="token annotation builtin">Target</span></span><span class="token punctuation">(</span><span>allowedTargets<span class="token operator"> = </span><span class="token punctuation">[</span><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CLASS///PointingToDeclaration/">AnnotationTarget.CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.ANNOTATION_CLASS///PointingToDeclaration/">AnnotationTarget.ANNOTATION_CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY///PointingToDeclaration/">AnnotationTarget.PROPERTY</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FIELD///PointingToDeclaration/">AnnotationTarget.FIELD</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.LOCAL_VARIABLE///PointingToDeclaration/">AnnotationTarget.LOCAL_VARIABLE</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.VALUE_PARAMETER///PointingToDeclaration/">AnnotationTarget.VALUE_PARAMETER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CONSTRUCTOR///PointingToDeclaration/">AnnotationTarget.CONSTRUCTOR</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FUNCTION///PointingToDeclaration/">AnnotationTarget.FUNCTION</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_GETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_GETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_SETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_SETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.TYPEALIAS///PointingToDeclaration/">AnnotationTarget.TYPEALIAS</span></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">annotation class </span><a href="-experimental-kotlin-crypto-api/index.html">ExperimentalKotlinCryptoApi</a></div><div class="brief "><p class="paragraph">Denotes an api as experimental, such that it may change inadvertently without notice.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1199931036%2FClasslikes%2F-623345515" anchor-label="InternalKotlinCryptoApi" id="-1199931036%2FClasslikes%2F-623345515" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:core:dokkaHtmlPartial/commonMain" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain">
+<a data-name="-1199931036%2FClasslikes%2F319166921" anchor-label="InternalKotlinCryptoApi" id="-1199931036%2FClasslikes%2F319166921" data-filterable-set=":library:core/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:core/commonMain" data-filterable-set=":library:core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-internal-kotlin-crypto-api/index.html"><span>Internal</span><wbr><span>Kotlin</span><wbr><span>Crypto</span><wbr><span><span>Api</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1199931036%2FClasslikes%2F-623345515"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1199931036%2FClasslikes%2F319166921"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlin.annotation/Target///PointingToDeclaration/"><span class="token annotation builtin">Target</span></span><span class="token punctuation">(</span><span>allowedTargets<span class="token operator"> = </span><span class="token punctuation">[</span><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CLASS///PointingToDeclaration/">AnnotationTarget.CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.ANNOTATION_CLASS///PointingToDeclaration/">AnnotationTarget.ANNOTATION_CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY///PointingToDeclaration/">AnnotationTarget.PROPERTY</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FIELD///PointingToDeclaration/">AnnotationTarget.FIELD</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.LOCAL_VARIABLE///PointingToDeclaration/">AnnotationTarget.LOCAL_VARIABLE</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.VALUE_PARAMETER///PointingToDeclaration/">AnnotationTarget.VALUE_PARAMETER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CONSTRUCTOR///PointingToDeclaration/">AnnotationTarget.CONSTRUCTOR</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FUNCTION///PointingToDeclaration/">AnnotationTarget.FUNCTION</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_GETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_GETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_SETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_SETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.TYPEALIAS///PointingToDeclaration/">AnnotationTarget.TYPEALIAS</span></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">annotation class </span><a href="-internal-kotlin-crypto-api/index.html">InternalKotlinCryptoApi</a></div><div class="brief "><p class="paragraph">Denotes an api as internal, and subject to change at any time.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="kotlin.annotation/Target///PointingToDeclaration/"><span class="token annotation builtin">Target</span></span><span class="token punctuation">(</span><span>allowedTargets<span class="token operator"> = </span><span class="token punctuation">[</span><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CLASS///PointingToDeclaration/">AnnotationTarget.CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.ANNOTATION_CLASS///PointingToDeclaration/">AnnotationTarget.ANNOTATION_CLASS</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY///PointingToDeclaration/">AnnotationTarget.PROPERTY</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FIELD///PointingToDeclaration/">AnnotationTarget.FIELD</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.LOCAL_VARIABLE///PointingToDeclaration/">AnnotationTarget.LOCAL_VARIABLE</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.VALUE_PARAMETER///PointingToDeclaration/">AnnotationTarget.VALUE_PARAMETER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.CONSTRUCTOR///PointingToDeclaration/">AnnotationTarget.CONSTRUCTOR</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.FUNCTION///PointingToDeclaration/">AnnotationTarget.FUNCTION</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_GETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_GETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.PROPERTY_SETTER///PointingToDeclaration/">AnnotationTarget.PROPERTY_SETTER</span><span class="token punctuation">, </span></span><wbr><span><span data-unresolved-link="kotlin.annotation/AnnotationTarget.TYPEALIAS///PointingToDeclaration/">AnnotationTarget.TYPEALIAS</span></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">annotation class </span><a href="-internal-kotlin-crypto-api/index.html">InternalKotlinCryptoApi</a></div><div class="brief "><p class="paragraph">Denotes an api as internal, and subject to change at any time.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1415942276%2FClasslikes%2F-623345515" anchor-label="Resettable" id="1415942276%2FClasslikes%2F-623345515" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:core:dokkaHtmlPartial/commonMain" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain">
+<a data-name="1415942276%2FClasslikes%2F319166921" anchor-label="Resettable" id="1415942276%2FClasslikes%2F319166921" data-filterable-set=":library:core/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:core/commonMain" data-filterable-set=":library:core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-resettable/index.html"><span><span>Resettable</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1415942276%2FClasslikes%2F-623345515"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1415942276%2FClasslikes%2F319166921"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-resettable/index.html">Resettable</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-resettable/index.html">Resettable</a></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-452945687%2FClasslikes%2F-623345515" anchor-label="Updatable" id="-452945687%2FClasslikes%2F-623345515" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:core:dokkaHtmlPartial/commonMain" data-filterable-set=":library:core:dokkaHtmlPartial/commonMain">
+<a data-name="-452945687%2FClasslikes%2F319166921" anchor-label="Updatable" id="-452945687%2FClasslikes%2F319166921" data-filterable-set=":library:core/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:core/commonMain" data-filterable-set=":library:core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-updatable/index.html"><span><span>Updatable</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-452945687%2FClasslikes%2F-623345515"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-452945687%2FClasslikes%2F319166921"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-updatable/index.html">Updatable</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-updatable/index.html">Updatable</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -163,19 +202,19 @@
       </div>
       <div data-togglable="PROPERTY">
         <h2 class="">Properties</h2>
-        <div class="table"><a data-name="544868105%2FProperties%2F1900408513" anchor-label="KC_ANDROID_SDK_INT" id="544868105%2FProperties%2F1900408513" data-filterable-set=":library:core:dokkaHtmlPartial/jvmMain"></a>
-          <div class="table-row" data-filterable-current=":library:core:dokkaHtmlPartial/jvmMain" data-filterable-set=":library:core:dokkaHtmlPartial/jvmMain">
+        <div class="table"><a data-name="544868105%2FProperties%2F-2045678835" anchor-label="KC_ANDROID_SDK_INT" id="544868105%2FProperties%2F-2045678835" data-filterable-set=":library:core/jvmMain"></a>
+          <div class="table-row" data-filterable-current=":library:core/jvmMain" data-filterable-set=":library:core/jvmMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-k-c_-a-n-d-r-o-i-d_-s-d-k_-i-n-t.html"><span><span>KC_ANDROID_SDK_INT</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="544868105%2FProperties%2F1900408513"></span>
+                  <div><a href="-k-c_-a-n-d-r-o-i-d_-s-d-k_-i-n-t.html"><span>KC_</span><wbr><span>ANDROID_</span><wbr><span>SDK_</span><wbr><span>INT</span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="544868105%2FProperties%2F-2045678835"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":library:core:dokkaHtmlPartial/jvmMain" data-filterable-set=":library:core:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":library:core:dokkaHtmlPartial/jvmMain">jvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="-internal-kotlin-crypto-api/index.html"><span class="token annotation builtin">InternalKotlinCryptoApi</span></a></div></div><span class="token keyword">val </span><a href="-k-c_-a-n-d-r-o-i-d_-s-d-k_-i-n-t.html">KC_ANDROID_SDK_INT</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token operator">?</span></div></div>                  </div>
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":library:core/jvmMain" data-filterable-set=":library:core/jvmMain" data-active="" data-toggle=":library:core/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":library:core/jvmMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="-internal-kotlin-crypto-api/index.html"><span class="token annotation builtin">InternalKotlinCryptoApi</span></a></div></div><span class="token keyword">val </span><a href="-k-c_-a-n-d-r-o-i-d_-s-d-k_-i-n-t.html">KC_ANDROID_SDK_INT</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token operator">?</span></div></div>                  </div>
                 </div>
               </div>
             </div>
@@ -185,12 +224,18 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2023-2025 Copyright KotlinCrypto</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
             </div>
         </div>
     </div>
 </body>
 </html>
-

@@ -25,61 +25,93 @@
 <link href="../../../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../../../styles/logo-styles.css" rel="Stylesheet">
 <link href="../../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
 <script type="text/javascript" src="../../../../../scripts/clipboard.js" async></script>
 <script type="text/javascript" src="../../../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../../ui-kit/ui-kit.min.js" defer></script>
 <script type="text/javascript" src="../../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
     <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
 <a class="library-name--link" href="../../../../../index.html">
-                            core
-                    </a>            </div>
-            <div class="library-version">0.6.1
+                    core
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.7.0
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":library:xof/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":library:xof/commonMain" data-filter=":library:xof/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":library:xof:dokkaHtmlPartial/commonMain">common</button>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
         </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
+    </nav>
         <div id="container">
             <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    core
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="xof::org.kotlincrypto.core.xof/Xof.Reader///PointingToDeclaration//-548152619">
+<div class="main-content" data-page-type="classlike" id="content" pageids="xof::org.kotlincrypto.core.xof/Xof.Reader///PointingToDeclaration//42596233">
   <div class="breadcrumbs"><a href="../../../index.html">xof</a><span class="delimiter">/</span><a href="../../index.html">org.kotlincrypto.core.xof</a><span class="delimiter">/</span><a href="../index.html">Xof</a><span class="delimiter">/</span><span class="current">Reader</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Reader</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">inner </span><span class="token keyword">class </span><a href="index.html">Reader</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/KotlinCrypto/core/tree/master/library/xof/src/commonMain/kotlin/org/kotlincrypto/core/xof/Xof.kt#L130">source</a>)</span></span></div><p class="paragraph">Reads the <a href="../index.html">Xof</a> snapshot.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">inner </span><span class="token keyword">class </span><a href="index.html">Reader</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/KotlinCrypto/core/tree/master/library/xof/src/commonMain/kotlin/org/kotlincrypto/core/xof/Xof.kt#L131">source</a>)</span></span></div><p class="paragraph">Reads the <a href="../index.html">Xof</a> snapshot.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="-57967494%2FConstructors%2F-548152619" anchor-label="Reader" id="-57967494%2FConstructors%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+        <div class="table"><a data-name="-57967494%2FConstructors%2F42596233" anchor-label="Reader" id="-57967494%2FConstructors%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-reader.html"><span><span>Reader</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-57967494%2FConstructors%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-57967494%2FConstructors%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -88,32 +120,32 @@
       </div>
       <div data-togglable="PROPERTY">
         <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1923594748%2FProperties%2F-548152619" anchor-label="bytesRead" id="1923594748%2FProperties%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+        <div class="table"><a data-name="1923594748%2FProperties%2F42596233" anchor-label="bytesRead" id="1923594748%2FProperties%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="bytes-read.html"><span>bytes</span><wbr><span><span>Read</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1923594748%2FProperties%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1923594748%2FProperties%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="kotlin.jvm/JvmName///PointingToDeclaration/"><span class="token annotation builtin">JvmName</span></span><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"bytesRead"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="bytes-read.html">bytesRead</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Long///PointingToDeclaration/">Long</span></div><div class="brief "><p class="paragraph">The total amount of bytes read for this <a href="index.html">Reader</a> instance.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="kotlin.jvm/JvmName///PointingToDeclaration/"><span class="token annotation builtin">JvmName</span></span><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"bytesRead"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">val </span><a href="bytes-read.html">bytesRead</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Long///PointingToDeclaration/">Long</span></div><div class="brief "><p class="paragraph">The total amount of bytes read for this <a href="index.html">Reader</a> instance.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1441501575%2FProperties%2F-548152619" anchor-label="isClosed" id="1441501575%2FProperties%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+<a data-name="1441501575%2FProperties%2F42596233" anchor-label="isClosed" id="1441501575%2FProperties%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-closed.html"><span>is</span><wbr><span><span>Closed</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1441501575%2FProperties%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1441501575%2FProperties%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="kotlin.jvm/JvmName///PointingToDeclaration/"><span class="token annotation builtin">JvmName</span></span><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"isClosed"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">var </span><a href="is-closed.html">isClosed</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Boolean///PointingToDeclaration/">Boolean</span></div><div class="brief "><p class="paragraph">If the reader is closed or not</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><span data-unresolved-link="kotlin.jvm/JvmName///PointingToDeclaration/"><span class="token annotation builtin">JvmName</span></span><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"isClosed"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">var </span><a href="is-closed.html">isClosed</a><span class="token operator">: </span><span data-unresolved-link="kotlin/Boolean///PointingToDeclaration/">Boolean</span></div><div class="brief "><p class="paragraph">If the reader is closed or not</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -122,77 +154,77 @@
       </div>
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1164573829%2FFunctions%2F-548152619" anchor-label="close" id="1164573829%2FFunctions%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+        <div class="table"><a data-name="1164573829%2FFunctions%2F42596233" anchor-label="close" id="1164573829%2FFunctions%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="close.html"><span><span>close</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1164573829%2FFunctions%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1164573829%2FFunctions%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Closes the <a href="index.html">Reader</a>, rendering it no-longer usable for <a href="read.html">read</a>s. Attempting to <a href="read.html">read</a> again after closure will result in an <span data-unresolved-link="kotlin/IllegalStateException///PointingToDeclaration/">IllegalStateException</span> being thrown.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Closes the <a href="index.html">Reader</a>, rendering it no-longer usable for <a href="read.html">read</a>s. Attempting to <a href="read.html">read</a> again after closure will result in an <span data-unresolved-link="kotlin/IllegalStateException///PointingToDeclaration/">IllegalStateException</span> being thrown.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-674587609%2FFunctions%2F-548152619" anchor-label="closeProtected" id="-674587609%2FFunctions%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+<a data-name="-674587609%2FFunctions%2F42596233" anchor-label="closeProtected" id="-674587609%2FFunctions%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="close-protected.html"><span>close</span><wbr><span><span>Protected</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-674587609%2FFunctions%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-674587609%2FFunctions%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="close-protected.html"><span class="token function">closeProtected</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="close-protected.html"><span class="token function">closeProtected</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1616477414%2FFunctions%2F-548152619" anchor-label="read" id="-1616477414%2FFunctions%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+<a data-name="-1616477414%2FFunctions%2F42596233" anchor-label="read" id="-1616477414%2FFunctions%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="read.html"><span><span>read</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1616477414%2FFunctions%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1616477414%2FFunctions%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">out<span class="token operator">: </span><span data-unresolved-link="kotlin/ByteArray///PointingToDeclaration/">ByteArray</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></div><div class="brief "><p class="paragraph">Reads the <a href="../index.html">Xof</a> snapshot's state for when <a href="index.html">Reader</a> was produced, filling the provided <a href="read.html">out</a> array completely.</p></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">out<span class="token operator">: </span><span data-unresolved-link="kotlin/ByteArray///PointingToDeclaration/">ByteArray</span><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token punctuation">, </span></span><span class="parameter ">len<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></div><div class="brief "><p class="paragraph">Reads the <a href="../index.html">Xof</a> snapshot's state for when <a href="index.html">Reader</a> was produced, filling the provided <a href="read.html">out</a> array for specified <a href="read.html">offset</a> and <a href="read.html">len</a> arguments.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">out<span class="token operator">: </span><span data-unresolved-link="kotlin/ByteArray///PointingToDeclaration/">ByteArray</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></div><div class="brief "><p class="paragraph">Reads the <a href="../index.html">Xof</a> snapshot's state for when <a href="index.html">Reader</a> was produced, filling the provided <a href="read.html">out</a> array completely.</p></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">out<span class="token operator">: </span><span data-unresolved-link="kotlin/ByteArray///PointingToDeclaration/">ByteArray</span><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token punctuation">, </span></span><span class="parameter ">len<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></div><div class="brief "><p class="paragraph">Reads the <a href="../index.html">Xof</a> snapshot's state for when <a href="index.html">Reader</a> was produced, filling the provided <a href="read.html">out</a> array for specified <a href="read.html">offset</a> and <a href="read.html">len</a> arguments.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-467075327%2FFunctions%2F-548152619" anchor-label="readProtected" id="-467075327%2FFunctions%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+<a data-name="-467075327%2FFunctions%2F42596233" anchor-label="readProtected" id="-467075327%2FFunctions%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="read-protected.html"><span>read</span><wbr><span><span>Protected</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-467075327%2FFunctions%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-467075327%2FFunctions%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="read-protected.html"><span class="token function">readProtected</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">out<span class="token operator">: </span><span data-unresolved-link="kotlin/ByteArray///PointingToDeclaration/">ByteArray</span><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token punctuation">, </span></span><span class="parameter ">len<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="read-protected.html"><span class="token function">readProtected</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">out<span class="token operator">: </span><span data-unresolved-link="kotlin/ByteArray///PointingToDeclaration/">ByteArray</span><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span><span class="token punctuation">, </span></span><span class="parameter ">len<span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlin/Int///PointingToDeclaration/">Int</span></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1687781936%2FFunctions%2F-548152619" anchor-label="use" id="-1687781936%2FFunctions%2F-548152619" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":library:xof:dokkaHtmlPartial/commonMain" data-filterable-set=":library:xof:dokkaHtmlPartial/commonMain">
+<a data-name="-1687781936%2FFunctions%2F42596233" anchor-label="use" id="-1687781936%2FFunctions%2F42596233" data-filterable-set=":library:xof/commonMain"></a>
+          <div class="table-row" data-filterable-current=":library:xof/commonMain" data-filterable-set=":library:xof/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="use.html"><span><span>use</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1687781936%2FFunctions%2F-548152619"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1687781936%2FFunctions%2F42596233"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="use.html">T</a><span class="token operator">&gt; </span><a href="use.html"><span class="token function">use</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">action<span class="token operator">: </span><a href="index.html">Xof.Reader</a><span class="token operator">&lt;</span><a href="../index.html">A</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="use.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="use.html">T</a></div><div class="brief "><p class="paragraph">Helper function which automatically invokes <a href="close.html">close</a> once action completes.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="use.html">T</a><span class="token operator">&gt; </span><a href="use.html"><span class="token function">use</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">action<span class="token operator">: </span><a href="index.html">Xof.Reader</a><span class="token operator">&lt;</span><a href="../index.html">A</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="use.html">T</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="use.html">T</a></div><div class="brief "><p class="paragraph">Helper function which automatically invokes <a href="close.html">close</a> once action completes.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -202,12 +234,18 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2025 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2023-2025 Copyright KotlinCrypto</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
             </div>
         </div>
     </div>
 </body>
 </html>
-
