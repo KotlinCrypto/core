@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 0.7.1 (2025-08-25)
+ - Updates `kotlin` to `2.2.10` [[#126]][126]
+ - Updates `kotlincrypto.error` to `0.3.1`
+
 ## Version 0.7.0 (2025-02-25)
  - Updates `kotlin` to `2.1.10` [[#122]][122]
  - Updates `kotlincrypto.error` to `0.3.0` [[#122]][122]
@@ -196,3 +200,4 @@
 [118]: https://github.com/KotlinCrypto/core/pull/118
 [122]: https://github.com/KotlinCrypto/core/pull/122
 [124]: https://github.com/KotlinCrypto/core/pull/124
+[126]: https://github.com/KotlinCrypto/core/pull/126
