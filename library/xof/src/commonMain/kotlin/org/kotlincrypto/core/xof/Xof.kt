@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "NOTHING_TO_INLINE")
+@file:Suppress("NOTHING_TO_INLINE")
 
 package org.kotlincrypto.core.xof
 
@@ -66,7 +66,7 @@ public sealed class Xof<A: XofAlgorithm>(
 
         /**
          * Helper to provide access to the instance backing [Xof], if said instance
-         * can be re-keyed (such as a [org.kotlincrypto.core.mac.Mac]).
+         * can be re-keyed (such as a `org.kotlincrypto.core.mac.Mac`).
          *
          * @throws [InvalidKeyException] if [newKey] is unacceptable.
          * */
