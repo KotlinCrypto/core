@@ -26,7 +26,7 @@ public interface XofAlgorithm: Algorithm
 
 /**
  * Extended functionality, specifically for a [Xof] who's backing instance
- * is a [org.kotlincrypto.core.mac.Mac].
+ * is a `org.kotlincrypto.core.mac.Mac`.
  *
  *
  * @see [Xof.Companion.reset]

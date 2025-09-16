@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING", "DeprecatedCallableAddReplaceWith")
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING", "RedundantVisibilityModifier")
 
 package org.kotlincrypto.core.mac
 
@@ -325,10 +325,11 @@ public actual abstract class Mac: javax.crypto.Mac, Algorithm, Copyable<Mac>, Re
         public actual final override fun hashCode(): Int = 17 * 31 + code.hashCode()
     }
 
-    private data object EmptyKey: KeySpec, SecretKey {
+    private object EmptyKey: KeySpec, SecretKey {
         override fun getAlgorithm(): String = "org.kotlincrypto.core.mac.Mac.EmptyKey"
         override fun getEncoded(): ByteArray? = null
         override fun getFormat(): String = "RAW"
+        @Suppress("UNUSED")
         private fun readResolve(): Any = EmptyKey
     }
 
