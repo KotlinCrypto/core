@@ -41,7 +41,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">0.7.1
+        <div class="library-version" id="library-version">0.8.0
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
@@ -94,7 +94,7 @@
   <div class="breadcrumbs"><a href="../../index.html">xof</a><span class="delimiter">/</span><a href="../index.html">org.kotlincrypto.core.xof</a><span class="delimiter">/</span><span class="current">XofFactory</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Xof</span><wbr><span><span>Factory</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">XofFactory</a><span class="token operator">&lt;</span><a href="index.html">A</a><span class="token operator"> : </span><a href="../-xof-algorithm/index.html">XofAlgorithm</a><span class="token operator">&gt;</span><span class="clearfix"><span class="floating-right">(<a href="https://github.com/KotlinCrypto/core/tree/master/library/xof/src/commonMain/kotlin/org/kotlincrypto/core/xof/XofFactory.kt#L42">source</a>)</span></span></div><p class="paragraph">Factory class for implementors of Digest or Mac to wrap them in <a href="-xof-delegate/index.html">XofDelegate</a> such that there is a distinct separation of functionality between those class types and <a href="../-xof/index.html">Xof</a>s, while still being able to share similarities/capabilities.</p><p class="paragraph">e.g.</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class SHAKE128: SHAKEDigest {
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":library:xof/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="index.html">XofFactory</a><span class="token operator">&lt;</span><a href="index.html">A</a><span class="token operator"> : </span><a href="../-xof-algorithm/index.html">XofAlgorithm</a><span class="token operator">&gt;</span><span class="clearfix"><span class="floating-right">(<a href="https://github.com/KotlinCrypto/core/tree/master/library/xof/src/commonMain/kotlin/org/kotlincrypto/core/xof/XofFactory.kt#L44">source</a>)</span></span></div><p class="paragraph">Factory class for implementors of Digest or Mac to wrap them in <a href="-xof-delegate/index.html">XofDelegate</a> such that there is a distinct separation of functionality between those class types and <a href="../-xof/index.html">Xof</a>s, while still being able to share similarities/capabilities.</p><p class="paragraph">e.g.</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class SHAKE128: SHAKEDigest {
 
     // ...
 
